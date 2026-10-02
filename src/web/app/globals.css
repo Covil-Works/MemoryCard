@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #000000;
+  --bg-secondary: #0c0c0c;
+  --bg-card: #141414;
+  --bg-hover: #1f1f1f;
+  --border: #2b2b2b;
+  --border-focus: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --text-muted: #555555;
+  --status-todo: #ffffff;
+  --status-in-progress: #ffffff;
+  --status-done: #888888;
+  --danger: #ffffff;
+  --danger-bg: #220000;
+  --warning-bg: #2b2200;
+  --warning-text: #fff3a8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+code, pre, .font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+/* Botões utilitários */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+  border-radius: 2px;
+}
+
+.btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-secondary);
+}
+
+.btn-primary {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #e0e0e0;
+  border-color: #e0e0e0;
+}
+
+.btn-danger {
+  background: transparent;
+  border-color: #ff4444;
+  color: #ff4444;
+}
+
+.btn-danger:hover {
+  background: #ff4444;
+  color: #000000;
+}
+
+/* Inputs */
+.input, .textarea, .select {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  border-radius: 2px;
+  outline: none;
+}
+
+.input:focus, .textarea:focus, .select:focus {
+  border-color: var(--border-focus);
+}
