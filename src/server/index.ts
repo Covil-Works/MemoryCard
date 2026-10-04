@@ -180,7 +180,11 @@ export async function startLocalServer(options: ServerOptions = {}): Promise<Run
   return running;
 }
 
-// Execução direta (npm run dev)
-if (process.argv[1]?.endsWith('src/server/index.ts')) {
+const serverScriptPath = process.argv[1] ? path.normalize(process.argv[1]) : '';
+if (
+  serverScriptPath.endsWith(path.normalize('src/server/index.ts')) ||
+  serverScriptPath.endsWith(path.normalize('src/server/index.js'))
+) {
   startLocalServer({ openBrowser: true });
 }
+

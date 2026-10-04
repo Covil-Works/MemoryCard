@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useSSE } from '../hooks/use-sse';
 
 interface ProjectEntry {
@@ -23,6 +24,7 @@ export default function DashboardPage() {
   const [relinkingProject, setRelinkingProject] = useState<ProjectEntry | null>(null);
   const [relinkPath, setRelinkPath] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPickingDirectory, setIsPickingDirectory] = useState(false);
 
   const fetchProjects = async () => {
     try {
@@ -50,6 +52,7 @@ export default function DashboardPage() {
   });
 
   const handlePickDirectoryForNew = async () => {
+    setIsPickingDirectory(true);
     try {
       const res = await fetch('/api/system/select-directory');
       const data = await res.json();
@@ -62,6 +65,8 @@ export default function DashboardPage() {
       }
     } catch {
       setIsNewProjectModalOpen(true);
+    } finally {
+      setIsPickingDirectory(false);
     }
   };
 
@@ -154,9 +159,10 @@ export default function DashboardPage() {
         </div>
         <button
           onClick={handlePickDirectoryForNew}
+          disabled={isPickingDirectory}
           className="btn btn-primary"
         >
-          + Novo Projeto
+          {isPickingDirectory ? 'Selecionando...' : '+ Novo Projeto'}
         </button>
       </div>
 
@@ -201,12 +207,12 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2 shrink-0">
                 {p.available ? (
                   <>
-                    <a href={`/${p.slug}`} className="btn btn-primary">
+                    <Link href={`/${p.slug}`} className="btn btn-primary text-xs">
                       Abrir Board →
-                    </a>
+                    </Link>
                     <button
                       onClick={() => handleUnregisterProject(p.project_id, p.name)}
-                      className="btn text-xs text-[#888] hover:text-[#f66]"
+                      className="btn text-xs text-[#888] hover:text-[#f66] hover:border-[#f66]"
                       title="Remover projeto da lista do MemoryCard"
                     >
                       Remover
@@ -219,7 +225,7 @@ export default function DashboardPage() {
                         setRelinkingProject(p);
                         setRelinkPath('');
                       }}
-                      className="btn"
+                      className="btn text-xs"
                     >
                       Relincar Pasta
                     </button>
@@ -237,6 +243,7 @@ export default function DashboardPage() {
           ))}
         </div>
       )}
+
 
       {/* Modal Novo Projeto */}
       {isNewProjectModalOpen && (
