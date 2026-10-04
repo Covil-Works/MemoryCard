@@ -4,6 +4,7 @@ Este repositório contém o código do **MemoryCard**, uma plataforma para geren
 
 ## Regras de Testes
 As diretrizes e decisões arquiteturais sobre testes automatizados estão descritas em [tests/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/tests/AGENTS.md).
+- **Proibido alterar testes existentes:** Ao criar ou editar funcionalidades no código da aplicação, **NÃO** altere os testes existentes. Eles servem para validar e garantir o comportamento esperado do que estamos desenvolvendo (o código deve se adequar aos testes, e nunca o inverso).
 - Todo teste deve respeitar o isolamento absoluto de diretórios e variáveis globais.
 - Jamais execute testes que possam gravar no diretório de usuário real (`~/.memorycard`).
 
