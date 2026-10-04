@@ -124,6 +124,25 @@ export default function DashboardPage() {
     }
   };
 
+  const handleUnregisterProject = async (projectId: string, name: string) => {
+    if (!window.confirm(`Deseja remover "${name}" da lista de projetos registrados? Os arquivos locais não serão apagados.`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/projects/${projectId}`, {
+        method: 'DELETE'
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Erro ao remover projeto');
+      }
+      await fetchProjects();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="max-w-5xl w-full mx-auto flex flex-col gap-6">
       <div className="flex items-center justify-between border-b border-[#222] pb-4">
@@ -181,19 +200,37 @@ export default function DashboardPage() {
 
               <div className="flex items-center gap-2 shrink-0">
                 {p.available ? (
-                  <a href={`/${p.slug}`} className="btn btn-primary">
-                    Abrir Board →
-                  </a>
+                  <>
+                    <a href={`/${p.slug}`} className="btn btn-primary">
+                      Abrir Board →
+                    </a>
+                    <button
+                      onClick={() => handleUnregisterProject(p.project_id, p.name)}
+                      className="btn text-xs text-[#888] hover:text-[#f66]"
+                      title="Remover projeto da lista do MemoryCard"
+                    >
+                      Remover
+                    </button>
+                  </>
                 ) : (
-                  <button
-                    onClick={() => {
-                      setRelinkingProject(p);
-                      setRelinkPath('');
-                    }}
-                    className="btn"
-                  >
-                    Relincar Pasta
-                  </button>
+                  <>
+                    <button
+                      onClick={() => {
+                        setRelinkingProject(p);
+                        setRelinkPath('');
+                      }}
+                      className="btn"
+                    >
+                      Relincar Pasta
+                    </button>
+                    <button
+                      onClick={() => handleUnregisterProject(p.project_id, p.name)}
+                      className="btn btn-danger text-xs"
+                      title="Remover projeto indisponível da lista"
+                    >
+                      Remover da Lista
+                    </button>
+                  </>
                 )}
               </div>
             </div>

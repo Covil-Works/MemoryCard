@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'node:http';
-import { readGlobalProjects, relinkProjectInGlobalRegistry } from '../storage/project-registry.js';
+import { readGlobalProjects, relinkProjectInGlobalRegistry, unregisterProjectFromGlobalRegistry } from '../storage/project-registry.js';
 import { ProjectService } from '../core/services/project-service.js';
 import { TaskService } from '../core/services/task-service.js';
 import { TodoService } from '../core/services/todo-service.js';
@@ -142,6 +142,23 @@ export async function handleApiRoute(req: IncomingMessage, res: ServerResponse):
       const body = await readJsonBody(req);
       await relinkProjectInGlobalRegistry(body.project_id, body.path);
       sendJson(res, 200, { success: true });
+    } catch (err: any) {
+      sendError(res, err);
+    }
+    return true;
+  }
+
+  const deleteProjectMatch = pathname.match(/^\/api\/projects\/([^/]+)$/);
+  if (deleteProjectMatch && method === 'DELETE') {
+    try {
+      const projectId = deleteProjectMatch[1];
+      const removed = await unregisterProjectFromGlobalRegistry(projectId);
+      if (!removed) {
+        sendJson(res, 404, { error: 'Projeto não encontrado no registro global.' });
+      } else {
+        sseManager.broadcast({ type: 'project-availability-changed', projectId });
+        sendJson(res, 200, { success: true });
+      }
     } catch (err: any) {
       sendError(res, err);
     }

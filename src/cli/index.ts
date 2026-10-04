@@ -6,6 +6,7 @@ import { TaskService } from '../core/services/task-service.js';
 import { TodoService } from '../core/services/todo-service.js';
 import { CommentService } from '../core/services/comment-service.js';
 import { StatusService } from '../core/services/status-service.js';
+import { readGlobalProjects, unregisterProjectFromGlobalRegistry } from '../storage/project-registry.js';
 
 export function createCli(): Command {
   const program = new Command();
@@ -67,6 +68,46 @@ export function createCli(): Command {
         const project = await ProjectService.getProject();
         const { startLocalServer } = await import('../server/index.js');
         await startLocalServer({ openBrowser: true, projectSlug: project.slug });
+      } catch (err: any) {
+        console.error(`Erro: ${err.message}`);
+        process.exit(1);
+      }
+    });
+
+  program
+    .command('projects')
+    .description('Lista todos os projetos registrados globalmente no MemoryCard')
+    .action(async () => {
+      try {
+        const { projects } = await readGlobalProjects();
+        if (projects.length === 0) {
+          console.log('Nenhum projeto registrado no MemoryCard.');
+          return;
+        }
+        console.log('NOME'.padEnd(25) + 'STATUS'.padEnd(14) + 'ID'.padEnd(38) + 'CAMINHO');
+        console.log('-'.repeat(95));
+        for (const p of projects) {
+          const status = p.available ? 'DISPONÍVEL' : 'INDISPONÍVEL';
+          console.log((p.name || '-').padEnd(25) + status.padEnd(14) + p.project_id.padEnd(38) + p.path);
+        }
+      } catch (err: any) {
+        console.error(`Erro: ${err.message}`);
+        process.exit(1);
+      }
+    });
+
+  program
+    .command('forget <id>')
+    .description('Remove um projeto da lista global sem apagar arquivos locais')
+    .action(async (id: string) => {
+      try {
+        const removed = await unregisterProjectFromGlobalRegistry(id);
+        if (removed) {
+          console.log(`Projeto "${id}" removido do registro global com sucesso.`);
+        } else {
+          console.error(`Projeto com ID "${id}" não encontrado no registro global.`);
+          process.exit(1);
+        }
       } catch (err: any) {
         console.error(`Erro: ${err.message}`);
         process.exit(1);

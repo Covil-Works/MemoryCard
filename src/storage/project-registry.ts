@@ -8,7 +8,7 @@ import { atomicWriteFile } from './atomic-write.js';
 import { computeHash } from './hashing.js';
 
 export function getGlobalMemoryCardDir(): string {
-  return path.join(os.homedir(), '.memorycard');
+  return process.env.MEMORYCARD_GLOBAL_DIR || path.join(os.homedir(), '.memorycard');
 }
 
 export function getGlobalProjectsJsonPath(): string {
@@ -179,4 +179,36 @@ export async function relinkProjectInGlobalRegistry(projectId: string, newPath: 
   }
 
   await registerProjectInGlobalRegistry(projectId, resolvedNewPath);
+}
+
+/**
+ * Remove um projeto do índice global projects.json.
+ * Não apaga os arquivos do projeto no disco, apenas o desregistra da listagem.
+ */
+export async function unregisterProjectFromGlobalRegistry(projectId: string): Promise<boolean> {
+  await ensureGlobalMemoryCardStructure();
+
+  const projectsJsonPath = getGlobalProjectsJsonPath();
+  let data: GlobalProjectsRegistry = { projects: [] };
+
+  try {
+    const rawContent = await fs.promises.readFile(projectsJsonPath, 'utf-8');
+    data = JSON.parse(rawContent);
+    if (!Array.isArray(data.projects)) {
+      data = { projects: [] };
+    }
+  } catch {
+    data = { projects: [] };
+  }
+
+  const initialLength = data.projects.length;
+  data.projects = data.projects.filter(p => p.project_id !== projectId);
+
+  if (data.projects.length !== initialLength) {
+    const outputContent = JSON.stringify(data, null, 2) + '\n';
+    await atomicWriteFile(projectsJsonPath, outputContent);
+    return true;
+  }
+
+  return false;
 }
