@@ -70,6 +70,17 @@ const translations = {
     selectFolder: 'Selecionando...',
     noProjects: 'Nenhum projeto registrado no MemoryCard.',
     noProjectsHint: 'Clique em "+ Novo Projeto" ou execute memorycard init no terminal.',
+    mobileAccess: 'Acessar no Celular',
+    mobileAccessDesc: 'Conecte seu celular através da rede local Wi-Fi.',
+    networkModalTitle: 'Acesso Móvel na Rede',
+    networkModalDesc: 'Abra o quadro e gerencie tarefas diretamente pelo seu smartphone.',
+    scanQrCode: 'Aponte a câmera do celular para abrir o MemoryCard instantaneamente:',
+    networkUrlLabel: 'Ou acesse pelo navegador do celular digitando o endereço:',
+    copyUrl: 'Copiar Endereço',
+    copied: 'Copiado!',
+    wifiTip: 'O celular e o computador precisam estar conectados na mesma rede Wi-Fi.',
+    noNetworkTitle: 'Rede local não detectada',
+    noNetworkDesc: 'Conecte seu computador a uma rede Wi-Fi para permitir o acesso de outros dispositivos.',
     columnMenu: 'Opções da coluna',
     renameColumn: 'Renomear coluna',
     deleteColumn: 'Excluir coluna',
@@ -137,6 +148,17 @@ const translations = {
     selectFolder: 'Selecting...',
     noProjects: 'No projects registered in MemoryCard.',
     noProjectsHint: 'Click "+ New Project" or run memorycard init in your terminal.',
+    mobileAccess: 'Mobile Access',
+    mobileAccessDesc: 'Connect your phone through the local Wi-Fi network.',
+    networkModalTitle: 'Local Network Mobile Access',
+    networkModalDesc: 'Open the board and manage tasks directly from your smartphone.',
+    scanQrCode: 'Point your phone camera to open MemoryCard instantly:',
+    networkUrlLabel: 'Or type this address into your phone browser:',
+    copyUrl: 'Copy Address',
+    copied: 'Copied!',
+    wifiTip: 'Your phone and computer must be connected to the same Wi-Fi network.',
+    noNetworkTitle: 'No local network detected',
+    noNetworkDesc: 'Connect this computer to a Wi-Fi network to allow access from other devices.',
     columnMenu: 'Column options',
     renameColumn: 'Rename column',
     deleteColumn: 'Delete column',
@@ -162,6 +184,8 @@ interface SettingsContextValue {
   setVisibilitySettings: (settings: VisibilitySettings) => void;
   isVisibilityModalOpen: boolean;
   setIsVisibilityModalOpen: (open: boolean) => void;
+  isNetworkModalOpen: boolean;
+  setIsNetworkModalOpen: (open: boolean) => void;
   projectActions: ProjectActions | null;
   setProjectActions: (actions: ProjectActions | null) => void;
   t: (key: TranslationKey) => string;
@@ -180,6 +204,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('pt-br');
   const [visibilitySettings, setVisibilitySettingsState] = useState<VisibilitySettings>(DEFAULT_VISIBILITY);
   const [isVisibilityModalOpen, setIsVisibilityModalOpen] = useState(false);
+  const [isNetworkModalOpen, setIsNetworkModalOpen] = useState(false);
   const [projectActions, setProjectActions] = useState<ProjectActions | null>(null);
 
   useEffect(() => {
@@ -244,6 +269,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         setVisibilitySettings,
         isVisibilityModalOpen,
         setIsVisibilityModalOpen,
+        isNetworkModalOpen,
+        setIsNetworkModalOpen,
         projectActions,
         setProjectActions,
         t,

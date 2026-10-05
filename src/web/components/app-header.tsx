@@ -6,7 +6,14 @@ import { usePathname } from 'next/navigation';
 import { useSettings } from './settings-context';
 
 export function AppHeader() {
-  const { language, setLanguage, projectActions, setIsVisibilityModalOpen, t } = useSettings();
+  const {
+    language,
+    setLanguage,
+    projectActions,
+    setIsVisibilityModalOpen,
+    setIsNetworkModalOpen,
+    t,
+  } = useSettings();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -56,6 +63,25 @@ export function AppHeader() {
             ← {t('dashboard')}
           </Link>
         )}
+
+        {/* Botão Acesso Celular (Apenas Computador/Desktop) */}
+        <button
+          onClick={() => setIsNetworkModalOpen(true)}
+          className="hidden sm:inline-flex items-center gap-1.5 p-1.5 sm:px-2.5 sm:py-1 text-gray-300 hover:text-white hover:bg-[#1a1a1a] border border-[#2b2b2b] hover:border-[#444] transition-colors rounded-sm text-xs font-mono"
+          title={t('mobileAccess')}
+        >
+          <svg
+            className="w-4 h-4 text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2" strokeWidth="2" />
+            <path d="M12 18h.01" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <span className="text-xs">{t('mobileAccess')}</span>
+        </button>
 
         {/* Botão dos 3 tracinhos (Menu Hamburguer) */}
         <div className="relative">
@@ -121,10 +147,28 @@ export function AppHeader() {
                 className="w-full text-left px-3 py-2 text-gray-200 hover:bg-[#1e1e1e] hover:text-white flex items-center justify-between transition-colors border border-transparent hover:border-[#333]"
               >
                 <span>{t('visibility')}</span>
-                <span className="text-[10px] text-[#888]">⚙</span>
+                <span className="text-[10px] text-[#777]">→</span>
               </button>
 
               <div className="border-t border-[#222] my-1" />
+
+              {/* Acesso no Celular (Apenas no Computador/Desktop) */}
+              <div className="hidden sm:block">
+                <div className="px-2 pt-1 pb-0.5 text-[10px] text-[#666] uppercase tracking-wider font-bold">
+                  {t('mobileAccess')}
+                </div>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setIsNetworkModalOpen(true);
+                  }}
+                  className="w-full text-left px-3 py-2 text-gray-200 hover:bg-[#1e1e1e] hover:text-white flex items-center justify-between transition-colors border border-transparent hover:border-[#333]"
+                >
+                  <span>{t('mobileAccess')}</span>
+                  <span className="text-[10px] text-[#777]">→</span>
+                </button>
+                <div className="border-t border-[#222] my-1" />
+              </div>
 
               {/* Idioma */}
               <div className="px-2 pt-1 pb-0.5 text-[10px] text-[#666] uppercase tracking-wider font-bold">

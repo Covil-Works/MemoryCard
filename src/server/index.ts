@@ -1,4 +1,5 @@
 import http from 'node:http';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import open from 'open';
@@ -9,20 +10,45 @@ const __dirname = path.dirname(__filename);
 
 export interface ServerOptions {
   port?: number;
+  host?: string;
   openBrowser?: boolean;
   projectSlug?: string;
+  qr?: boolean;
 }
 
 export interface RunningServer {
   server: http.Server;
   port: number;
+  host: string;
   url: string;
+  networkUrl: string | null;
+  networkAddresses: string[];
   close: () => Promise<void>;
 }
 
 let globalServerInstance: RunningServer | null = null;
 
-export async function createLocalServer(port: number = 3333): Promise<RunningServer> {
+export function getRunningServerInstance(): RunningServer | null {
+  return globalServerInstance;
+}
+
+/**
+ * Retorna todos os endereços IPv4 externos disponíveis nesta máquina (Wi-Fi, Ethernet, etc.).
+ */
+export function getNetworkAddresses(port: number): string[] {
+  const interfaces = os.networkInterfaces();
+  const addresses: string[] = [];
+  for (const name of Object.keys(interfaces)) {
+    for (const net of interfaces[name] || []) {
+      if (net.family === 'IPv4' && !net.internal) {
+        addresses.push(`http://${net.address}:${port}`);
+      }
+    }
+  }
+  return addresses;
+}
+
+export async function createLocalServer(port: number = 3333, host: string = '0.0.0.0'): Promise<RunningServer> {
   const isDev = process.env.NODE_ENV !== 'production';
 
   // Tentativa de carregar Next.js dinamicamente se disponível
@@ -91,12 +117,17 @@ export async function createLocalServer(port: number = 3333): Promise<RunningSer
       }
     });
 
-    server.listen(port, () => {
+    server.listen(port, host, () => {
       const url = `http://localhost:${port}`;
+      const networkAddresses = getNetworkAddresses(port);
+      const networkUrl = networkAddresses[0] || null;
       const running: RunningServer = {
         server,
         port,
+        host,
         url,
+        networkUrl,
+        networkAddresses,
         close: async () => {
           return new Promise(resClose => server.close(() => resClose()));
         }
@@ -112,6 +143,7 @@ export async function createLocalServer(port: number = 3333): Promise<RunningSer
  */
 export async function startLocalServer(options: ServerOptions = {}): Promise<RunningServer> {
   const preferredPort = options.port || 3333;
+  const host = options.host || '0.0.0.0';
   const projectSlug = options.projectSlug;
 
   // Se já houver instância ativa neste processo
@@ -137,14 +169,36 @@ export async function startLocalServer(options: ServerOptions = {}): Promise<Run
 
   if (isPortResponding) {
     const targetUrl = projectSlug ? `http://localhost:${preferredPort}/${projectSlug}` : `http://localhost:${preferredPort}`;
-    console.log(`MemoryCard já está rodando em ${targetUrl}`);
+    const networkAddrs = getNetworkAddresses(preferredPort);
+    const targetNetworkUrl = networkAddrs[0]
+      ? (projectSlug ? `${networkAddrs[0]}/${projectSlug}` : networkAddrs[0])
+      : null;
+
+    console.log(`\n  \x1b[1m\x1b[32m[MemoryCard] Servidor já em execução:\x1b[0m`);
+    console.log(`  > \x1b[1mLocal:\x1b[0m   ${targetUrl}`);
+    if (targetNetworkUrl) {
+      console.log(`  > \x1b[1mRede:\x1b[0m    ${targetNetworkUrl}`);
+      console.log(`  \x1b[2m(Acesse do seu celular ou qualquer dispositivo no mesmo Wi-Fi)\x1b[0m`);
+    }
+
+    if (options.qr && targetNetworkUrl) {
+      try {
+        const qrcode = (await import('qrcode')).default;
+        const qrStr = await qrcode.toString(targetNetworkUrl, { type: 'terminal', small: true });
+        console.log(`\n${qrStr}\n`);
+      } catch {}
+    }
+
     if (options.openBrowser) {
       await open(targetUrl).catch(() => {});
     }
     return {
       server: null as any,
       port: preferredPort,
+      host,
       url: `http://localhost:${preferredPort}`,
+      networkUrl: targetNetworkUrl,
+      networkAddresses: networkAddrs,
       close: async () => {}
     };
   }
@@ -155,7 +209,7 @@ export async function startLocalServer(options: ServerOptions = {}): Promise<Run
 
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
-      running = await createLocalServer(currentPort);
+      running = await createLocalServer(currentPort, host);
       break;
     } catch (err: any) {
       if (err.code === 'EADDRINUSE') {
@@ -171,7 +225,26 @@ export async function startLocalServer(options: ServerOptions = {}): Promise<Run
   }
 
   const targetUrl = projectSlug ? `${running.url}/${projectSlug}` : running.url;
-  console.log(`MemoryCard rodando em ${running.url}`);
+  const targetNetworkUrl = running.networkUrl
+    ? (projectSlug ? `${running.networkUrl}/${projectSlug}` : running.networkUrl)
+    : null;
+
+  console.log(`\n  \x1b[1m\x1b[32m[MemoryCard] Servidor ativo:\x1b[0m`);
+  console.log(`  > \x1b[1mLocal:\x1b[0m   ${targetUrl}`);
+  if (targetNetworkUrl) {
+    console.log(`  > \x1b[1mRede:\x1b[0m    ${targetNetworkUrl}`);
+    console.log(`  \x1b[2m(Acesse do seu celular ou qualquer dispositivo no mesmo Wi-Fi)\x1b[0m`);
+  }
+
+  if (options.qr && targetNetworkUrl) {
+    try {
+      const qrcode = (await import('qrcode')).default;
+      const qrStr = await qrcode.toString(targetNetworkUrl, { type: 'terminal', small: true });
+      console.log(`\n${qrStr}\n`);
+    } catch {}
+  } else if (targetNetworkUrl) {
+    console.log(`  \x1b[2mDica: use 'memorycard --qr' ou use o botão 'Celular' no computador para escanear com a câmera.\x1b[0m\n`);
+  }
 
   if (options.openBrowser) {
     await open(targetUrl).catch(() => {});

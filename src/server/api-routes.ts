@@ -109,7 +109,52 @@ export async function handleApiRoute(req: IncomingMessage, res: ServerResponse):
     return true;
   }
 
-  // 3. Projetos Globais
+  // 3. Informações de rede local para acesso por celular / outros dispositivos
+  if (pathname === '/api/system/network' && method === 'GET') {
+    try {
+      const { getNetworkAddresses, getRunningServerInstance } = await import('./index.js');
+      const running = getRunningServerInstance();
+      const port = running?.port || 3333;
+      const networkAddresses = getNetworkAddresses(port);
+      const networkBase = networkAddresses[0] || null;
+
+      const targetPath = url.searchParams.get('path') || '';
+      const cleanPath = targetPath.startsWith('/') ? targetPath : (targetPath ? `/${targetPath}` : '');
+      const localUrl = `http://localhost:${port}${cleanPath}`;
+      const networkUrl = networkBase ? `${networkBase}${cleanPath}` : null;
+
+      let qrDataUrl: string | null = null;
+      if (networkUrl) {
+        try {
+          const qrcode = (await import('qrcode')).default;
+          qrDataUrl = await qrcode.toDataURL(networkUrl, {
+            margin: 1,
+            width: 240,
+            color: {
+              dark: '#000000',
+              light: '#ffffff'
+            }
+          });
+        } catch (err: any) {
+          console.error('Erro ao gerar QR code:', err);
+        }
+      }
+
+      sendJson(res, 200, {
+        port,
+        local: localUrl,
+        network: networkUrl,
+        networkAddresses,
+        qrDataUrl,
+        hasNetwork: !!networkUrl
+      });
+    } catch (err: any) {
+      sendError(res, err);
+    }
+    return true;
+  }
+
+  // 4. Projetos Globais
   if (pathname === '/api/projects' && method === 'GET') {
     try {
       const { projects } = await readGlobalProjects();

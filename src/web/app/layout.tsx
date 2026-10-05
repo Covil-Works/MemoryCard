@@ -3,6 +3,7 @@ import React from 'react';
 import { SettingsProvider } from '../components/settings-context';
 import { AppHeader } from '../components/app-header';
 import { VisibilityModal } from '../components/visibility-modal';
+import { NetworkModal } from '../components/network-modal';
 
 export const metadata = {
   title: 'MemoryCard',
@@ -29,6 +30,7 @@ export default function RootLayout({
             {children}
           </main>
           <VisibilityModal />
+          <NetworkModal />
         </SettingsProvider>
       </body>
     </html>

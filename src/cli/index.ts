@@ -15,11 +15,42 @@ export function createCli(): Command {
     .name('memorycard')
     .description('Plataforma para gerenciamento de memória e estados das tasks de projetos')
     .version('0.1.0')
-    .action(async () => {
+    .option('-p, --port <port>', 'Porta do servidor web', '3333')
+    .option('-H, --host <host>', 'Host de escuta do servidor (padrão: 0.0.0.0 para acesso em rede local)', '0.0.0.0')
+    .option('--qr', 'Exibe o QR code no terminal para conexão rápida pelo celular')
+    .option('--no-open', 'Não abrir o navegador automaticamente')
+    .action(async (options: any) => {
       // memorycard sem argumentos: inicia servidor e abre interface
       try {
         const { startLocalServer } = await import('../server/index.js');
-        await startLocalServer({ openBrowser: true });
+        await startLocalServer({
+          port: options.port ? Number(options.port) : 3333,
+          host: options.host || '0.0.0.0',
+          openBrowser: options.open !== false,
+          qr: Boolean(options.qr)
+        });
+      } catch (err: any) {
+        console.error(`Erro ao iniciar servidor: ${err.message}`);
+        process.exit(1);
+      }
+    });
+
+  program
+    .command('ui')
+    .description('Inicia o servidor e interface web do MemoryCard')
+    .option('-p, --port <port>', 'Porta do servidor web', '3333')
+    .option('-H, --host <host>', 'Host de escuta do servidor (padrão: 0.0.0.0 para acesso em rede local)', '0.0.0.0')
+    .option('--qr', 'Exibe o QR code no terminal para conexão rápida pelo celular')
+    .option('--no-open', 'Não abrir o navegador automaticamente')
+    .action(async (options: any) => {
+      try {
+        const { startLocalServer } = await import('../server/index.js');
+        await startLocalServer({
+          port: options.port ? Number(options.port) : 3333,
+          host: options.host || '0.0.0.0',
+          openBrowser: options.open !== false,
+          qr: Boolean(options.qr)
+        });
       } catch (err: any) {
         console.error(`Erro ao iniciar servidor: ${err.message}`);
         process.exit(1);
@@ -63,11 +94,20 @@ export function createCli(): Command {
   program
     .command('open')
     .description('Abre diretamente o board do projeto atual no navegador')
-    .action(async () => {
+    .option('-p, --port <port>', 'Porta do servidor web', '3333')
+    .option('-H, --host <host>', 'Host de escuta do servidor (padrão: 0.0.0.0)', '0.0.0.0')
+    .option('--qr', 'Exibe o QR code no terminal para conexão rápida pelo celular')
+    .action(async (options: any) => {
       try {
         const project = await ProjectService.getProject();
         const { startLocalServer } = await import('../server/index.js');
-        await startLocalServer({ openBrowser: true, projectSlug: project.slug });
+        await startLocalServer({
+          port: options.port ? Number(options.port) : 3333,
+          host: options.host || '0.0.0.0',
+          openBrowser: true,
+          projectSlug: project.slug,
+          qr: Boolean(options.qr)
+        });
       } catch (err: any) {
         console.error(`Erro: ${err.message}`);
         process.exit(1);

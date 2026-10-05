@@ -30,3 +30,5 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
 - [docs/architecture/ADR-UI.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/architecture/ADR-UI.md): Decisões arquiteturais de UI e Frontend Web:
   - **`ADR-UI-001`**: *Independência de Diretório de Execução (`process.cwd()`)*.
   - **`ADR-UI-002`**: *Resiliência de Eventos SSE (Server-Sent Events)*.
+  - **`ADR-UI-003`**: *Servidor Acessível em Rede Local (`0.0.0.0`) e Conexão de Dispositivos Móveis*.
+
