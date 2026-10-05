@@ -1,22 +1,26 @@
-# Orientações para Agentes de IA (AGENTS.md)
+# Orientações para Agentes de IA — Roteador de Contexto (`AGENTS.md`)
 
 Este repositório contém o código do **MemoryCard**, uma plataforma para gerenciamento de memória e estados de tasks em projetos de software.
 
-## Regras de Testes
-As diretrizes e decisões arquiteturais sobre testes automatizados estão descritas em [tests/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/tests/AGENTS.md).
-- **Proibido alterar testes existentes:** Ao criar ou editar funcionalidades no código da aplicação, **NÃO** altere os testes existentes. Eles servem para validar e garantir o comportamento esperado do que estamos desenvolvendo (o código deve se adequar aos testes, e nunca o inverso).
-- Todo teste deve respeitar o isolamento absoluto de diretórios e variáveis globais.
-- Jamais execute testes que possam gravar no diretório de usuário real (`~/.memorycard`).
+Este documento funciona como um **roteador de contexto**. Não concentramos regras técnicas, decisões de implementação ou convenções aqui na raiz. Sempre consulte a documentação detalhada nos locais indicados abaixo antes de propor alterações.
 
-## Regras de Interface Web
-As diretrizes sobre build, estilos (Tailwind/PostCSS) e resiliência de frontend estão descritas em [src/web/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/src/web/AGENTS.md).
+---
 
-## Princípios de Desenvolvimento
-1. **Integridade de Armazenamento:** Modificações em arquivos de configuração e tasks utilizam escrita atômica (`atomicWriteFile`) e validação de concorrência com base em hash SHA-256 (`If-Match`).
-2. **Separação Local vs Global:** Projetos individuais mantêm suas configurações e tasks em `.memorycard/` no diretório raiz do projeto; o diretório global (`MEMORYCARD_GLOBAL_DIR` ou `~/.memorycard/`) gerencia apenas o índice de projetos (`projects.json`) e modelos globais.
-3. **Não Poluição de Ambiente:** Qualquer script, CLI ou teste executado em ambiente de desenvolvimento deve preservar a integridade do sistema operacional e limpar recursos temporários.
+## 🧭 Roteamento de Contexto
 
-## Documentação do Projeto
-Para guardar documentações transversais (regras, decisões arquiteturais e convenções), utilizamos a pasta `docs/`.
-E para ser um mapa geral de navegação de toda a documentação, consulte [docs/index.md](memorycard/docs/index.md).
-For documentation discovery, start with `docs/index.md`. Do not scan the entire docs directory unless necessary.
+### 1. Documentação Geral e Descoberta
+Para qualquer decisão técnica, arquitetura, regras de negócio ou convenções:
+- **Ponto de entrada mestre:** [docs/index.md](/memorycard/docs/index.md) (utilize este mapa para descobrir os documentos relevantes sem varrer toda a pasta).
+- **Como documentar e manter padrões:** [docs/AGENTS.md](memorycard/docs/AGENTS.md).
+
+### 2. Decisões de Arquitetura de Software (ADRs)
+As decisões sobre como o sistema deve ser construído estão catalogadas por contexto na pasta `docs/architecture/`:
+- **Armazenamento, concorrência e integridade:** [docs/architecture/ADR-STORAGE.md](memorycard/docs/architecture/ADR-STORAGE.md).
+- **Interface Web e Frontend:** [docs/architecture/ADR-UI.md](memorycard/docs/architecture/ADR-UI.md).
+
+### 3. Convenções de Interface do Usuário (UI)
+- Para padrões visuais, criação de componentes e modais: [docs/ui/conventions.md](memorycard/docs/ui/conventions.md).
+
+### 4. Suíte de Testes Automatizados
+- Para diretrizes obrigatórias de testes: [tests/AGENTS.md](memorycard/tests/AGENTS.md).
+

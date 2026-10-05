@@ -26,12 +26,25 @@ Para garantir rastreabilidade em commits, PRs, tarefas e revisões de código, *
   1. **ID e Título:** `UI-XXX: [Nome da Convenção]`
   2. **Contexto e Motivação:** Problema de UX/UI resolvido pelo padrão.
   3. **Estrutura e Anatomia:** Detalhamento da hierarquia visual e funcional.
-  4. **Exemplo Prático:** Código ou telas de referência na aplicação.
+- **Rigor Documental:** Não crie ou deduza novas convenções sem validação e alinhamento prévio; registre apenas decisões expressamente acordadas ou migradas de fontes oficiais do projeto.
 
 ---
 
-## 4. Organização de Subdiretórios
+## 4. Identificação e Estrutura de Decisões de Arquitetura (ADRs)
+Para assegurar rastreabilidade técnica e governança das escolhas estruturais do projeto, **todas as decisões de arquitetura devem ser catalogadas na pasta `docs/architecture/`, separadas por contexto e identificadas de forma única**:
+- **Organização por Contexto:** Arquivos nomeados no padrão `ADR-<CONTEXTO>.md` (ex.: [docs/architecture/ADR-UI.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/architecture/ADR-UI.md)).
+- **Identificador Único por Decisão:** Cada decisão arquitetural dentro de um arquivo de contexto deve receber um identificador sequencial próprio: `ADR-<CONTEXTO>-XXX` (ex.: `ADR-UI-001`, `ADR-UI-002`, etc.).
+- **Estrutura Obrigatória de cada Decisão:**
+  1. **ID e Título:** `ADR-<CONTEXTO>-XXX: [Nome da Decisão]`
+  2. **Contexto e Motivação:** Problema arquitetural, restrições operacionais ou limitações de ambiente.
+  3. **Decisão Arquitetural e Regras:** Regras mandatórias, restrições técnicas e diretrizes de implementação adotadas.
+- **Rigor Documental:** Não crie ou deduza novas regras arquiteturais sem validação e alinhamento prévio; registre apenas decisões expressamente acordadas ou migradas de fontes oficiais do projeto.
+
+---
+
+## 5. Organização de Subdiretórios
 Mantenha a organização temática modular:
-- `docs/ui/`: Convenções, design tokens e diretrizes de interface.
-- `docs/architecture/`: Diagramas conceituais e decisões de arquitetura de software (ADRs).
+- `docs/ui/`: Convenções visuais, design tokens e diretrizes de interface (`UI-XXX`).
+- `docs/architecture/`: Decisões de arquitetura de software agrupadas por contexto (`ADR-<CONTEXTO>.md` e `ADR-<CONTEXTO>-XXX`).
 - Demais temas transversais devem ser criados sob subpastas específicas e referenciados no índice.
+
