@@ -233,7 +233,7 @@ export function TaskModal({
         {/* Banner de Conflito de Concorrência Otimista (OCC) */}
         {conflictWarning && (
           <div className="p-3 bg-[#2b2200] border border-[#ffcc00] text-[#fff3a8] text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <span>⚠️ Arquivo alterado externamente no disco. Salvar irá falhar devido a conflito de versão.</span>
+            <span><strong className="text-amber-400 font-bold mr-1">[Aviso]</strong>Arquivo alterado externamente no disco. Salvar irá falhar devido a conflito de versão.</span>
             <button
               onClick={loadTask}
               className="btn text-xs bg-white text-black border-white hover:bg-gray-200 self-start sm:self-auto shrink-0"

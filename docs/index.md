@@ -19,6 +19,7 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
   - **`UI-001`**: *Padrão Estrutural de Configurações por Temas e Opções Contextuais*.
   - **`UI-002`**: *Criação de Novos Componentes e Utilitários*.
   - **`UI-003`**: *Responsividade Mobile e Quadro Kanban com Rolagem Horizontal Isolada*.
+  - **`UI-004`**: *Proibição de Emojis na Interface do Usuário (No-Emoji Policy)*.
 
 ---
 

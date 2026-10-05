@@ -13,6 +13,7 @@ Cada convenção possui um identificador sequencial único (`UI-XXX`) para facil
 | [UI-001](#ui-001-padrão-estrutural-de-configurações-por-temas-e-opções-contextuais) | Padrão Estrutural de Configurações por Temas e Opções Contextuais | Modais e Painéis de Configuração |
 | [UI-002](#ui-002-criação-de-novos-componentes-e-utilitários) | Criação de Novos Componentes e Utilitários | Componentes e Estilos Web |
 | [UI-003](#ui-003-responsividade-mobile-e-quadro-kanban-com-rolagem-horizontal-isolada) | Responsividade Mobile e Quadro Kanban com Rolagem Horizontal Isolada | Layout Geral e Quadro Kanban |
+| [UI-004](#ui-004-proibição-de-emojis-na-interface-do-usuário-no-emoji-policy) | Proibição de Emojis na Interface do Usuário (No-Emoji Policy) | Geral (UI & UX) |
 
 ---
 
@@ -87,4 +88,18 @@ No quadro Kanban, o fluxo de colunas não deve ser quebrado verticalmente; a dis
 3. **Largura das Colunas em Modo Mobile:** Em telas menores que `640px` (`sm:`), as colunas utilizam largura dinâmica de visualização parcial (`w-[82vw] max-w-[320px] sm:w-[290px]`) acompanhada de `snap-start` e `snap-x snap-proximity`. Isso exibe a coluna em foco e deixa a borda da próxima coluna visível à direita, sinalizando intuitivamente a capacidade de deslizamento.
 4. **Modais Responsivos:** Todos os modais devem limitar sua altura com `max-h-[90vh] sm:max-h-[85vh]` e `my-auto`, permitindo rolagem interna no corpo do modal em telas pequenas.
 5. **Prevenção de Auto-Zoom no iOS:** Todos os campos editáveis (`input`, `textarea`, `select`) devem possuir fonte mínima de `16px` em resoluções mobile (`@media (max-width: 640px)`), prevenindo que o WebKit execute auto-zoom na tela ao focar.
+
+---
+
+## UI-004: Proibição de Emojis na Interface do Usuário (No-Emoji Policy)
+
+### 1. Contexto e Motivação
+O **MemoryCard** adota uma identidade visual técnica, sóbria, monocromática e minimalista voltada a desenvolvedores e agentes de IA. O uso de emojis Unicode decorativos (ex.: 📱, 💡, ⚠️, ⚙, etc.) em rótulos, títulos, botões e modais compromete a consistência e a seriedade da aplicação, além de gerar renderizações visuais díspares e imprevisíveis entre diferentes plataformas (Android, iOS, Windows, macOS e distribuições Linux).
+
+### 2. Diretrizes de Aplicação
+1. **Tolerância Zero para Emojis em Textos de UI:** É terminantemente proibido o uso de emojis de texto Unicode em qualquer elemento visível da interface gráfica (incluindo cabeçalhos, botões, opções de menu, formulários, alertas e modais).
+2. **Iconografia Profissional Vetorial:** Sempre que for estritamente necessária uma representação gráfica além do texto puro, deve-se empregar ícones vetoriais padronizados (SVGs limpos ou pacotes profissionais dedicados como `lucide-react`), respeitando a paleta e traço do design system.
+3. **Indicadores de Status Textuais e Monospaçados:** Alertas, tags e badges de estado devem priorizar rótulos textuais claros (ex.: `[Aviso]`, `[INFO]`, `ERRO`) com estilização tipográfica monocromática e contraste semântico sutil via cores de borda/texto, sem depender de ilustrações cartunescas.
+4. **Exibição Condicional de Controles Móveis:** Recursos voltados a conectar smartphones (como o botão e opção de menu "Acessar no Celular") devem ser exibidos unicamente no ambiente desktop (`hidden sm:inline-flex` / `hidden sm:block`), evitando poluir a interface quando o usuário já estiver operando a partir do próprio dispositivo móvel.
+
 
