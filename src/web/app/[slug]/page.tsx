@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useSSE } from '../../hooks/use-sse';
 import { TaskModal } from '../../components/task-modal';
 import { NewTaskModal } from '../../components/new-task-modal';
+import { NewColumnModal } from '../../components/new-column-modal';
 import { ModelsModal } from '../../components/models-modal';
+import { useSettings } from '../../components/settings-context';
 
 interface Column {
   id: string;
@@ -38,6 +40,7 @@ interface ProjectInfo {
 
 export default function ProjectBoardPage({ params }: { params: { slug: string } }) {
   const slug = params.slug;
+  const { t, setProjectActions, getColumnTasksStyle } = useSettings();
 
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -49,6 +52,8 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
   const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
   const [externalConflictForActiveTask, setExternalConflictForActiveTask] = useState(false);
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
+  const [newTaskTargetColumn, setNewTaskTargetColumn] = useState<string | null>(null);
+  const [isNewColumnModalOpen, setIsNewColumnModalOpen] = useState(false);
   const [isModelsModalOpen, setIsModelsModalOpen] = useState(false);
 
   // Drag and drop state
@@ -85,6 +90,19 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
   useEffect(() => {
     fetchProjectData();
   }, [slug]);
+
+  // Registra as ações de projeto para o menu dos três tracinhos no canto superior direito
+  useEffect(() => {
+    if (projectInfo) {
+      setProjectActions({
+        openModelsModal: () => setIsModelsModalOpen(true),
+        projectName: projectInfo.config.project.name,
+      });
+    }
+    return () => {
+      setProjectActions(null);
+    };
+  }, [projectInfo]);
 
   // Atualização em tempo real via SSE (§24)
   useSSE((event) => {
@@ -157,7 +175,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
   };
 
   if (loading) {
-    return <div className="text-center py-20 text-[#666] font-mono text-xs">Carregando board...</div>;
+    return <div className="text-center py-20 text-[#666] font-mono text-xs">{t('loading')}</div>;
   }
 
   if (error || !projectInfo) {
@@ -171,14 +189,14 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
   const columns = projectInfo.config.columns || [];
 
   return (
-    <div className="flex-1 flex flex-col gap-4">
+    <div className="flex-1 flex flex-col gap-4 w-full max-w-full min-w-0">
       {/* Cabeçalho do Board */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#222] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#222] pb-4 shrink-0">
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-lg font-bold font-mono text-white">{projectInfo.config.project.name}</h1>
             <span className="text-[10px] font-mono px-2 py-0.5 border border-[#333] text-[#888]">
-              MODELO: {projectInfo.config.task_model}
+              {t('model')} {projectInfo.config.task_model}
             </span>
           </div>
           <div className="text-xs text-[#666] font-mono mt-0.5">{projectInfo.rootDir}</div>
@@ -186,103 +204,121 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <label className="text-[10px] font-mono text-[#777]">ORDENAR:</label>
+            <label className="text-[10px] font-mono text-[#777]">{t('sort')}</label>
             <select
               className="select text-xs font-mono py-1 px-2"
               value={projectInfo.config.board.sort}
               onChange={(e) => handleSortChange(e.target.value)}
             >
-              <option value="updated_at">Mais Recente (updated_at)</option>
-              <option value="alphabetical">Alfabética (A-Z)</option>
-              <option value="custom">Manual (Custom)</option>
+              <option value="updated_at">{t('sortRecent')}</option>
+              <option value="alphabetical">{t('sortAlpha')}</option>
+              <option value="custom">{t('sortCustom')}</option>
             </select>
           </div>
 
-          <button onClick={() => setIsModelsModalOpen(true)} className="btn text-xs">
-            Modelos
-          </button>
-
-          <button onClick={() => setIsNewTaskModalOpen(true)} className="btn btn-primary text-xs">
-            + Nova Task
+          {/* Botão Nova Coluna (substitui o botão de nova task no canto superior direito) */}
+          <button
+            onClick={() => setIsNewColumnModalOpen(true)}
+            className="btn btn-primary text-xs"
+          >
+            {t('newColumn')}
           </button>
         </div>
       </div>
 
-      {/* Grid de Colunas Kanban */}
-      <div className="flex-1 grid grid-cols-1 md:grid-flow-col auto-cols-fr gap-4 overflow-x-auto min-h-[600px] items-start pb-4">
-        {columns.map((column) => {
-          const columnTasks = tasks.filter((t) => t.status === column.id);
-          const isDragOver = dragOverColumn === column.id;
+      {/* Grid de Colunas Kanban com Scroll Horizontal Isolado */}
+      <div className="w-full max-w-full overflow-x-auto pb-4 custom-scrollbar">
+        <div className="flex flex-row items-start gap-4 min-w-max pb-2">
+          {columns.map((column) => {
+            const columnTasks = tasks.filter((t) => t.status === column.id);
+            const isDragOver = dragOverColumn === column.id;
 
-          return (
-            <div
-              key={column.id}
-              onDragOver={(e) => handleDragOver(e, column.id)}
-              onDragLeave={() => setDragOverColumn(null)}
-              onDrop={(e) => handleDrop(e, column.id)}
-              className={`flex flex-col bg-[#0c0c0c] border min-w-[280px] h-full transition-colors ${
-                isDragOver ? 'border-white bg-[#151515]' : 'border-[#222]'
-              }`}
-            >
-              {/* Cabeçalho da Coluna */}
-              <div className="p-3 border-b border-[#222] flex items-center justify-between">
-                <span className="font-mono font-bold text-xs text-white uppercase tracking-wider">
-                  {column.name}
-                </span>
-                <span className="font-mono text-xs text-[#666] bg-[#1a1a1a] px-1.5 py-0.2">
-                  {columnTasks.length}
-                </span>
-              </div>
-
-              {/* Lista de Cards */}
-              <div className="flex-1 p-2 flex flex-col gap-2 overflow-y-auto max-h-[75vh]">
-                {columnTasks.length === 0 ? (
-                  <div className="text-center py-8 text-[11px] text-[#444] font-mono italic">
-                    Arraste cards para cá
+            return (
+              <div
+                key={column.id}
+                onDragOver={(e) => handleDragOver(e, column.id)}
+                onDragLeave={() => setDragOverColumn(null)}
+                onDrop={(e) => handleDrop(e, column.id)}
+                className={`flex flex-col bg-[#0c0c0c] border w-[290px] shrink-0 transition-colors ${
+                  isDragOver ? 'border-white bg-[#151515]' : 'border-[#222]'
+                }`}
+              >
+                {/* Cabeçalho da Coluna com botão + Task */}
+                <div className="p-3 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="font-mono font-bold text-xs text-white uppercase tracking-wider truncate">
+                      {column.name}
+                    </span>
+                    <span className="font-mono text-xs text-[#666] bg-[#1a1a1a] px-1.5 py-0.2 shrink-0">
+                      {columnTasks.length}
+                    </span>
                   </div>
-                ) : (
-                  columnTasks.map((task) => {
-                    const totalTodos = task.todos?.length || 0;
-                    const completedTodos = task.todos?.filter((t) => t.completed).length || 0;
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewTaskTargetColumn(column.id);
+                      setIsNewTaskModalOpen(true);
+                    }}
+                    className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0 ml-2"
+                    title={`Adicionar task em ${column.name}`}
+                  >
+                    {t('addTask')}
+                  </button>
+                </div>
 
-                    return (
-                      <div
-                        key={task.id}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, task.id)}
-                        onClick={() => {
-                          setActiveTaskId(task.id);
-                          setExternalConflictForActiveTask(false);
-                        }}
-                        className="p-3 bg-[#111] border border-[#222] hover:border-[#555] cursor-pointer flex flex-col gap-2 transition-all hover:bg-[#161616]"
-                      >
-                        <div className="flex items-center justify-between text-[11px] font-mono">
-                          <span className="text-[#888] font-bold">#{task.id}</span>
-                          <span className="text-[10px] text-[#555]">
-                            {task.updated_at.split('T')[1]?.slice(0, 5)}
-                          </span>
-                        </div>
+                {/* Lista de Cards com limite de altura configurável e scroll vertical interno */}
+                <div
+                  className="p-2 flex flex-col gap-2 overflow-y-auto"
+                  style={getColumnTasksStyle()}
+                >
+                  {columnTasks.length === 0 ? (
+                    <div className="text-center py-8 text-[11px] text-[#444] font-mono italic">
+                      {t('emptyColumn')}
+                    </div>
+                  ) : (
+                    columnTasks.map((task) => {
+                      const totalTodos = task.todos?.length || 0;
+                      const completedTodos = task.todos?.filter((t) => t.completed).length || 0;
 
-                        <div className="text-xs font-medium text-gray-200 line-clamp-2">
-                          {task.title}
-                        </div>
-
-                        {totalTodos > 0 && (
-                          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#777] mt-1">
-                            <span className="text-white">
-                              {completedTodos}/{totalTodos}
+                      return (
+                        <div
+                          key={task.id}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, task.id)}
+                          onClick={() => {
+                            setActiveTaskId(task.id);
+                            setExternalConflictForActiveTask(false);
+                          }}
+                          className="p-3 bg-[#111] border border-[#222] hover:border-[#555] cursor-pointer flex flex-col gap-2 transition-all hover:bg-[#161616]"
+                        >
+                          <div className="flex items-center justify-between text-[11px] font-mono">
+                            <span className="text-[#888] font-bold">#{task.id}</span>
+                            <span className="text-[10px] text-[#555]">
+                              {task.updated_at.split('T')[1]?.slice(0, 5)}
                             </span>
-                            <span>todos</span>
                           </div>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
+
+                          <div className="text-xs font-medium text-gray-200 line-clamp-2">
+                            {task.title}
+                          </div>
+
+                          {totalTodos > 0 && (
+                            <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#777] mt-1">
+                              <span className="text-white">
+                                {completedTodos}/{totalTodos}
+                              </span>
+                              <span>todos</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* Modal de Detalhes / Edição de Task */}
@@ -299,19 +335,32 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
         />
       )}
 
-      {/* Modal de Criação de Task */}
+      {/* Modal de Criação de Task vinculada à respectiva coluna */}
       {isNewTaskModalOpen && (
         <NewTaskModal
           slug={slug}
           columns={columns}
           models={models}
+          defaultStatus={newTaskTargetColumn || columns[0]?.id}
           defaultModel={projectInfo.config.task_model}
-          onClose={() => setIsNewTaskModalOpen(false)}
+          onClose={() => {
+            setIsNewTaskModalOpen(false);
+            setNewTaskTargetColumn(null);
+          }}
           onTaskCreated={fetchProjectData}
         />
       )}
 
-      {/* Modal de Modelos */}
+      {/* Modal de Nova Coluna */}
+      {isNewColumnModalOpen && (
+        <NewColumnModal
+          slug={slug}
+          onClose={() => setIsNewColumnModalOpen(false)}
+          onColumnCreated={fetchProjectData}
+        />
+      )}
+
+      {/* Modal de Modelos (acionado via menu dos três tracinhos no canto superior direito) */}
       {isModelsModalOpen && (
         <ModelsModal
           slug={slug}

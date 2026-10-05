@@ -118,19 +118,20 @@ export function ModelsModal({
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-      <div className="bg-[#111] border border-[#333] max-w-2xl w-full p-6 flex flex-col gap-4 text-sm max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-[#222] pb-3">
+      <div className="bg-[#111] border border-[#333] max-w-2xl w-full max-h-[80vh] my-[10vh] flex flex-col text-sm overflow-hidden shadow-2xl">
+        <div className="p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <h2 className="text-sm font-bold font-mono text-white">Modelos de Task</h2>
-          <button onClick={onClose} className="text-[#888] hover:text-white font-mono text-xs">
+          <button onClick={onClose} className="text-[#888] hover:text-white font-mono text-sm px-2">
             ✕
           </button>
         </div>
 
-        {error && (
-          <div className="p-3 bg-[#200] border border-[#f44] text-[#f88] text-xs font-mono">
-            {error}
-          </div>
-        )}
+        <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-4">
+          {error && (
+            <div className="p-3 bg-[#200] border border-[#f44] text-[#f88] text-xs font-mono">
+              {error}
+            </div>
+          )}
 
         {isCreatingNew ? (
           /* Formulário de criação de modelo */
@@ -256,6 +257,7 @@ export function ModelsModal({
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

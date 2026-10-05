@@ -15,3 +15,8 @@ As diretrizes sobre build, estilos (Tailwind/PostCSS) e resiliência de frontend
 1. **Integridade de Armazenamento:** Modificações em arquivos de configuração e tasks utilizam escrita atômica (`atomicWriteFile`) e validação de concorrência com base em hash SHA-256 (`If-Match`).
 2. **Separação Local vs Global:** Projetos individuais mantêm suas configurações e tasks em `.memorycard/` no diretório raiz do projeto; o diretório global (`MEMORYCARD_GLOBAL_DIR` ou `~/.memorycard/`) gerencia apenas o índice de projetos (`projects.json`) e modelos globais.
 3. **Não Poluição de Ambiente:** Qualquer script, CLI ou teste executado em ambiente de desenvolvimento deve preservar a integridade do sistema operacional e limpar recursos temporários.
+
+## Documentação do Projeto
+Para guardar documentações transversais (regras, decisões arquiteturais e convenções), utilizamos a pasta `docs/`.
+E para ser um mapa geral de navegação de toda a documentação, consulte [docs/index.md](memorycard/docs/index.md).
+For documentation discovery, start with `docs/index.md`. Do not scan the entire docs directory unless necessary.

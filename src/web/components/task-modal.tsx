@@ -210,10 +210,10 @@ export function TaskModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-[#111] border border-[#333] max-w-2xl w-full p-6 my-8 flex flex-col gap-6 text-sm">
-        {/* Cabeçalho */}
-        <div className="flex items-center justify-between border-b border-[#222] pb-3">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+      <div className="bg-[#111] border border-[#333] max-w-2xl w-full max-h-[80vh] my-[10vh] flex flex-col text-sm overflow-hidden shadow-2xl">
+        {/* Cabeçalho fixo */}
+        <div className="p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <div className="flex items-center gap-3">
             <span className="font-mono font-bold text-xs bg-[#222] px-2 py-0.5 text-white">
               #{task.id}
@@ -226,6 +226,9 @@ export function TaskModal({
             ✕
           </button>
         </div>
+
+        {/* Corpo com scroll interno */}
+        <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-6">
 
         {/* Banner de Conflito de Concorrência Otimista (OCC) */}
         {conflictWarning && (
@@ -412,6 +415,7 @@ export function TaskModal({
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
