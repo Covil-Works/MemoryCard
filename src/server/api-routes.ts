@@ -8,6 +8,7 @@ import { StatusService } from '../core/services/status-service.js';
 import { ModelService } from '../core/services/model-service.js';
 import { ConcurrencyConflictError } from '../storage/hashing.js';
 import { openNativeFolderDialog } from './native-dialog.js';
+import { browseDirectory, createDirectory } from './directory-browser.js';
 import { sseManager } from './sse.js';
 import { ProjectWatcher } from '../watcher/project-watcher.js';
 
@@ -98,7 +99,33 @@ export async function handleApiRoute(req: IncomingMessage, res: ServerResponse):
     return true;
   }
 
-  // 2. Seletor de diretório nativo
+  // 2. Seletor e Navegador de diretórios
+  if (pathname === '/api/system/fs-browse' && method === 'GET') {
+    try {
+      const targetPath = url.searchParams.get('path') || undefined;
+      const result = await browseDirectory(targetPath);
+      sendJson(res, 200, result);
+    } catch (err: any) {
+      sendError(res, err);
+    }
+    return true;
+  }
+
+  if (pathname === '/api/system/create-directory' && method === 'POST') {
+    try {
+      const body = await readJsonBody(req);
+      if (!body.path || typeof body.path !== 'string') {
+        sendJson(res, 400, { error: 'O caminho do diretório é obrigatório' });
+        return true;
+      }
+      const result = await createDirectory(body.path);
+      sendJson(res, 201, result);
+    } catch (err: any) {
+      sendError(res, err);
+    }
+    return true;
+  }
+
   if (pathname === '/api/system/select-directory' && method === 'GET') {
     try {
       const selectedPath = await openNativeFolderDialog();

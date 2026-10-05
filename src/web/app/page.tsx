@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSSE } from '../hooks/use-sse';
 import { useSettings } from '../components/settings-context';
+import { FolderBrowser } from '../components/folder-browser';
 
 interface ProjectEntry {
   project_id: string;
@@ -26,7 +27,6 @@ export default function DashboardPage() {
   const [relinkingProject, setRelinkingProject] = useState<ProjectEntry | null>(null);
   const [relinkPath, setRelinkPath] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isPickingDirectory, setIsPickingDirectory] = useState(false);
 
   const fetchProjects = async () => {
     try {
@@ -55,23 +55,11 @@ export default function DashboardPage() {
     }
   });
 
-  const handlePickDirectoryForNew = async () => {
-    setIsPickingDirectory(true);
-    try {
-      const res = await fetch('/api/system/select-directory');
-      const data = await res.json();
-      if (data.path) {
-        setNewProjectPath(data.path);
-        setIsNewProjectModalOpen(true);
-      } else {
-        // Se cancelado ou nativo não respondeu, abre modal para entrada manual
-        setIsNewProjectModalOpen(true);
-      }
-    } catch {
-      setIsNewProjectModalOpen(true);
-    } finally {
-      setIsPickingDirectory(false);
-    }
+  const handleOpenNewProjectModal = () => {
+    setError(null);
+    setNewProjectPath('');
+    setNewProjectName('');
+    setIsNewProjectModalOpen(true);
   };
 
   const handleCreateProject = async (e: React.FormEvent) => {
@@ -162,11 +150,10 @@ export default function DashboardPage() {
           </p>
         </div>
         <button
-          onClick={handlePickDirectoryForNew}
-          disabled={isPickingDirectory}
+          onClick={handleOpenNewProjectModal}
           className="btn btn-primary text-xs sm:text-sm self-start sm:self-auto shrink-0"
         >
-          {isPickingDirectory ? t('selectFolder') : t('newProject')}
+          {t('newProject')}
         </button>
       </div>
 
@@ -251,8 +238,8 @@ export default function DashboardPage() {
       {/* Modal Novo Projeto */}
       {isNewProjectModalOpen && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
-          <div className="bg-[#111] border border-[#333] max-w-md w-full max-h-[90vh] sm:max-h-[80vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
-            <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+          <div className="bg-[#111] border border-[#333] max-w-xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+            <div className="p-3.5 sm:p-4 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
               <h2 className="text-sm font-bold font-mono text-white">{t('createNewProject')}</h2>
               <button
                 onClick={() => setIsNewProjectModalOpen(false)}
@@ -261,8 +248,18 @@ export default function DashboardPage() {
                 ✕
               </button>
             </div>
-            <div className="p-4 sm:p-6 overflow-y-auto flex-1">
+            <div className="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex-1 flex flex-col gap-4">
               <form id="new-project-form" onSubmit={handleCreateProject} className="flex flex-col gap-3">
+                <div>
+                  <label className="text-xs text-[#888] font-mono block mb-1">{t('projectNameLabel')}</label>
+                  <input
+                    type="text"
+                    className="input text-xs"
+                    placeholder="Nome do projeto (opcional)"
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                  />
+                </div>
                 <div>
                   <label className="text-xs text-[#888] font-mono block mb-1">{t('directoryPath')}</label>
                   <input
@@ -274,17 +271,15 @@ export default function DashboardPage() {
                     required
                   />
                 </div>
-                <div>
-                  <label className="text-xs text-[#888] font-mono block mb-1">{t('projectNameLabel')}</label>
-                  <input
-                    type="text"
-                    className="input text-xs"
-                    placeholder="Nome do projeto"
-                    value={newProjectName}
-                    onChange={(e) => setNewProjectName(e.target.value)}
-                  />
-                </div>
               </form>
+
+              <div>
+                <label className="text-xs text-[#888] font-mono block mb-1.5">{t('browseFolders')}</label>
+                <FolderBrowser
+                  selectedPath={newProjectPath}
+                  onSelectPath={(selected) => setNewProjectPath(selected)}
+                />
+              </div>
             </div>
             <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
               <button
@@ -297,10 +292,10 @@ export default function DashboardPage() {
               <button
                 type="submit"
                 form="new-project-form"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !newProjectPath.trim()}
                 className="btn btn-primary text-xs"
               >
-                {isSubmitting ? 'Inicializando...' : 'Criar Projeto'}
+                {isSubmitting ? t('initializingProject') : t('initProjectBtn')}
               </button>
             </div>
           </div>
@@ -310,8 +305,8 @@ export default function DashboardPage() {
       {/* Modal Relink Projeto */}
       {relinkingProject && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
-          <div className="bg-[#111] border border-[#333] max-w-md w-full max-h-[90vh] sm:max-h-[80vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
-            <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+          <div className="bg-[#111] border border-[#333] max-w-xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+            <div className="p-3.5 sm:p-4 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
               <h2 className="text-sm font-bold font-mono text-white">{t('relink')}</h2>
               <button
                 onClick={() => setRelinkingProject(null)}
@@ -320,8 +315,8 @@ export default function DashboardPage() {
                 ✕
               </button>
             </div>
-            <div className="p-4 sm:p-6 overflow-y-auto flex-1">
-              <p className="text-xs text-[#888] mb-3">
+            <div className="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex-1 flex flex-col gap-4">
+              <p className="text-xs text-[#888]">
                 O diretório original não foi encontrado. Selecione o novo caminho onde os arquivos deste projeto residem:
               </p>
               <form id="relink-form" onSubmit={handleRelink} className="flex flex-col gap-3">
@@ -337,6 +332,14 @@ export default function DashboardPage() {
                   />
                 </div>
               </form>
+
+              <div>
+                <label className="text-xs text-[#888] font-mono block mb-1.5">{t('browseFolders')}</label>
+                <FolderBrowser
+                  selectedPath={relinkPath}
+                  onSelectPath={(selected) => setRelinkPath(selected)}
+                />
+              </div>
             </div>
             <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
               <button
@@ -349,7 +352,7 @@ export default function DashboardPage() {
               <button
                 type="submit"
                 form="relink-form"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !relinkPath.trim()}
                 className="btn btn-primary text-xs"
               >
                 {isSubmitting ? 'Relincando...' : t('relinkConfirm')}
