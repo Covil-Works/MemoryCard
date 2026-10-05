@@ -5,6 +5,8 @@ import { useSSE } from '../../hooks/use-sse';
 import { TaskModal } from '../../components/task-modal';
 import { NewTaskModal } from '../../components/new-task-modal';
 import { NewColumnModal } from '../../components/new-column-modal';
+import { RenameColumnModal } from '../../components/rename-column-modal';
+import { DeleteColumnModal } from '../../components/delete-column-modal';
 import { ModelsModal } from '../../components/models-modal';
 import { useSettings } from '../../components/settings-context';
 
@@ -55,6 +57,11 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
   const [newTaskTargetColumn, setNewTaskTargetColumn] = useState<string | null>(null);
   const [isNewColumnModalOpen, setIsNewColumnModalOpen] = useState(false);
   const [isModelsModalOpen, setIsModelsModalOpen] = useState(false);
+
+  // Menu de opções e modais da Coluna
+  const [openMenuColumnId, setOpenMenuColumnId] = useState<string | null>(null);
+  const [renamingColumn, setRenamingColumn] = useState<Column | null>(null);
+  const [deletingColumn, setDeletingColumn] = useState<{ column: Column; taskCount: number } | null>(null);
 
   // Drag and drop state
   const [draggedTaskId, setDraggedTaskId] = useState<number | null>(null);
@@ -114,6 +121,19 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
       fetchProjectData();
     }
   });
+
+  // Fecha menu de coluna ao pressionar Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpenMenuColumnId(null);
+      }
+    };
+    if (openMenuColumnId) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [openMenuColumnId]);
 
   // Alterar ordenação do board
   const handleSortChange = async (newSort: string) => {
@@ -243,7 +263,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                   isDragOver ? 'border-white bg-[#151515]' : 'border-[#222]'
                 }`}
               >
-                {/* Cabeçalho da Coluna com botão + Task */}
+                {/* Cabeçalho da Coluna com botão + Task e Menu de 3 Pontinhos */}
                 <div className="p-2.5 sm:p-3 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
                   <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                     <span className="font-mono font-bold text-xs text-white uppercase tracking-wider truncate">
@@ -253,17 +273,120 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                       {columnTasks.length}
                     </span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setNewTaskTargetColumn(column.id);
-                      setIsNewTaskModalOpen(true);
-                    }}
-                    className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0 ml-1 sm:ml-2"
-                    title={`Adicionar task em ${column.name}`}
-                  >
-                    {t('addTask')}
-                  </button>
+
+                  <div className="flex items-center gap-1 shrink-0 ml-1 sm:ml-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewTaskTargetColumn(column.id);
+                        setIsNewTaskModalOpen(true);
+                      }}
+                      className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0"
+                      title={`Adicionar task em ${column.name}`}
+                    >
+                      {t('addTask')}
+                    </button>
+
+                    {/* Botão de 3 pontinhos verticais (Kebab Menu) */}
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenMenuColumnId(openMenuColumnId === column.id ? null : column.id);
+                        }}
+                        className="p-1 text-gray-400 hover:text-white hover:bg-[#1a1a1a] border border-transparent hover:border-[#333] transition-colors rounded-sm flex items-center justify-center focus:outline-none"
+                        title={t('columnMenu')}
+                        aria-label={`${t('columnMenu')} ${column.name}`}
+                        aria-expanded={openMenuColumnId === column.id}
+                      >
+                        <svg
+                          className="w-4 h-4 text-gray-400 hover:text-white"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle cx="12" cy="5" r="1.75" />
+                          <circle cx="12" cy="12" r="1.75" />
+                          <circle cx="12" cy="19" r="1.75" />
+                        </svg>
+                      </button>
+
+                      {/* Dropdown Menu */}
+                      {openMenuColumnId === column.id && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-20 cursor-default"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenMenuColumnId(null);
+                            }}
+                          />
+
+                          <div
+                            className="absolute right-0 top-full mt-1.5 w-44 bg-[#111] border border-[#333] shadow-2xl py-1 z-30 font-mono text-xs"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {/* Renomear Coluna */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setOpenMenuColumnId(null);
+                                setRenamingColumn(column);
+                              }}
+                              className="w-full text-left px-3 py-2 text-gray-200 hover:text-white hover:bg-[#1f1f1f] flex items-center gap-2 transition-colors"
+                            >
+                              <svg
+                                className="w-3.5 h-3.5 text-gray-400 shrink-0"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                              </svg>
+                              <span>{t('renameColumn')}</span>
+                            </button>
+
+                            <div className="h-[1px] bg-[#222] my-1" />
+
+                            {/* Excluir Coluna */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setOpenMenuColumnId(null);
+                                setDeletingColumn({ column, taskCount: columnTasks.length });
+                              }}
+                              className="w-full text-left px-3 py-2 text-red-400 hover:text-red-300 hover:bg-[#200] flex items-center justify-between gap-2 transition-colors"
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                <svg
+                                  className="w-3.5 h-3.5 text-red-400 shrink-0"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <polyline points="3 6 5 6 21 6" />
+                                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                </svg>
+                                <span className="truncate">{t('deleteColumn')}</span>
+                              </div>
+                              {columnTasks.length > 0 && (
+                                <span className="text-[10px] text-red-400/80 bg-red-950/60 px-1 py-0.5 border border-red-900/60 shrink-0">
+                                  {columnTasks.length}
+                                </span>
+                              )}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Lista de Cards com limite de altura configurável e scroll vertical interno */}
@@ -367,6 +490,27 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
           currentTaskModel={projectInfo.config.task_model}
           onClose={() => setIsModelsModalOpen(false)}
           onModelChanged={fetchProjectData}
+        />
+      )}
+
+      {/* Modal de Renomear Coluna */}
+      {renamingColumn && (
+        <RenameColumnModal
+          slug={slug}
+          column={renamingColumn}
+          onClose={() => setRenamingColumn(null)}
+          onColumnRenamed={fetchProjectData}
+        />
+      )}
+
+      {/* Modal de Excluir Coluna */}
+      {deletingColumn && (
+        <DeleteColumnModal
+          slug={slug}
+          column={deletingColumn.column}
+          taskCount={deletingColumn.taskCount}
+          onClose={() => setDeletingColumn(null)}
+          onColumnDeleted={fetchProjectData}
         />
       )}
     </div>
