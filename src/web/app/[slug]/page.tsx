@@ -88,9 +88,9 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
 
   // Atualização em tempo real via SSE (§24)
   useSSE((event) => {
-    if (projectInfo && event.payload.project_id === projectInfo.config.project.id) {
+    if (projectInfo && event.payload?.project_id === projectInfo.config.project.id) {
       // Se a task aberta foi atualizada externamente
-      if (event.type === 'task-updated' && activeTaskId === event.payload.task_id) {
+      if (event.type === 'task-updated' && activeTaskId === event.payload?.task_id) {
         setExternalConflictForActiveTask(true);
       }
       fetchProjectData();

@@ -8,6 +8,9 @@ As diretrizes e decisões arquiteturais sobre testes automatizados estão descri
 - Todo teste deve respeitar o isolamento absoluto de diretórios e variáveis globais.
 - Jamais execute testes que possam gravar no diretório de usuário real (`~/.memorycard`).
 
+## Regras de Interface Web
+As diretrizes sobre build, estilos (Tailwind/PostCSS) e resiliência de frontend estão descritas em [src/web/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/src/web/AGENTS.md).
+
 ## Princípios de Desenvolvimento
 1. **Integridade de Armazenamento:** Modificações em arquivos de configuração e tasks utilizam escrita atômica (`atomicWriteFile`) e validação de concorrência com base em hash SHA-256 (`If-Match`).
 2. **Separação Local vs Global:** Projetos individuais mantêm suas configurações e tasks em `.memorycard/` no diretório raiz do projeto; o diretório global (`MEMORYCARD_GLOBAL_DIR` ou `~/.memorycard/`) gerencia apenas o índice de projetos (`projects.json`) e modelos globais.
