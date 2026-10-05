@@ -153,18 +153,18 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-5xl w-full mx-auto flex flex-col gap-6">
-      <div className="flex items-center justify-between border-b border-[#222] pb-4">
+    <div className="max-w-5xl w-full mx-auto flex flex-col gap-4 sm:gap-6 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#222] pb-4">
         <div>
-          <h1 className="text-xl font-bold font-mono tracking-tight">{t('registeredProjects')}</h1>
-          <p className="text-xs text-[#777] mt-1">
+          <h1 className="text-lg sm:text-xl font-bold font-mono tracking-tight">{t('registeredProjects')}</h1>
+          <p className="text-xs text-[#777] mt-0.5 sm:mt-1">
             {t('registeredProjectsDesc')}
           </p>
         </div>
         <button
           onClick={handlePickDirectoryForNew}
           disabled={isPickingDirectory}
-          className="btn btn-primary"
+          className="btn btn-primary text-xs sm:text-sm self-start sm:self-auto shrink-0"
         >
           {isPickingDirectory ? t('selectFolder') : t('newProject')}
         </button>
@@ -190,25 +190,25 @@ export default function DashboardPage() {
           {projects.map((p) => (
             <div
               key={p.project_id}
-              className="border border-[#222] bg-[#0d0d0d] hover:border-[#444] p-4 flex items-center justify-between transition-colors"
+              className="border border-[#222] bg-[#0d0d0d] hover:border-[#444] p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors"
             >
-              <div className="flex flex-col gap-1 min-w-0 pr-4">
-                <div className="flex items-center gap-3">
-                  <span className="font-bold text-sm text-white truncate">{p.name}</span>
+              <div className="flex flex-col gap-1 min-w-0 w-full sm:w-auto">
+                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                  <span className="font-bold text-sm text-white truncate max-w-full">{p.name}</span>
                   {p.available ? (
-                    <span className="px-2 py-0.5 text-[10px] font-mono border border-[#444] text-gray-300">
+                    <span className="px-1.5 sm:px-2 py-0.5 text-[10px] font-mono border border-[#444] text-gray-300">
                       {t('available')}
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 text-[10px] font-mono border border-[#f44] text-[#f66]">
+                    <span className="px-1.5 sm:px-2 py-0.5 text-[10px] font-mono border border-[#f44] text-[#f66]">
                       {t('unavailable')}
                     </span>
                   )}
                 </div>
-                <div className="text-xs text-[#666] font-mono truncate">{p.path}</div>
+                <div className="text-xs text-[#666] font-mono truncate max-w-full">{p.path}</div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 self-end sm:self-center border-t border-[#1a1a1a] sm:border-0 pt-2 sm:pt-0 w-full sm:w-auto justify-end">
                 {p.available ? (
                   <>
                     <Link href={`/${p.slug}`} className="btn btn-primary text-xs">
@@ -250,9 +250,9 @@ export default function DashboardPage() {
 
       {/* Modal Novo Projeto */}
       {isNewProjectModalOpen && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#111] border border-[#333] max-w-md w-full max-h-[80vh] my-[10vh] flex flex-col text-sm overflow-hidden shadow-2xl">
-            <div className="p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
+          <div className="bg-[#111] border border-[#333] max-w-md w-full max-h-[90vh] sm:max-h-[80vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+            <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
               <h2 className="text-sm font-bold font-mono text-white">{t('createNewProject')}</h2>
               <button
                 onClick={() => setIsNewProjectModalOpen(false)}
@@ -261,7 +261,7 @@ export default function DashboardPage() {
                 ✕
               </button>
             </div>
-            <div className="p-6 overflow-y-auto flex-1">
+            <div className="p-4 sm:p-6 overflow-y-auto flex-1">
               <form id="new-project-form" onSubmit={handleCreateProject} className="flex flex-col gap-3">
                 <div>
                   <label className="text-xs text-[#888] font-mono block mb-1">{t('directoryPath')}</label>
@@ -286,7 +286,7 @@ export default function DashboardPage() {
                 </div>
               </form>
             </div>
-            <div className="p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
+            <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
               <button
                 type="button"
                 onClick={() => setIsNewProjectModalOpen(false)}
@@ -309,9 +309,9 @@ export default function DashboardPage() {
 
       {/* Modal Relink Projeto */}
       {relinkingProject && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#111] border border-[#333] max-w-md w-full max-h-[80vh] my-[10vh] flex flex-col text-sm overflow-hidden shadow-2xl">
-            <div className="p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
+          <div className="bg-[#111] border border-[#333] max-w-md w-full max-h-[90vh] sm:max-h-[80vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+            <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
               <h2 className="text-sm font-bold font-mono text-white">{t('relink')}</h2>
               <button
                 onClick={() => setRelinkingProject(null)}
@@ -320,7 +320,7 @@ export default function DashboardPage() {
                 ✕
               </button>
             </div>
-            <div className="p-6 overflow-y-auto flex-1">
+            <div className="p-4 sm:p-6 overflow-y-auto flex-1">
               <p className="text-xs text-[#888] mb-3">
                 O diretório original não foi encontrado. Selecione o novo caminho onde os arquivos deste projeto residem:
               </p>
@@ -338,7 +338,7 @@ export default function DashboardPage() {
                 </div>
               </form>
             </div>
-            <div className="p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
+            <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
               <button
                 type="button"
                 onClick={() => setRelinkingProject(null)}

@@ -189,22 +189,22 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
   const columns = projectInfo.config.columns || [];
 
   return (
-    <div className="flex-1 flex flex-col gap-4 w-full max-w-full min-w-0">
+    <div className="flex-1 flex flex-col gap-3 sm:gap-4 w-full max-w-full min-w-0">
       {/* Cabeçalho do Board */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#222] pb-4 shrink-0">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-lg font-bold font-mono text-white">{projectInfo.config.project.name}</h1>
-            <span className="text-[10px] font-mono px-2 py-0.5 border border-[#333] text-[#888]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#222] pb-3 sm:pb-4 shrink-0">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <h1 className="text-base sm:text-lg font-bold font-mono text-white truncate max-w-full">{projectInfo.config.project.name}</h1>
+            <span className="text-[10px] font-mono px-2 py-0.5 border border-[#333] text-[#888] shrink-0">
               {t('model')} {projectInfo.config.task_model}
             </span>
           </div>
-          <div className="text-xs text-[#666] font-mono mt-0.5">{projectInfo.rootDir}</div>
+          <div className="text-[11px] sm:text-xs text-[#666] font-mono mt-0.5 truncate max-w-full">{projectInfo.rootDir}</div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <label className="text-[10px] font-mono text-[#777]">{t('sort')}</label>
+        <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <label className="text-[10px] font-mono text-[#777] shrink-0">{t('sort')}</label>
             <select
               className="select text-xs font-mono py-1 px-2"
               value={projectInfo.config.board.sort}
@@ -219,7 +219,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
           {/* Botão Nova Coluna (substitui o botão de nova task no canto superior direito) */}
           <button
             onClick={() => setIsNewColumnModalOpen(true)}
-            className="btn btn-primary text-xs"
+            className="btn btn-primary text-xs shrink-0"
           >
             {t('newColumn')}
           </button>
@@ -227,8 +227,8 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
       </div>
 
       {/* Grid de Colunas Kanban com Scroll Horizontal Isolado */}
-      <div className="w-full max-w-full overflow-x-auto pb-4 custom-scrollbar">
-        <div className="flex flex-row items-start gap-4 min-w-max pb-2">
+      <div className="w-full max-w-full overflow-x-auto pb-4 pt-1 custom-scrollbar snap-x snap-proximity overscroll-x-contain touch-pan-x">
+        <div className="flex flex-row items-start gap-3 sm:gap-4 min-w-max pb-2 pr-4 sm:pr-0">
           {columns.map((column) => {
             const columnTasks = tasks.filter((t) => t.status === column.id);
             const isDragOver = dragOverColumn === column.id;
@@ -239,13 +239,13 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                 onDragOver={(e) => handleDragOver(e, column.id)}
                 onDragLeave={() => setDragOverColumn(null)}
                 onDrop={(e) => handleDrop(e, column.id)}
-                className={`flex flex-col bg-[#0c0c0c] border w-[290px] shrink-0 transition-colors ${
+                className={`flex flex-col bg-[#0c0c0c] border w-[82vw] max-w-[320px] sm:w-[290px] shrink-0 snap-start transition-colors ${
                   isDragOver ? 'border-white bg-[#151515]' : 'border-[#222]'
                 }`}
               >
                 {/* Cabeçalho da Coluna com botão + Task */}
-                <div className="p-3 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
-                  <div className="flex items-center gap-2 min-w-0">
+                <div className="p-2.5 sm:p-3 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                     <span className="font-mono font-bold text-xs text-white uppercase tracking-wider truncate">
                       {column.name}
                     </span>
@@ -259,7 +259,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                       setNewTaskTargetColumn(column.id);
                       setIsNewTaskModalOpen(true);
                     }}
-                    className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0 ml-2"
+                    className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0 ml-1 sm:ml-2"
                     title={`Adicionar task em ${column.name}`}
                   >
                     {t('addTask')}

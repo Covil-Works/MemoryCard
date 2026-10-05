@@ -204,7 +204,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }
     // 'auto' (Padrão): ajusta à altura do monitor sem rolagem vertical na página
     return {
-      maxHeight: 'calc(100vh - 230px)',
+      maxHeight: 'min(calc(100dvh - 220px), calc(100vh - 220px))',
       minHeight: '260px',
     };
   };

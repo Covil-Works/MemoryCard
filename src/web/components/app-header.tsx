@@ -36,22 +36,22 @@ export function AppHeader() {
   const isHome = pathname === '/';
 
   return (
-    <header className="border-b border-[#222] px-6 py-3 flex items-center justify-between bg-[#0a0a0a] relative z-40">
-      <div className="flex items-center gap-4">
+    <header className="border-b border-[#222] px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between bg-[#0a0a0a] relative z-40">
+      <div className="flex items-center gap-2 sm:gap-4">
         <Link
           href="/"
-          className="font-mono font-bold tracking-wider text-sm text-white hover:text-gray-300 transition-colors"
+          className="font-mono font-bold tracking-wider text-xs sm:text-sm text-white hover:text-gray-300 transition-colors"
         >
           MEMORYCARD
         </Link>
-        <span className="text-xs text-[#555] font-mono">v0.1.0</span>
+        <span className="text-[10px] sm:text-xs text-[#555] font-mono">v0.1.0</span>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {!isHome && (
           <Link
             href="/"
-            className="text-xs text-gray-400 hover:text-white px-2 py-1 font-mono transition-colors"
+            className="text-xs text-gray-400 hover:text-white px-1.5 sm:px-2 py-1 font-mono transition-colors"
           >
             ← {t('dashboard')}
           </Link>
@@ -87,7 +87,7 @@ export function AppHeader() {
           {isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute right-0 top-full mt-2 w-64 bg-[#111] border border-[#333] shadow-2xl p-2 text-xs flex flex-col gap-1 font-mono z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+              className="absolute right-0 top-full mt-2 w-60 sm:w-64 max-w-[calc(100vw-1.5rem)] bg-[#111] border border-[#333] shadow-2xl p-2 text-xs flex flex-col gap-1 font-mono z-50 animate-in fade-in slide-in-from-top-1 duration-150"
             >
               {/* Opções específicas de Projeto */}
               {projectActions?.openModelsModal && (

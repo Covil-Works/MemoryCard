@@ -40,10 +40,10 @@ export function VisibilityModal() {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-      <div className="bg-[#111] border border-[#333] max-w-xl w-full max-h-[80vh] my-[10vh] flex flex-col text-sm overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
+      <div className="bg-[#111] border border-[#333] max-w-xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
         {/* Cabeçalho fixo no topo - Tema Maior: Visibilidade */}
-        <div className="p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+        <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <div>
             <h2 className="text-sm font-bold font-mono text-white">
               {t('visibilitySettingsTitle')}
@@ -62,9 +62,9 @@ export function VisibilityModal() {
         </div>
 
         {/* Corpo com scroll interno para temas e configurações */}
-        <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-6">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-6">
           {/* Tema: Altura das colunas */}
-          <div className="border border-[#222] bg-[#0c0c0c] p-5 flex flex-col gap-4">
+          <div className="border border-[#222] bg-[#0c0c0c] p-3.5 sm:p-5 flex flex-col gap-4">
             <div className="border-b border-[#1f1f1f] pb-3">
               <h3 className="text-base font-bold font-mono text-white tracking-wide">
                 {t('columnHeightTitle')}
@@ -82,11 +82,11 @@ export function VisibilityModal() {
                 </span>
                 
                 {/* Opção única de alternância */}
-                <div className="inline-flex p-1 bg-[#141414] border border-[#2b2b2b] rounded-sm gap-1">
+                <div className="inline-flex p-1 bg-[#141414] border border-[#2b2b2b] rounded-sm gap-1 w-full sm:w-auto justify-center sm:justify-start">
                   <button
                     type="button"
                     onClick={() => setMode('auto')}
-                    className={`px-3 py-1 text-xs font-mono transition-colors rounded-sm ${
+                    className={`flex-1 sm:flex-initial px-3 py-1 text-xs font-mono transition-colors rounded-sm ${
                       mode === 'auto'
                         ? 'bg-white text-black font-bold shadow-sm'
                         : 'text-[#888] hover:text-white'
@@ -97,7 +97,7 @@ export function VisibilityModal() {
                   <button
                     type="button"
                     onClick={() => setMode('tasks')}
-                    className={`px-3 py-1 text-xs font-mono transition-colors rounded-sm ${
+                    className={`flex-1 sm:flex-initial px-3 py-1 text-xs font-mono transition-colors rounded-sm ${
                       mode === 'tasks'
                         ? 'bg-white text-black font-bold shadow-sm'
                         : 'text-[#888] hover:text-white'
@@ -119,7 +119,7 @@ export function VisibilityModal() {
                       <label className="text-xs font-mono text-white font-medium">
                         {t('tasksLimitLabel')}
                       </label>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <input
                           type="number"
                           min="1"
@@ -154,7 +154,7 @@ export function VisibilityModal() {
         </div>
 
         {/* Rodapé fixo na parte inferior */}
-        <div className="p-4 border-t border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+        <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d] gap-2">
           <button
             type="button"
             onClick={handleReset}

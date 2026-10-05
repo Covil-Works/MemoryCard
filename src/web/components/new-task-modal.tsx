@@ -66,11 +66,11 @@ export function NewTaskModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-      <div className="bg-[#111] border border-[#333] max-w-lg w-full max-h-[80vh] my-[10vh] flex flex-col text-sm overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
+      <div className="bg-[#111] border border-[#333] max-w-lg w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
         {/* Cabeçalho */}
-        <div className="p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
-          <div className="flex items-center gap-3">
+        <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <h2 className="text-sm font-bold font-mono text-white">Criar Nova Task</h2>
             {targetColumn && (
               <span className="text-[10px] font-mono px-2 py-0.5 border border-[#333] bg-[#1a1a1a] text-[#aaa]">
@@ -84,7 +84,7 @@ export function NewTaskModal({
         </div>
 
         {/* Corpo com scroll interno */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
           {error && (
             <div className="p-3 bg-[#200] border border-[#f44] text-[#f88] text-xs font-mono mb-4">
               {error}
@@ -133,7 +133,7 @@ export function NewTaskModal({
         </div>
 
         {/* Rodapé fixo */}
-        <div className="p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
+        <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
           <button type="button" onClick={onClose} className="btn text-xs">
             {t('cancel')}
           </button>

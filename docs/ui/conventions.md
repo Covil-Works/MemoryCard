@@ -12,6 +12,7 @@ Cada convenção possui um identificador sequencial único (`UI-XXX`) para facil
 |---|---|---|
 | [UI-001](#ui-001-padrão-estrutural-de-configurações-por-temas-e-opções-contextuais) | Padrão Estrutural de Configurações por Temas e Opções Contextuais | Modais e Painéis de Configuração |
 | [UI-002](#ui-002-criação-de-novos-componentes-e-utilitários) | Criação de Novos Componentes e Utilitários | Componentes e Estilos Web |
+| [UI-003](#ui-003-responsividade-mobile-e-quadro-kanban-com-rolagem-horizontal-isolada) | Responsividade Mobile e Quadro Kanban com Rolagem Horizontal Isolada | Layout Geral e Quadro Kanban |
 
 ---
 
@@ -70,4 +71,20 @@ Garantir que novos componentes, páginas e utilitários criados na interface web
 ### 2. Diretrizes de Aplicação
 1. **Cobertura de Estilos no Tailwind:** Ao criar novos diretórios ou páginas com estilização, certifique-se de que o padrão de arquivos esteja coberto pelo `content` em `src/web/tailwind.config.js` (e no espelho da raiz).
 2. **Isolamento de Escopo:** Evite estilos locais que dependam de variáveis ou classes geradas fora do escopo do Next.js.
+
+---
+
+## UI-003: Responsividade Mobile e Quadro Kanban com Rolagem Horizontal Isolada
+
+### 1. Contexto e Motivação
+A aplicação deve ser plenamente acessível e visualmente agradável em celulares e dispositivos com telas estreitas. O layout global (cabeçalho, barra de ferramentas, lista de projetos e modais) deve se adequar estritamente à largura do dispositivo (`width: 100%`), sem permitir que a página inteira transborde ou sofra deslocamento horizontal indesejado.
+
+No quadro Kanban, o fluxo de colunas não deve ser quebrado verticalmente; a disposição das colunas deve se manter lado a lado, permitindo que o usuário deslize horizontalmente apenas pelo trilho de colunas.
+
+### 2. Diretrizes de Aplicação
+1. **Contenção Global de Rolagem:** O `html`, o `body` e o contêiner raiz `<main>` devem ter `overflow-x: hidden` e `max-width: 100%`, impedindo qualquer efeito de rolagem lateral na página inteira.
+2. **Isolamento de Rolagem das Colunas:** O contêiner de colunas deve possuir `overflow-x: auto`, `overscroll-x-contain` e classes de suavidade touch (`-webkit-overflow-scrolling: touch` via `.custom-scrollbar`).
+3. **Largura das Colunas em Modo Mobile:** Em telas menores que `640px` (`sm:`), as colunas utilizam largura dinâmica de visualização parcial (`w-[82vw] max-w-[320px] sm:w-[290px]`) acompanhada de `snap-start` e `snap-x snap-proximity`. Isso exibe a coluna em foco e deixa a borda da próxima coluna visível à direita, sinalizando intuitivamente a capacidade de deslizamento.
+4. **Modais Responsivos:** Todos os modais devem limitar sua altura com `max-h-[90vh] sm:max-h-[85vh]` e `my-auto`, permitindo rolagem interna no corpo do modal em telas pequenas.
+5. **Prevenção de Auto-Zoom no iOS:** Todos os campos editáveis (`input`, `textarea`, `select`) devem possuir fonte mínima de `16px` em resoluções mobile (`@media (max-width: 640px)`), prevenindo que o WebKit execute auto-zoom na tela ao focar.
 

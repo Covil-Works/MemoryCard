@@ -117,16 +117,16 @@ export function ModelsModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-      <div className="bg-[#111] border border-[#333] max-w-2xl w-full max-h-[80vh] my-[10vh] flex flex-col text-sm overflow-hidden shadow-2xl">
-        <div className="p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
+      <div className="bg-[#111] border border-[#333] max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+        <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <h2 className="text-sm font-bold font-mono text-white">Modelos de Task</h2>
           <button onClick={onClose} className="text-[#888] hover:text-white font-mono text-sm px-2">
             ✕
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-4">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-4">
           {error && (
             <div className="p-3 bg-[#200] border border-[#f44] text-[#f88] text-xs font-mono">
               {error}
@@ -152,7 +152,7 @@ export function ModelsModal({
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs text-[#888] font-mono block mb-1">Nome do Modelo:</label>
                 <input
@@ -181,7 +181,7 @@ export function ModelsModal({
             <div>
               <label className="text-xs text-[#888] font-mono block mb-1">Conteúdo do Modelo Markdown:</label>
               <textarea
-                className="textarea font-mono text-xs h-64"
+                className="textarea font-mono text-xs h-48 sm:h-64"
                 value={newModelContent}
                 onChange={(e) => setNewModelContent(e.target.value)}
                 required
@@ -204,13 +204,13 @@ export function ModelsModal({
         ) : (
           /* Listagem de modelos */
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <p className="text-xs text-[#888]">
                 Selecione o modelo padrão usado para novas tasks deste projeto:
               </p>
               <button
                 onClick={handleStartCreateNew}
-                className="btn btn-primary text-xs"
+                className="btn btn-primary text-xs self-start sm:self-auto shrink-0"
               >
                 + Novo Modelo
               </button>
@@ -222,12 +222,12 @@ export function ModelsModal({
                 return (
                   <div
                     key={`${model.scope}-${model.name}`}
-                    className={`p-3 border flex items-center justify-between transition-colors ${
+                    className={`p-3 border flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors ${
                       isSelected ? 'border-white bg-[#1a1a1a]' : 'border-[#222] bg-[#0c0c0c] hover:border-[#333]'
                     }`}
                   >
-                    <div className="flex flex-col gap-0.5">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-0.5 min-w-0 w-full sm:w-auto">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-mono font-bold text-xs text-white">{model.name}.md</span>
                         <span className="text-[10px] font-mono px-1.5 py-0.2 bg-[#222] text-[#888]">
                           {model.scope === 'global' ? 'GLOBAL' : 'PROJETO'}
@@ -238,7 +238,7 @@ export function ModelsModal({
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] text-[#666] font-mono truncate max-w-md">
+                      <span className="text-[10px] text-[#666] font-mono truncate max-w-full sm:max-w-md">
                         {model.path}
                       </span>
                     </div>
@@ -246,7 +246,7 @@ export function ModelsModal({
                     {!isSelected && (
                       <button
                         onClick={() => handleSelectDefaultModel(model.name)}
-                        className="btn text-xs"
+                        className="btn text-xs self-end sm:self-auto shrink-0"
                       >
                         Definir como Padrão
                       </button>

@@ -18,6 +18,7 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
 - [docs/ui/conventions.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/ui/conventions.md): Convenções visuais e estruturais de interface:
   - **`UI-001`**: *Padrão Estrutural de Configurações por Temas e Opções Contextuais*.
   - **`UI-002`**: *Criação de Novos Componentes e Utilitários*.
+  - **`UI-003`**: *Responsividade Mobile e Quadro Kanban com Rolagem Horizontal Isolada*.
 
 ---
 
