@@ -10,7 +10,7 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
 ## 1. Diretrizes para Agentes de IA
 - [AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/AGENTS.md): Roteador de contexto principal para agentes de IA na raiz do repositório.
 - [docs/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/AGENTS.md): Como produzir, estruturar e manter a documentação na pasta `docs/`.
-- [tests/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/tests/AGENTS.md): Regras de isolamento, integridade dos testes e variáveis globais.
+- [tests/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/tests/AGENTS.md): Regras de criação sob demanda, integridade dos testes, isolamento e variáveis globais.
 
 ---
 
@@ -30,5 +30,3 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
 - [docs/architecture/ADR-UI.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/architecture/ADR-UI.md): Decisões arquiteturais de UI e Frontend Web:
   - **`ADR-UI-001`**: *Independência de Diretório de Execução (`process.cwd()`)*.
   - **`ADR-UI-002`**: *Resiliência de Eventos SSE (Server-Sent Events)*.
-
-
