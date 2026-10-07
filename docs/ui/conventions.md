@@ -137,7 +137,15 @@ A aplicação suporta múltiplos temas visuais preservando integralmente a estru
 5. **Memory Card 3D:**
    - **Iluminação Calibrada:** Reutiliza a configuração e calibração visual do tema `default` (mesmo ângulo de iluminação, mapa de tons sRGB e realce dos relevos e detalhes da carcaça plástica).
    - **Sticker Outline:** Contorno branco contínuo de aproximadamente `4px` ao redor da silhueta 2D renderizado nativamente na GPU via pós-processamento.
-6. **Alternância e Persistência:**
+   - **Interação Física ao Pressionar:** Ao pressionar (`pointerdown`), o card diminui levemente de tamanho. Se mantido pressionado por mais de 220ms, acumula energia e inicia uma tremida (shake) sutil. Ao soltar (`pointerup`), a tremida para imediatamente, o card aumenta rapidamente além do tamanho normal (overshoot) e retorna suavemente ao tamanho original. Cliques sucessivos tratam a transição suavemente sem interrupção abrupta.
+   - **Emissão de Letras como Partículas:** Ao soltar o card (tanto em clique rápido quanto segurado), letras soltas surgem de trás da silhueta do card em direções radiais aleatórias, desacelerando suavemente por atrito e desaparecendo em fade out gradual.
+     - **Conjunto de Caracteres Restrito:** Apenas letras contidas nas palavras `Memory Card` e `Covil`.
+     - **Tipografia:** Fonte retrô `MinimalHard` (`ref/`).
+     - **Cores:** Reutiliza exclusivamente as variáveis do tema Play (`--play-green`, `--play-pink`, `--play-red`, `--play-blue`).
+     - **Intensidade Proporcional:** Quantidade de partículas varia de 14 (clique rápido) até 48 (clique segurado acumulado).
+6. **Efeito Visual de Ruído / Granulado Animado:**
+   - Textura sutil de pequenos pontos/grãos aplicada via overlay fixo (`opacity: 0.04`) com animação contínua em passos discretos (`steps(8)`), sem scanlines, faixas VHS ou distorções agressivas, garantindo legibilidade e desempenho ideais exclusivamente no tema `play`.
+7. **Alternância e Persistência:**
    - O tema é configurável via `VisibilityModal` (seguindo a hierarquia de `UI-001`) e atalho rápido no menu superior direito do `AppHeader`.
    - O tema ativo é persistido no `localStorage` sob a chave `memorycard_theme` e refletido no DOM pelo atributo `data-theme="play"` / `data-theme="default"`.
 

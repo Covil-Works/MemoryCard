@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+@font-face {
+  font-family: 'MinimalHard';
+  src: url('/fonts/minimalhard.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -151,6 +159,43 @@ code, pre, .font-mono {
 [data-theme="play"] body {
   background-color: #242424 !important;
 }
+
+/* Efeito de Ruído / Granulado Sutil Animado Exclusivo do Tema Play */
+[data-theme="play"] body::after {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTgwIDE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOTUiIG51bU9jdGF2ZXM9IjQiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIvPjwvc3ZnPg==');
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  opacity: 0.04;
+  animation: play-grain-motion 0.45s steps(8) infinite;
+}
+
+@keyframes play-grain-motion {
+  0% { transform: translate(0, 0); }
+  12.5% { transform: translate(-3%, -4%); }
+  25% { transform: translate(4%, 3%); }
+  37.5% { transform: translate(-2%, 5%); }
+  50% { transform: translate(3%, -3%); }
+  62.5% { transform: translate(-5%, 2%); }
+  75% { transform: translate(4%, 4%); }
+  87.5% { transform: translate(-3%, -2%); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="play"] body::after {
+    animation: none;
+    opacity: 0.03;
+  }
+}
+
 
 [data-theme="play"] header {
   background-color: #2C2C2C !important;
