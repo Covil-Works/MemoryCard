@@ -5,7 +5,7 @@ import { useSettings } from './settings-context';
 
 const TILE_SIZE = 256;
 const FRAME_COUNT = 10;
-const FPS = 22;
+const FPS = 12;
 const FRAME_INTERVAL = 1000 / FPS;
 
 /**
@@ -25,28 +25,22 @@ function createNoisePattern(ctx: CanvasRenderingContext2D, size: number): Canvas
 
   for (let i = 0; i < data.length; i += 4) {
     const r = Math.random();
-    if (r < 0.28) {
-      // Grão claro (pontos prateados / haletos iluminados de foto antiga)
-      const isClump = Math.random() < 0.04;
-      const val = Math.floor(215 + Math.random() * 40);
+    if (r < 0.15) {
+      // Grão claro suave (haletos iluminados de foto antiga)
+      const val = Math.floor(190 + Math.random() * 50);
       data[i] = val;
       data[i + 1] = val;
       data[i + 2] = val;
-      data[i + 3] = isClump
-        ? Math.floor(70 + Math.random() * 45) // pontos com leve saliência física
-        : Math.floor(30 + Math.random() * 55); // pontos finos e sutis
-    } else if (r < 0.56) {
-      // Grão escuro (textura de densidade da emulsão)
-      const isClump = Math.random() < 0.04;
-      const val = Math.floor(Math.random() * 40);
+      data[i + 3] = Math.floor(18 + Math.random() * 32); // suave e translúcido
+    } else if (r < 0.30) {
+      // Grão escuro suave (densidade sutil da emulsão)
+      const val = Math.floor(20 + Math.random() * 40);
       data[i] = val;
       data[i + 1] = val;
       data[i + 2] = val;
-      data[i + 3] = isClump
-        ? Math.floor(70 + Math.random() * 45)
-        : Math.floor(30 + Math.random() * 55);
+      data[i + 3] = Math.floor(18 + Math.random() * 32); // suave e translúcido
     } else {
-      // Ponto transparente (preserva 100% da nitidez de textos e contrastes)
+      // 70% transparente (mantém o fundo limpo e o conteúdo nítido)
       data[i] = 0;
       data[i + 1] = 0;
       data[i + 2] = 0;
@@ -73,8 +67,10 @@ export function PlayNoiseOverlay() {
     if (!ctx) return;
 
     const resizeCanvas = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      // Escala 2x para garantir pontos menores e mais finos (sub-pixel)
+      const dpr = Math.max(window.devicePixelRatio || 1, 2);
+      const w = Math.floor(window.innerWidth * dpr);
+      const h = Math.floor(window.innerHeight * dpr);
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;
@@ -168,7 +164,7 @@ export function PlayNoiseOverlay() {
     <canvas
       ref={canvasRef}
       className="pointer-events-none fixed inset-0 z-[99999] w-full h-full select-none"
-      style={{ pointerEvents: 'none' }}
+      style={{ pointerEvents: 'none', opacity: 0.45 }}
       aria-hidden="true"
     />
   );
