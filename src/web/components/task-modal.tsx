@@ -26,7 +26,6 @@ export function TaskModal({
   // Campos de edição
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('');
   const [newTodoText, setNewTodoText] = useState('');
   const [newCommentText, setNewCommentText] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -41,7 +40,6 @@ export function TaskModal({
       setTask(data);
       setTitle(data.title);
       setDescription(data.description || '');
-      setStatus(data.status);
       setIsDirty(false);
       setConflictWarning(false);
       setError(null);
@@ -78,7 +76,7 @@ export function TaskModal({
         body: JSON.stringify({
           title,
           description,
-          status,
+          status: task.status,
           hash: task.hash
         })
       });
@@ -218,6 +216,9 @@ export function TaskModal({
             <span className="font-mono font-bold text-xs bg-[#222] px-2 py-0.5 text-white">
               #{task.id}
             </span>
+            <span className="text-[10px] font-mono px-2 py-0.5 border border-[#333] bg-[#1a1a1a] text-[#aaa]">
+              Status: <strong className="text-white">{task.status}</strong>
+            </span>
             <span className="text-[11px] sm:text-xs text-[#888] font-mono">
               Atualizada: {task.updated_at.split('T')[0]} {task.updated_at.split('T')[1]?.slice(0, 5)}
             </span>
@@ -259,20 +260,6 @@ export function TaskModal({
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
-                setIsDirty(true);
-              }}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="text-xs text-[#888] font-mono block mb-1">Status:</label>
-            <input
-              type="text"
-              className="input font-mono text-xs"
-              value={status}
-              onChange={(e) => {
-                setStatus(e.target.value);
                 setIsDirty(true);
               }}
               required
