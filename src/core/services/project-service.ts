@@ -14,16 +14,22 @@ export class ProjectAlreadyInitializedError extends Error {
   }
 }
 
+export class ProjectAlreadyInListError extends ProjectAlreadyInitializedError {
+  constructor(dir: string, name?: string) {
+    super(dir);
+    this.message = 'Este projeto já está sendo exibido na sua lista.';
+    this.name = 'ProjectAlreadyInListError';
+  }
+}
+
 export class ProjectService {
   /**
    * Inicializa um novo projeto MemoryCard no diretório indicado:
-   * - Cria .memorycard/
-   * - Cria .memorycard/tasks/
-   * - Cria .memorycard/models/
-   * - Cria .memorycard/config.json com UUID único
-   * - Registra no índice global ~/.memorycard/projects.json
+   * - Se o projeto não existe: cria estrutura, modelos e config.
+   * - Se o projeto existe mas não está na lista: re-registra e preserva dados salvos.
+   * - Se o projeto existe e já está na lista: lança ProjectAlreadyInListError.
    */
-  static async initProject(targetDir: string = process.cwd(), projectName?: string): Promise<ProjectResolvedInfo> {
+  static async initProject(targetDir: string = process.cwd(), projectName?: string): Promise<ProjectResolvedInfo & { reattached?: boolean }> {
     const resolvedDir = path.resolve(targetDir);
     await fs.promises.mkdir(resolvedDir, { recursive: true });
 
@@ -31,9 +37,46 @@ export class ProjectService {
     const configPath = path.join(memoryCardDir, 'config.json');
 
     if (fs.existsSync(configPath)) {
-      throw new ProjectAlreadyInitializedError(resolvedDir);
+      // 1. Projeto já existe fisicamente nesta pasta
+      // Verifica se ele já está sendo exibido no registro global (~/.memorycard/projects.json)
+      const { readGlobalProjects } = await import('../../storage/project-registry.js');
+      const { projects } = await readGlobalProjects();
+
+      let existingConfig: any = null;
+      try {
+        const raw = await fs.promises.readFile(configPath, 'utf-8');
+        existingConfig = JSON.parse(raw);
+      } catch (err: any) {
+        throw new Error(`Arquivo config.json do projeto existente está inválido: ${err.message}`);
+      }
+
+      const existingId = existingConfig?.project?.id;
+      const normalizedResolved = resolvedDir.replace(/\\/g, '/').toLowerCase();
+      const isAlreadyInList = projects.some(p => {
+        const pathMatches = path.resolve(p.path).replace(/\\/g, '/').toLowerCase() === normalizedResolved;
+        const idMatches = Boolean(existingId && p.project_id === existingId);
+        return pathMatches || idMatches;
+      });
+
+      if (isAlreadyInList) {
+        // Regra: Projeto existe + já está na lista -> mostrar aviso
+        throw new ProjectAlreadyInListError(resolvedDir, existingConfig?.project?.name);
+      }
+
+      // Regra: Projeto existe + não está na lista -> carregar novamente preservando toda a estrutura
+      await ensureGlobalMemoryCardStructure();
+      await registerProjectInGlobalRegistry(existingId || crypto.randomUUID(), resolvedDir);
+
+      return {
+        rootDir: resolvedDir,
+        configPath,
+        config: existingConfig,
+        slug: generateProjectSlug(existingConfig?.project?.name || path.basename(resolvedDir)),
+        reattached: true
+      };
     }
 
+    // Regra: Projeto não existe -> criar normalmente
     const tasksDir = path.join(memoryCardDir, 'tasks');
     const modelsDir = path.join(memoryCardDir, 'models');
 

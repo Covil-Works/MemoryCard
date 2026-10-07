@@ -40,9 +40,23 @@ export default function DashboardPage() {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [newProjectPath, setNewProjectPath] = useState('');
   const [newProjectName, setNewProjectName] = useState('');
+  const [modalNotice, setModalNotice] = useState<{ path: string; isAlreadyInList: boolean; name?: string } | null>(null);
+  const [modalError, setModalError] = useState<string | null>(null);
   const [relinkingProject, setRelinkingProject] = useState<ProjectEntry | null>(null);
   const [relinkPath, setRelinkPath] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isNormalizedSamePath = (p1?: string, p2?: string) => {
+    if (!p1 || !p2) return false;
+    const n1 = p1.trim().replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+    const n2 = p2.trim().replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+    return n1 === n2;
+  };
+
+  const isSelectedPathAlreadyInList = Boolean(
+    newProjectPath.trim() &&
+    projects.some((p) => isNormalizedSamePath(p.path, newProjectPath))
+  );
 
   const fetchProjects = async () => {
     try {
@@ -73,6 +87,8 @@ export default function DashboardPage() {
 
   const handleOpenNewProjectModal = () => {
     setError(null);
+    setModalError(null);
+    setModalNotice(null);
     setNewProjectPath('');
     setNewProjectName('');
     setIsNewProjectModalOpen(true);
@@ -82,8 +98,13 @@ export default function DashboardPage() {
     e.preventDefault();
     if (!newProjectPath.trim()) return;
 
+    if (isSelectedPathAlreadyInList || modalNotice?.isAlreadyInList) {
+      setModalError(t('projectAlreadyInListWarning'));
+      return;
+    }
+
     setIsSubmitting(true);
-    setError(null);
+    setModalError(null);
     try {
       const res = await fetch('/api/projects/init', {
         method: 'POST',
@@ -93,16 +114,18 @@ export default function DashboardPage() {
           name: newProjectName.trim() || undefined
         })
       });
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || 'Erro ao inicializar projeto');
       }
       setIsNewProjectModalOpen(false);
       setNewProjectPath('');
       setNewProjectName('');
+      setModalNotice(null);
+      setModalError(null);
       await fetchProjects();
     } catch (err: any) {
-      setError(err.message);
+      setModalError(err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -297,6 +320,25 @@ export default function DashboardPage() {
               </button>
             </div>
             <div className="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex-1 flex flex-col gap-4">
+              {modalError && (
+                <div className="p-2.5 bg-[#200] border border-[#500] text-[#f88] text-xs font-mono rounded-sm">
+                  {modalError}
+                </div>
+              )}
+
+              {(isSelectedPathAlreadyInList || modalNotice?.isAlreadyInList) && (
+                <div className="p-3 bg-amber-950/40 border border-amber-600/60 text-amber-300 text-xs font-mono rounded-sm flex items-center gap-2">
+                  <span className="font-bold">[Aviso]</span>
+                  <span>{t('projectAlreadyInListWarning')}</span>
+                </div>
+              )}
+
+              {modalNotice && !modalNotice.isAlreadyInList && !isSelectedPathAlreadyInList && (
+                <div className="p-2.5 bg-emerald-950/30 border border-emerald-600/40 text-emerald-300 text-xs font-mono rounded-sm flex items-center gap-2">
+                  <span>{t('existingMemoryCardHint')}</span>
+                </div>
+              )}
+
               <form id="new-project-form" onSubmit={handleCreateProject} className="flex flex-col gap-3">
                 <div>
                   <label className="text-xs text-[#888] font-mono block mb-1">{t('projectNameLabel')}</label>
@@ -305,7 +347,10 @@ export default function DashboardPage() {
                     className="input text-xs"
                     placeholder="Nome do projeto (opcional)"
                     value={newProjectName}
-                    onChange={(e) => setNewProjectName(e.target.value)}
+                    onChange={(e) => {
+                      setNewProjectName(e.target.value);
+                      setModalError(null);
+                    }}
                   />
                 </div>
                 <div>
@@ -315,7 +360,11 @@ export default function DashboardPage() {
                     className="input font-mono text-xs"
                     placeholder="/caminho/para/o/projeto"
                     value={newProjectPath}
-                    onChange={(e) => setNewProjectPath(e.target.value)}
+                    onChange={(e) => {
+                      setNewProjectPath(e.target.value);
+                      setModalError(null);
+                      setModalNotice(null);
+                    }}
                     required
                   />
                 </div>
@@ -325,7 +374,15 @@ export default function DashboardPage() {
                 <label className="text-xs text-[#888] font-mono block mb-1.5">{t('browseFolders')}</label>
                 <FolderBrowser
                   selectedPath={newProjectPath}
-                  onSelectPath={(selected) => setNewProjectPath(selected)}
+                  onSelectPath={(selected) => {
+                    setNewProjectPath(selected);
+                    setModalError(null);
+                  }}
+                  existingProjects={projects}
+                  onSelectExistingProject={(info) => {
+                    setModalNotice(info);
+                    setModalError(null);
+                  }}
                 />
               </div>
             </div>
@@ -340,10 +397,19 @@ export default function DashboardPage() {
               <button
                 type="submit"
                 form="new-project-form"
-                disabled={isSubmitting || !newProjectPath.trim()}
-                className="btn btn-primary btn-action-green text-xs"
+                disabled={isSubmitting || !newProjectPath.trim() || isSelectedPathAlreadyInList || Boolean(modalNotice?.isAlreadyInList)}
+                className="btn btn-primary btn-action-green text-xs disabled:opacity-40 disabled:cursor-not-allowed"
+                title={
+                  isSelectedPathAlreadyInList || modalNotice?.isAlreadyInList
+                    ? t('projectAlreadyInListWarning')
+                    : undefined
+                }
               >
-                {isSubmitting ? t('initializingProject') : t('initProjectBtn')}
+                {isSubmitting
+                  ? t('initializingProject')
+                  : modalNotice && !modalNotice.isAlreadyInList && !isSelectedPathAlreadyInList
+                  ? t('addExistingProjectBtn')
+                  : t('initProjectBtn')}
               </button>
             </div>
           </div>
