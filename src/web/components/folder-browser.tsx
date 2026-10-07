@@ -273,7 +273,7 @@ export function FolderBrowser({
             <button
               type="submit"
               disabled={createLoading || !newFolderName.trim()}
-              className="btn btn-primary text-xs py-1 px-3"
+              className="btn btn-primary btn-action-green text-xs py-1 px-3"
             >
               {createLoading ? '...' : t('create')}
             </button>

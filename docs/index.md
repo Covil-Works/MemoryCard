@@ -20,6 +20,7 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
   - **`UI-002`**: *Criação de Novos Componentes e Utilitários*.
   - **`UI-003`**: *Responsividade Mobile e Quadro Kanban com Rolagem Horizontal Isolada*.
   - **`UI-004`**: *Proibição de Emojis na Interface do Usuário (No-Emoji Policy)*.
+  - **`UI-005`**: *Suporte a Temas Visuais (Default e Play)*.
 
 ---
 

@@ -211,9 +211,9 @@ export function TaskModal({
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
-      <div className="bg-[#111] border border-[#333] max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+      <div className="modal-surface bg-[#111] border border-[#333] max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
         {/* Cabeçalho fixo */}
-        <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+        <div className="modal-header p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <span className="font-mono font-bold text-xs bg-[#222] px-2 py-0.5 text-white">
               #{task.id}
@@ -236,7 +236,7 @@ export function TaskModal({
             <span><strong className="text-amber-400 font-bold mr-1">[Aviso]</strong>Arquivo alterado externamente no disco. Salvar irá falhar devido a conflito de versão.</span>
             <button
               onClick={loadTask}
-              className="btn text-xs bg-white text-black border-white hover:bg-gray-200 self-start sm:self-auto shrink-0"
+              className="btn btn-action-pink text-xs bg-white text-black border-white hover:bg-gray-200 self-start sm:self-auto shrink-0"
             >
               Recarregar Disco
             </button>
@@ -296,14 +296,14 @@ export function TaskModal({
             <button
               type="button"
               onClick={() => setShowDeleteConfirm(true)}
-              className="btn btn-danger text-xs"
+              className="btn btn-danger btn-action-red text-xs"
             >
               Excluir Task
             </button>
             <button
               type="submit"
               disabled={isSaving || !isDirty}
-              className={`btn ${isDirty ? 'btn-primary' : 'opacity-40 cursor-not-allowed'}`}
+              className={`btn btn-action-blue ${isDirty ? 'btn-primary' : 'opacity-40 cursor-not-allowed'}`}
             >
               {isSaving ? 'Salvando...' : 'Salvar Alterações'}
             </button>
@@ -350,7 +350,7 @@ export function TaskModal({
               value={newTodoText}
               onChange={(e) => setNewTodoText(e.target.value)}
             />
-            <button type="submit" className="btn text-xs">
+            <button type="submit" className="btn btn-action-green text-xs">
               + Adicionar
             </button>
           </form>
@@ -381,7 +381,7 @@ export function TaskModal({
               onChange={(e) => setNewCommentText(e.target.value)}
             />
             <div className="flex justify-end">
-              <button type="submit" className="btn text-xs">
+              <button type="submit" className="btn btn-action-green text-xs">
                 Enviar Comentário
               </button>
             </div>
@@ -391,7 +391,7 @@ export function TaskModal({
         {/* Confirmação de Exclusão */}
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-3 sm:p-4 z-60">
-            <div className="bg-[#151515] border border-[#f44] p-4 sm:p-6 max-w-sm w-full mx-3 flex flex-col gap-4 text-center">
+            <div className="modal-surface bg-[#151515] border border-[#f44] p-4 sm:p-6 max-w-sm w-full mx-3 flex flex-col gap-4 text-center">
               <h4 className="text-sm font-bold text-white font-mono">Confirmar Exclusão</h4>
               <p className="text-xs text-[#aaa]">
                 Tem certeza que deseja apagar a task #{taskId}? O arquivo Markdown será removido fisicamente e o ID não será reaproveitado.
@@ -407,7 +407,7 @@ export function TaskModal({
                 <button
                   type="button"
                   onClick={handleDeleteTask}
-                  className="btn btn-danger text-xs font-bold"
+                  className="btn btn-danger btn-action-red text-xs font-bold"
                 >
                   Sim, Excluir
                 </button>

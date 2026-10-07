@@ -61,9 +61,9 @@ export function NetworkModal() {
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
-      <div className="bg-[#111] border border-[#333] max-w-md w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+      <div className="modal-surface bg-[#111] border border-[#333] max-w-md w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
         {/* Cabeçalho */}
-        <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+        <div className="modal-header p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <div className="flex items-center gap-2.5">
             <svg
               className="w-4 h-4 text-gray-400 shrink-0"
@@ -136,7 +136,7 @@ export function NetworkModal() {
                     type="button"
                     onClick={handleCopy}
                     className={`btn text-xs px-3 py-1.5 shrink-0 transition-colors ${
-                      copied ? 'bg-emerald-600 text-white border-emerald-500' : 'btn-primary'
+                      copied ? 'bg-emerald-600 text-white border-emerald-500' : 'btn-primary btn-action-blue'
                     }`}
                   >
                     {copied ? t('copied') : t('copyUrl')}
@@ -176,7 +176,7 @@ export function NetworkModal() {
         </div>
 
         {/* Rodapé fixo */}
-        <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end shrink-0 bg-[#0d0d0d]">
+        <div className="modal-footer p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end shrink-0 bg-[#0d0d0d]">
           <button
             type="button"
             onClick={() => setIsNetworkModalOpen(false)}

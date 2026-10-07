@@ -4,11 +4,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'pt-br' | 'en';
 export type ColumnHeightMode = 'auto' | 'tasks' | 'compact' | 'medium' | 'large' | 'custom';
+export type Theme = 'default' | 'play';
 
 export interface VisibilitySettings {
   mode: ColumnHeightMode;
   tasksLimit: number;
   customHeight: number;
+  theme?: Theme;
 }
 
 export interface ProjectActions {
@@ -28,6 +30,9 @@ const translations = {
     models: 'Modelos',
     visibility: 'Visibilidade',
     language: 'Idioma',
+    theme: 'Tema',
+    themeDefault: 'Padrão',
+    themePlay: 'Play',
     version: 'Versão',
     appearance: 'Aparência & Visibilidade',
     projectSettings: 'Configurações do Projeto',
@@ -45,6 +50,11 @@ const translations = {
     columnCreatedSuccess: 'Coluna criada com sucesso',
     visibilitySettingsTitle: 'Visibilidade',
     visibilityDesc: 'Preferências visuais e dimensionamento do sistema.',
+    visualThemeTitle: 'Tema visual',
+    visualThemeDesc: 'Personalize a experiência visual e a identidade gráfica do MemoryCard.',
+    configThemeLabel: 'Tema ativo:',
+    themeDefaultDesc: 'Visual técnico minimalista monocromático original do MemoryCard, com estrutura sólida e alto contraste.',
+    themePlayDesc: 'Identidade inspirada nos símbolos dos controles (verde, vermelho, azul e rosa), com cantos arredondados, containers abertos e sticker outline no Memory Card.',
     columnHeightTitle: 'Altura das colunas',
     columnHeightDesc: 'Defina como a altura das colunas do quadro Kanban é dimensionada.',
     configModeLabel: 'Configuração de exibição:',
@@ -120,6 +130,9 @@ const translations = {
     models: 'Models',
     visibility: 'Visibility',
     language: 'Language',
+    theme: 'Theme',
+    themeDefault: 'Default',
+    themePlay: 'Play',
     version: 'Version',
     appearance: 'Appearance & Visibility',
     projectSettings: 'Project Settings',
@@ -137,6 +150,11 @@ const translations = {
     columnCreatedSuccess: 'Column created successfully',
     visibilitySettingsTitle: 'Visibility',
     visibilityDesc: 'Visual preferences and system sizing.',
+    visualThemeTitle: 'Visual Theme',
+    visualThemeDesc: 'Customize the visual experience and graphic identity of MemoryCard.',
+    configThemeLabel: 'Active theme:',
+    themeDefaultDesc: 'Original monochromatic technical minimalist look of MemoryCard, with sober structure and high contrast.',
+    themePlayDesc: 'Identity inspired by classic controller symbols (green, red, blue and pink), featuring rounded corners, open containers and sticker outline on the Memory Card.',
     columnHeightTitle: 'Column height',
     columnHeightDesc: 'Configure how the Kanban board column heights are dimensioned.',
     configModeLabel: 'Display configuration:',
@@ -208,6 +226,8 @@ export type TranslationKey = keyof typeof translations['pt-br'];
 interface SettingsContextValue {
   language: Language;
   setLanguage: (lang: Language) => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
   visibilitySettings: VisibilitySettings;
   setVisibilitySettings: (settings: VisibilitySettings) => void;
   isVisibilityModalOpen: boolean;
@@ -224,12 +244,14 @@ const DEFAULT_VISIBILITY: VisibilitySettings = {
   mode: 'auto',
   tasksLimit: 5,
   customHeight: 520,
+  theme: 'default',
 };
 
 const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('pt-br');
+  const [theme, setThemeState] = useState<Theme>('default');
   const [visibilitySettings, setVisibilitySettingsState] = useState<VisibilitySettings>(DEFAULT_VISIBILITY);
   const [isVisibilityModalOpen, setIsVisibilityModalOpen] = useState(false);
   const [isNetworkModalOpen, setIsNetworkModalOpen] = useState(false);
@@ -241,16 +263,32 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       if (savedLang === 'pt-br' || savedLang === 'en') {
         setLanguageState(savedLang);
       }
+      const savedTheme = localStorage.getItem('memorycard_theme') as Theme | null;
+      let activeTheme: Theme = 'default';
+      if (savedTheme === 'default' || savedTheme === 'play') {
+        activeTheme = savedTheme;
+        setThemeState(savedTheme);
+      }
+      document.documentElement.setAttribute('data-theme', activeTheme);
+
       const savedVis = localStorage.getItem('memorycard_visibility');
       if (savedVis) {
         const parsed = JSON.parse(savedVis);
+        if (parsed.theme === 'default' || parsed.theme === 'play') {
+          activeTheme = parsed.theme;
+          setThemeState(parsed.theme);
+          document.documentElement.setAttribute('data-theme', parsed.theme);
+        }
         setVisibilitySettingsState({
           mode: parsed.mode === 'tasks' ? 'tasks' : 'auto',
           tasksLimit: typeof parsed.tasksLimit === 'number' ? parsed.tasksLimit : 5,
           customHeight: typeof parsed.customHeight === 'number' ? parsed.customHeight : 520,
+          theme: activeTheme,
         });
       }
-    } catch {}
+    } catch {
+      document.documentElement.setAttribute('data-theme', 'default');
+    }
   }, []);
 
   const setLanguage = (lang: Language) => {
@@ -260,8 +298,23 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     } catch {}
   };
 
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
+    try {
+      localStorage.setItem('memorycard_theme', newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
+    } catch {}
+  };
+
   const setVisibilitySettings = (settings: VisibilitySettings) => {
     setVisibilitySettingsState(settings);
+    if (settings.theme && (settings.theme === 'default' || settings.theme === 'play')) {
+      setThemeState(settings.theme);
+      try {
+        localStorage.setItem('memorycard_theme', settings.theme);
+        document.documentElement.setAttribute('data-theme', settings.theme);
+      } catch {}
+    }
     try {
       localStorage.setItem('memorycard_visibility', JSON.stringify(settings));
     } catch {}
@@ -293,6 +346,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       value={{
         language,
         setLanguage,
+        theme,
+        setTheme,
         visibilitySettings,
         setVisibilitySettings,
         isVisibilityModalOpen,

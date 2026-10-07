@@ -133,3 +133,252 @@ code, pre, .font-mono {
     touch-action: manipulation;
   }
 }
+
+/* ========================================================
+   TEMA PLAY - IDENTIDADE DOS SÍMBOLOS DOS CONTROLES
+   ======================================================== */
+
+[data-theme="play"] {
+  --play-green: #46b48a; /* Triângulo */
+  --play-red: #df0024;   /* Círculo */
+  --play-blue: #2e6db4;  /* X / Cruz */
+  --play-pink: #f69dc8;  /* Quadrado */
+  --border-focus: #2e6db4;
+}
+
+/* 1. Memory Card 3D: Contorno branco ~4px estilo adesivo/sticker na silhueta 2D */
+[data-theme="play"] .memorycard-3d-sticker canvas {
+  filter:
+    drop-shadow(4px 0 0 #ffffff)
+    drop-shadow(-4px 0 0 #ffffff)
+    drop-shadow(0 4px 0 #ffffff)
+    drop-shadow(0 -4px 0 #ffffff)
+    drop-shadow(2.83px 2.83px 0 #ffffff)
+    drop-shadow(-2.83px 2.83px 0 #ffffff)
+    drop-shadow(2.83px -2.83px 0 #ffffff)
+    drop-shadow(-2.83px -2.83px 0 #ffffff)
+    drop-shadow(3.7px 1.5px 0 #ffffff)
+    drop-shadow(-3.7px 1.5px 0 #ffffff)
+    drop-shadow(3.7px -1.5px 0 #ffffff)
+    drop-shadow(-3.7px -1.5px 0 #ffffff)
+    drop-shadow(1.5px 3.7px 0 #ffffff)
+    drop-shadow(-1.5px 3.7px 0 #ffffff)
+    drop-shadow(1.5px -3.7px 0 #ffffff)
+    drop-shadow(-1.5px -3.7px 0 #ffffff);
+}
+
+/* 2. Botões: cantos arredondados, sem preenchimento branco e com a nova paleta */
+[data-theme="play"] .btn,
+[data-theme="play"] button:not(.btn-unstyled) {
+  border-radius: 8px;
+}
+
+/* Botão padrão / secundário */
+[data-theme="play"] .btn {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #eeeeee;
+  transition: all 0.15s ease-in-out;
+}
+
+[data-theme="play"] .btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #ffffff;
+}
+
+/* Triângulo / Verde (#46b48a): Ações de criação e adição */
+[data-theme="play"] .btn-action-green,
+[data-theme="play"] .btn-primary {
+  background: var(--play-green);
+  color: #ffffff;
+  border-color: var(--play-green);
+  font-weight: 600;
+}
+
+[data-theme="play"] .btn-action-green:hover,
+[data-theme="play"] .btn-primary:hover {
+  background: #3da07a;
+  border-color: #3da07a;
+  color: #ffffff;
+}
+
+/* X / Cruz / Azul (#2e6db4): Navegação primária, abertura, salvar */
+[data-theme="play"] .btn-action-blue {
+  background: var(--play-blue) !important;
+  color: #ffffff !important;
+  border-color: var(--play-blue) !important;
+  font-weight: 600;
+}
+
+[data-theme="play"] .btn-action-blue:hover {
+  background: #255d9b !important;
+  border-color: #255d9b !important;
+  color: #ffffff !important;
+}
+
+/* Círculo / Vermelho (#df0024): Exclusão, perigo, remoção */
+[data-theme="play"] .btn-action-red,
+[data-theme="play"] .btn-danger {
+  background: var(--play-red) !important;
+  color: #ffffff !important;
+  border-color: var(--play-red) !important;
+  font-weight: 600;
+}
+
+[data-theme="play"] .btn-action-red:hover,
+[data-theme="play"] .btn-danger:hover {
+  background: #ba001e !important;
+  border-color: #ba001e !important;
+  color: #ffffff !important;
+}
+
+/* Botão de remoção sutil na listagem de projetos */
+[data-theme="play"] .btn-action-red-subtle {
+  background: transparent !important;
+  color: var(--play-red) !important;
+  border-color: rgba(223, 0, 36, 0.45) !important;
+}
+
+[data-theme="play"] .btn-action-red-subtle:hover {
+  background: var(--play-red) !important;
+  color: #ffffff !important;
+  border-color: var(--play-red) !important;
+}
+
+/* Quadrado / Rosa (#f69dc8): Relink, atalhos numéricos, ajustes secundários */
+[data-theme="play"] .btn-action-pink {
+  background: var(--play-pink) !important;
+  color: #111111 !important;
+  border-color: var(--play-pink) !important;
+  font-weight: 600;
+}
+
+[data-theme="play"] .btn-action-pink:hover {
+  background: #e88fb9 !important;
+  border-color: #e88fb9 !important;
+  color: #000000 !important;
+}
+
+/* Alternadores e seletores ativos (sem preenchimento branco) */
+[data-theme="play"] .toggle-active {
+  background: var(--play-blue) !important;
+  color: #ffffff !important;
+  border-color: var(--play-blue) !important;
+  font-weight: 600;
+}
+
+[data-theme="play"] .shortcut-num-active {
+  background: var(--play-pink) !important;
+  color: #111111 !important;
+  border-color: var(--play-pink) !important;
+  font-weight: 700;
+}
+
+/* Inputs e selects com cantos mais arredondados */
+[data-theme="play"] .input,
+[data-theme="play"] .textarea,
+[data-theme="play"] .select {
+  border-radius: 8px;
+  background: rgba(18, 18, 18, 0.9);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="play"] .input:focus,
+[data-theme="play"] .textarea:focus,
+[data-theme="play"] .select:focus {
+  border-color: var(--play-blue);
+  box-shadow: 0 0 0 1px var(--play-blue);
+}
+
+/* 3. Containers abertos e transparentes na Home */
+[data-theme="play"] .home-projects-box {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-theme="play"] .home-projects-header {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem !important;
+}
+
+[data-theme="play"] .home-projects-list {
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem !important;
+}
+
+[data-theme="play"] .home-empty-box {
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  border-style: dashed !important;
+  border-radius: 12px;
+}
+
+[data-theme="play"] .home-project-card {
+  border-radius: 12px;
+  background: rgba(18, 18, 18, 0.7);
+  border-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  transition: all 0.15s ease-in-out;
+}
+
+[data-theme="play"] .home-project-card:hover {
+  background: rgba(26, 26, 26, 0.9);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* 4. Colunas e Kanban (Bordas estruturais preservadas!) */
+[data-theme="play"] .kanban-column {
+  border-radius: 12px;
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(12, 12, 12, 0.85);
+}
+
+[data-theme="play"] .kanban-column-header {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background: transparent !important;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="play"] .kanban-task-card {
+  border-radius: 8px;
+  background: rgba(20, 20, 20, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+  transition: all 0.15s ease-in-out;
+}
+
+[data-theme="play"] .kanban-task-card:hover {
+  background: rgba(28, 28, 28, 0.95);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* 5. Modais com cantos suaves */
+[data-theme="play"] .modal-surface {
+  border-radius: 16px;
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="play"] .modal-header {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background: transparent !important;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="play"] .modal-footer {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  background: transparent !important;
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="play"] .model-badge-default {
+  background: var(--play-blue) !important;
+  color: #ffffff !important;
+  border-radius: 4px;
+}

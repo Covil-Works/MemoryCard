@@ -239,7 +239,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
           {/* Botão Nova Coluna (substitui o botão de nova task no canto superior direito) */}
           <button
             onClick={() => setIsNewColumnModalOpen(true)}
-            className="btn btn-primary text-xs shrink-0"
+            className="btn btn-primary btn-action-green text-xs shrink-0"
           >
             {t('newColumn')}
           </button>
@@ -259,12 +259,12 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                 onDragOver={(e) => handleDragOver(e, column.id)}
                 onDragLeave={() => setDragOverColumn(null)}
                 onDrop={(e) => handleDrop(e, column.id)}
-                className={`flex flex-col bg-[#0c0c0c] border w-[82vw] max-w-[320px] sm:w-[290px] shrink-0 snap-start transition-colors ${
+                className={`kanban-column flex flex-col bg-[#0c0c0c] border w-[82vw] max-w-[320px] sm:w-[290px] shrink-0 snap-start transition-colors ${
                   isDragOver ? 'border-white bg-[#151515]' : 'border-[#222]'
                 }`}
               >
                 {/* Cabeçalho da Coluna com botão + Task e Menu de 3 Pontinhos */}
-                <div className="p-2.5 sm:p-3 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+                <div className="kanban-column-header p-2.5 sm:p-3 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
                   <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                     <span className="font-mono font-bold text-xs text-white uppercase tracking-wider truncate">
                       {column.name}
@@ -281,7 +281,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                         setNewTaskTargetColumn(column.id);
                         setIsNewTaskModalOpen(true);
                       }}
-                      className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0"
+                      className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0 btn-action-green"
                       title={`Adicionar task em ${column.name}`}
                     >
                       {t('addTask')}
@@ -412,7 +412,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                             setActiveTaskId(task.id);
                             setExternalConflictForActiveTask(false);
                           }}
-                          className="p-3 bg-[#111] border border-[#222] hover:border-[#555] cursor-pointer flex flex-col gap-2 transition-all hover:bg-[#161616]"
+                          className="kanban-task-card p-3 bg-[#111] border border-[#222] hover:border-[#555] cursor-pointer flex flex-col gap-2 transition-all hover:bg-[#161616]"
                         >
                           <div className="flex items-center justify-between text-[11px] font-mono">
                             <span className="text-[#888] font-bold">#{task.id}</span>

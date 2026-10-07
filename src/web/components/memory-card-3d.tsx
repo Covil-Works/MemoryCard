@@ -341,14 +341,15 @@ export function MemoryCard3D() {
       renderLogo();
     }
 
-    // 7. Agrupamento para rotação unificada (+10% no tamanho em relação à escala anterior: 0.814)
+    // 7. Agrupamento para rotação unificada
     const cardGroup = new THREE.Group();
     cardGroup.add(recessBackstop);
     cardGroup.add(bodyBrush);
     cardGroup.add(labelFloor);
     cardGroup.add(brandPlane);
 
-    cardGroup.scale.set(0.814, 0.814, 0.814);
+    cardGroup.scale.set(0.95, 0.95, 0.95);
+    cardGroup.position.set(0, -1.5, 0);
 
     scene.add(cardGroup);
 
@@ -434,7 +435,7 @@ export function MemoryCard3D() {
   return (
     <div
       ref={mountRef}
-      className="w-full h-full flex items-center justify-center relative select-none"
+      className="w-full h-full flex items-center justify-center relative select-none memorycard-3d-sticker overflow-visible"
       title="Passe o mouse sobre o objeto para acelerar a rotação ou arraste para inspecionar em 3D"
     />
   );

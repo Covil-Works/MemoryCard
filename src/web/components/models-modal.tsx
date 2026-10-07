@@ -118,8 +118,8 @@ export function ModelsModal({
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
-      <div className="bg-[#111] border border-[#333] max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
-        <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+      <div className="modal-surface bg-[#111] border border-[#333] max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+        <div className="modal-header p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <h2 className="text-sm font-bold font-mono text-white">Modelos de Task</h2>
           <button onClick={onClose} className="text-[#888] hover:text-white font-mono text-sm px-2">
             ✕
@@ -196,7 +196,7 @@ export function ModelsModal({
               >
                 Voltar
               </button>
-              <button type="submit" disabled={isSubmitting} className="btn btn-primary text-xs">
+              <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-action-green text-xs">
                 {isSubmitting ? 'Validando e Salvando...' : 'Salvar Modelo'}
               </button>
             </div>
@@ -210,7 +210,7 @@ export function ModelsModal({
               </p>
               <button
                 onClick={handleStartCreateNew}
-                className="btn btn-primary text-xs self-start sm:self-auto shrink-0"
+                className="btn btn-primary btn-action-green text-xs self-start sm:self-auto shrink-0"
               >
                 + Novo Modelo
               </button>
@@ -233,7 +233,7 @@ export function ModelsModal({
                           {model.scope === 'global' ? 'GLOBAL' : 'PROJETO'}
                         </span>
                         {isSelected && (
-                          <span className="text-[10px] font-mono px-1.5 py-0.2 bg-white text-black font-bold">
+                          <span className="text-[10px] font-mono px-1.5 py-0.2 bg-white text-black font-bold model-badge-default">
                             PADRÃO
                           </span>
                         )}
@@ -246,7 +246,7 @@ export function ModelsModal({
                     {!isSelected && (
                       <button
                         onClick={() => handleSelectDefaultModel(model.name)}
-                        className="btn text-xs self-end sm:self-auto shrink-0"
+                        className="btn text-xs self-end sm:self-auto shrink-0 btn-action-blue"
                       >
                         Definir como Padrão
                       </button>
