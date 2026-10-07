@@ -160,17 +160,17 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center w-full">
         {/* Lado Esquerdo: Objeto 3D alinhado ao centro com textos embaixo */}
         <div className="lg:col-span-6 flex flex-col items-center justify-center w-full">
-          <div className="w-full h-[270px] sm:h-[340px] lg:h-[390px] flex items-center justify-center">
+          <div className="w-full h-[200px] sm:h-[240px] lg:h-[270px] flex items-center justify-center">
             <MemoryCard3D />
           </div>
-          <div className="flex flex-col items-center justify-center text-center mt-2 select-none">
-            <span className="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans">
+          <div className="flex flex-col items-center justify-center text-center -mt-2 sm:-mt-3 select-none">
+            <span className="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans leading-tight">
               MemoryCard
             </span>
             <span className="text-xs text-[#777] font-mono mt-0.5">
               {APP_VERSION}
             </span>
-            <span className="text-xs sm:text-sm font-semibold tracking-wider text-[#aaa] mt-1 font-sans">
+            <span className="text-xs sm:text-sm font-semibold tracking-wider text-[#aaa] mt-0.5 font-sans">
               CovilDev
             </span>
           </div>

@@ -22,7 +22,7 @@ export function MemoryCard3D() {
     const initialHeight = container.clientHeight || 360;
 
     const camera = new THREE.PerspectiveCamera(45, initialWidth / initialHeight, 0.1, 1000);
-    camera.position.set(0, 24, 95);
+    camera.position.set(0, 18, 86);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -401,7 +401,7 @@ export function MemoryCard3D() {
       onPointerLeave={() => {
         isHoveredRef.current = false;
       }}
-      className="w-full h-full min-h-[260px] sm:min-h-[340px] flex items-center justify-center relative cursor-grab active:cursor-grabbing select-none"
+      className="w-full h-full flex items-center justify-center relative cursor-grab active:cursor-grabbing select-none"
       title="Passe o mouse para acelerar a rotação ou arraste para inspecionar em 3D"
     />
   );
