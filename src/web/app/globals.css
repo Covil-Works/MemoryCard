@@ -146,26 +146,7 @@ code, pre, .font-mono {
   --border-focus: #2e6db4;
 }
 
-/* 1. Memory Card 3D: Contorno branco ~4px estilo adesivo/sticker na silhueta 2D */
-[data-theme="play"] .memorycard-3d-sticker canvas {
-  filter:
-    drop-shadow(4px 0 0 #ffffff)
-    drop-shadow(-4px 0 0 #ffffff)
-    drop-shadow(0 4px 0 #ffffff)
-    drop-shadow(0 -4px 0 #ffffff)
-    drop-shadow(2.83px 2.83px 0 #ffffff)
-    drop-shadow(-2.83px 2.83px 0 #ffffff)
-    drop-shadow(2.83px -2.83px 0 #ffffff)
-    drop-shadow(-2.83px -2.83px 0 #ffffff)
-    drop-shadow(3.7px 1.5px 0 #ffffff)
-    drop-shadow(-3.7px 1.5px 0 #ffffff)
-    drop-shadow(3.7px -1.5px 0 #ffffff)
-    drop-shadow(-3.7px -1.5px 0 #ffffff)
-    drop-shadow(1.5px 3.7px 0 #ffffff)
-    drop-shadow(-1.5px 3.7px 0 #ffffff)
-    drop-shadow(1.5px -3.7px 0 #ffffff)
-    drop-shadow(-1.5px -3.7px 0 #ffffff);
-}
+/* 1. Memory Card 3D: Contorno estilo sticker renderizado nativamente no WebGL a 60fps */
 
 /* 2. Botões: cantos arredondados, sem preenchimento branco e com a nova paleta */
 [data-theme="play"] .btn,

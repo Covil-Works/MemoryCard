@@ -247,7 +247,7 @@ const DEFAULT_VISIBILITY: VisibilitySettings = {
   theme: 'default',
 };
 
-const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
+export const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('pt-br');
