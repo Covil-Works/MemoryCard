@@ -115,24 +115,29 @@ A aplicação suporta múltiplos temas visuais preservando integralmente a estru
 2. **Imutabilidade Visual:** Nenhuma alteração de cores, bordas ou comportamentos visuais deve afetar o tema `default`.
 
 ### 3. Diretrizes do Tema `play`
-1. **Fundo Principal:** Permanece preto (`#000000`).
+1. **Hierarquia de Fundo e Contêineres:**
+   - **Fundo Principal:** Adota a tonalidade cinza escuro `#242424` (`background mais escuro`).
+   - **Cabeçalho e Contêineres:** O cabeçalho (`AppHeader`) e a caixa externa de projetos na Home utilizam a tonalidade cinza `#2C2C2C`.
+   - **Elementos e Cards Internos Mais Claros:** Os cards de projeto na Home (`#383838`) e os cards de tarefas no Kanban (`#383838`, hover `#424242`) possuem tonalidade mais clara para garantir contraste nítido em relação ao fundo e aos contêineres.
+   - **Colunas do Board:** Não são mais escuras que o background; utilizam a tonalidade cinza `#2C2C2C`, mantendo a coerência visual entre containers.
+   - **Controle de Ordenação:** Utiliza o ícone padrão de ordenação do projeto (`ArrowUpDown`) e seu seletor (`select`) não é mais escuro que o background (`#2C2C2C`).
 2. **Paleta de Cores Inspirada nos Símbolos dos Controles:**
    - **Triângulo / Verde (`#46b48a`):** Ações de criação e avanço (`+ Novo Projeto`, `+ Nova Coluna`, `+ Novo Modelo`, `Criar Task`, `+ Todo`).
    - **X / Cruz / Azul (`#2e6db4`):** Salvar configurações e estados ativos de alternância/toggles.
    - **Círculo / Vermelho (`#df0024`):** Ações destrutivas, perigo e exclusão (ícone de lixeira / remoção de projeto, `Excluir Coluna`, `Excluir Task`).
    - **Quadrado / Rosa (`#f69dc8`):** Ações primárias de abertura de quadro (`Abrir Board`), adição de tarefas nas colunas (`+ Task`), relink (`Relincar Pasta`), atalhos numéricos contextuais (`[3, 5, 7, 10]`) e ajustes secundários.
-3. **Regras de Botões:**
-   - **Bordas de 2px e Fundo Transparente:** Todos os botões possuem borda de `2px`, fundo transparente (`background: transparent`) e texto/ícone renderizado na respectiva cor semântica.
+3. **Regras de Botões Coloridos:**
+   - **Estado Normal:** Fundo transparente, borda de `2px` na respectiva cor do botão, e texto/ícones renderizados na mesma cor.
+   - **Hover:** O fundo do botão é preenchido com a respectiva cor do botão, a borda mantém a mesma cor, e o texto, ícones vetoriais e conteúdo interno tornam-se inteiramente brancos (`#ffffff`).
+   - **Abrangência Universal:** Válido para todos os botões coloridos do tema, inclusive em diálogos e modais.
    - **Cantos Suaves Padronizados (4px):** Todos os elementos, caixas, modais e botões possuem acabamento com cantos arredondados de `4px` (`border-radius: 4px`).
-   - **Ícone de Lixeira:** A remoção de projeto da lista é representada por um ícone de lixeira vetorial (`Trash2`) em vermelho, mantendo a interface limpa e compacta.
-4. **Cards e Contêineres Abertos:**
-   - Grandes caixas e contêineres decorativos (como o card externo de projetos na Home) tornam-se transparentes (`background: transparent`, `border-color: transparent`, `box-shadow: none`), deixando a hierarquia visual a cargo dos próprios títulos, botões e itens internos.
-5. **Preservação de Bordas Estruturais:**
-   - Bordas que organizam o fluxo de colunas e divisões estruturais do layout (como separadores de cabeçalho e trilhos de colunas do Kanban) devem continuar existindo.
-6. **Memory Card 3D com Sticker Outline:**
-   - O objeto 3D do Memory Card na Home recebe um contorno branco contínuo de aproximadamente `4px` ao redor de sua silhueta 2D enquanto gira.
-   - O contorno não deve ser uma geometria 3D no modelo; é aplicado como efeito/filtro 2D na projeção da tela sobre o canvas transparente, sem acompanhar individualmente faces internas ou profundidade do objeto.
-7. **Alternância e Persistência:**
+   - **Ícone de Lixeira:** A remoção de projeto da lista é representada por um ícone de lixeira vetorial (`Trash2`) em vermelho.
+4. **Preservação Visual de Dialogs e Modais:**
+   - Diálogos e modais preservam integralmente seus backgrounds, superfícies (`#242424`), contêineres e campos de entrada originais, aplicando apenas a regra de hover nos botões.
+5. **Memory Card 3D:**
+   - **Iluminação Calibrada:** Reutiliza a configuração e calibração visual do tema `default` (mesmo ângulo de iluminação, mapa de tons sRGB e realce dos relevos e detalhes da carcaça plástica).
+   - **Sticker Outline:** Contorno branco contínuo de aproximadamente `4px` ao redor da silhueta 2D renderizado nativamente na GPU via pós-processamento.
+6. **Alternância e Persistência:**
    - O tema é configurável via `VisibilityModal` (seguindo a hierarquia de `UI-001`) e atalho rápido no menu superior direito do `AppHeader`.
    - O tema ativo é persistido no `localStorage` sob a chave `memorycard_theme` e refletido no DOM pelo atributo `data-theme="play"` / `data-theme="default"`.
 

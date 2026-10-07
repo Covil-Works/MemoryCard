@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { SUBTRACTION, Brush, Evaluator } from 'three-bvh-csg';
 import { SettingsContext } from './settings-context';
 
@@ -505,6 +506,9 @@ export function MemoryCard3D() {
     const stickerPass = new ShaderPass(stickerShader);
     composer.addPass(stickerPass);
 
+    const outputPass = new OutputPass();
+    composer.addPass(outputPass);
+
     // 10. Loop de animação com aceleração apenas quando o mouse toca o objeto
     let currentSpeed = 0.007;
     let animId = 0;
@@ -546,6 +550,7 @@ export function MemoryCard3D() {
       renderer.domElement.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointerup', onPointerUp);
       controls.dispose();
+      outputPass.dispose();
       stickerPass.dispose();
       composer.dispose();
       renderer.dispose();

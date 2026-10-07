@@ -9,6 +9,7 @@ import { RenameColumnModal } from '../../components/rename-column-modal';
 import { DeleteColumnModal } from '../../components/delete-column-modal';
 import { ModelsModal } from '../../components/models-modal';
 import { useSettings } from '../../components/settings-context';
+import { ArrowUpDown } from 'lucide-react';
 
 interface Column {
   id: string;
@@ -42,7 +43,7 @@ interface ProjectInfo {
 
 export default function ProjectBoardPage({ params }: { params: { slug: string } }) {
   const slug = params.slug;
-  const { t, setProjectActions, getColumnTasksStyle } = useSettings();
+  const { t, setProjectActions, getColumnTasksStyle, theme } = useSettings();
 
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -224,6 +225,9 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
 
         <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto shrink-0">
           <div className="flex items-center gap-1.5 sm:gap-2">
+            {theme === 'play' && (
+              <ArrowUpDown className="w-3.5 h-3.5 text-[#888] shrink-0" />
+            )}
             <label className="text-[10px] font-mono text-[#777] shrink-0">{t('sort')}</label>
             <select
               className="select text-xs font-mono py-1 px-2"
