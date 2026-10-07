@@ -19,7 +19,7 @@ const MemoryCard3D = dynamic(() => import('../components/memory-card-3d'), {
 
 import pkg from '../../../package.json';
 
-const APP_VERSION = `v${pkg.version}`;
+const APP_VERSION = pkg.version;
 
 interface ProjectEntry {
   project_id: string;
@@ -160,19 +160,24 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center w-full">
         {/* Lado Esquerdo: Objeto 3D alinhado ao centro com textos embaixo */}
         <div className="lg:col-span-6 flex flex-col items-center justify-center w-full lg:-translate-y-4">
-          <div className="w-[300px] sm:w-[350px] h-[290px] sm:h-[340px] flex items-center justify-center">
+          <div className="w-[280px] sm:w-[320px] h-[270px] sm:h-[310px] flex items-center justify-center">
             <MemoryCard3D />
           </div>
           <div className="flex flex-col items-center justify-center text-center -mt-1 sm:-mt-2 select-none">
-            <span className="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans leading-tight">
+            <span className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-sans leading-tight">
               MemoryCard
             </span>
             <span className="text-xs text-[#777] font-mono mt-0.5">
               {APP_VERSION}
             </span>
-            <span className="text-xs sm:text-sm font-semibold tracking-wider text-[#aaa] mt-0.5 font-sans">
+            <a
+              href="https://covildev.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs sm:text-sm font-semibold tracking-wider text-[#999] hover:text-white transition-colors mt-0.5 font-sans underline-offset-4 hover:underline"
+            >
               CovilDev
-            </span>
+            </a>
           </div>
         </div>
 

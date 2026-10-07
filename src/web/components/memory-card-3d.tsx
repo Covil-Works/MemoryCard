@@ -341,14 +341,14 @@ export function MemoryCard3D() {
       renderLogo();
     }
 
-    // 7. Agrupamento para rotação unificada (+40% no tamanho em relação à escala anterior: 1.18)
+    // 7. Agrupamento para rotação unificada (-10% no tamanho em relação à escala anterior: 1.06)
     const cardGroup = new THREE.Group();
     cardGroup.add(recessBackstop);
     cardGroup.add(bodyBrush);
     cardGroup.add(labelFloor);
     cardGroup.add(brandPlane);
 
-    cardGroup.scale.set(1.18, 1.18, 1.18);
+    cardGroup.scale.set(1.06, 1.06, 1.06);
 
     scene.add(cardGroup);
 
