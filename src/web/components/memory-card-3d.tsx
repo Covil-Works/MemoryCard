@@ -30,7 +30,7 @@ export function MemoryCard3D() {
     const initialHeight = container.clientHeight || 360;
 
     const camera = new THREE.PerspectiveCamera(45, initialWidth / initialHeight, 0.1, 1000);
-    camera.position.set(0, 18, 88);
+    camera.position.set(0, -9, 88);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
