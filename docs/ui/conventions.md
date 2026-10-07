@@ -117,13 +117,14 @@ A aplicação suporta múltiplos temas visuais preservando integralmente a estru
 ### 3. Diretrizes do Tema `play`
 1. **Fundo Principal:** Permanece preto (`#000000`).
 2. **Paleta de Cores Inspirada nos Símbolos dos Controles:**
-   - **Triângulo / Verde (`#46b48a`):** Ações de criação, adição e avanço (`+ Novo Projeto`, `+ Nova Coluna`, `+ Task`, `+ Novo Modelo`, `Criar Task`, `+ Todo`).
-   - **X / Cruz / Azul (`#2e6db4`):** Ações primárias de abertura e navegação (`Abrir Board →`), salvar configurações e estados ativos de alternância/toggles.
-   - **Círculo / Vermelho (`#df0024`):** Ações destrutivas, perigo e exclusão (`Remover`, `Excluir Coluna`, `Excluir Task`).
-   - **Quadrado / Rosa (`#f69dc8`):** Ações de relink (`Relincar Pasta`), atalhos numéricos contextuais (`[3, 5, 7, 10]`) e ajustes secundários.
+   - **Triângulo / Verde (`#46b48a`):** Ações de criação e avanço (`+ Novo Projeto`, `+ Nova Coluna`, `+ Novo Modelo`, `Criar Task`, `+ Todo`).
+   - **X / Cruz / Azul (`#2e6db4`):** Salvar configurações e estados ativos de alternância/toggles.
+   - **Círculo / Vermelho (`#df0024`):** Ações destrutivas, perigo e exclusão (ícone de lixeira / remoção de projeto, `Excluir Coluna`, `Excluir Task`).
+   - **Quadrado / Rosa (`#f69dc8`):** Ações primárias de abertura de quadro (`Abrir Board`), adição de tarefas nas colunas (`+ Task`), relink (`Relincar Pasta`), atalhos numéricos contextuais (`[3, 5, 7, 10]`) e ajustes secundários.
 3. **Regras de Botões:**
-   - **Proibição de Preenchimento Branco:** Nenhum botão deve ter preenchimento branco (`background: #ffffff`). O branco é reservado para textos, bordas, ícones e detalhes.
-   - **Cantos Arredondados:** Botões possuem acabamento menos rígido e cantos mais suaves (`border-radius: 8px`).
+   - **Bordas de 2px e Fundo Transparente:** Todos os botões possuem borda de `2px`, fundo transparente (`background: transparent`) e texto/ícone renderizado na respectiva cor semântica.
+   - **Cantos Suaves Padronizados (4px):** Todos os elementos, caixas, modais e botões possuem acabamento com cantos arredondados de `4px` (`border-radius: 4px`).
+   - **Ícone de Lixeira:** A remoção de projeto da lista é representada por um ícone de lixeira vetorial (`Trash2`) em vermelho, mantendo a interface limpa e compacta.
 4. **Cards e Contêineres Abertos:**
    - Grandes caixas e contêineres decorativos (como o card externo de projetos na Home) tornam-se transparentes (`background: transparent`, `border-color: transparent`, `box-shadow: none`), deixando a hierarquia visual a cargo dos próprios títulos, botões e itens internos.
 5. **Preservação de Bordas Estruturais:**

@@ -281,7 +281,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                         setNewTaskTargetColumn(column.id);
                         setIsNewTaskModalOpen(true);
                       }}
-                      className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0 btn-action-green"
+                      className="btn text-xs py-0.5 px-2 hover:border-[#555] text-gray-300 hover:text-white shrink-0 btn-action-pink"
                       title={`Adicionar task em ${column.name}`}
                     >
                       {t('addTask')}

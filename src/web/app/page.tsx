@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSSE } from '../hooks/use-sse';
 import { useSettings } from '../components/settings-context';
 import { FolderBrowser } from '../components/folder-browser';
+import { Trash2 } from 'lucide-react';
 
 import dynamic from 'next/dynamic';
 
@@ -163,7 +164,7 @@ export default function DashboardPage() {
           <div className="w-[280px] sm:w-[320px] h-[280px] sm:h-[320px] flex items-center justify-center">
             <MemoryCard3D />
           </div>
-          <div className="flex flex-col items-center justify-center text-center -mt-8 select-none">
+          <div className="flex flex-col items-center justify-center text-center -mt-3 select-none">
             <span className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-sans leading-tight">
               MemoryCard
             </span>
@@ -240,15 +241,16 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2 shrink-0 self-end sm:self-center border-t border-[#1a1a1a] sm:border-0 pt-2 sm:pt-0 w-full sm:w-auto justify-end">
                       {p.available ? (
                         <>
-                          <Link href={`/${p.slug}`} className="btn btn-primary btn-action-blue text-xs">
+                          <Link href={`/${p.slug}`} className="btn btn-primary btn-action-pink text-xs">
                             {t('openBoard')}
                           </Link>
                           <button
                             onClick={() => handleUnregisterProject(p.project_id, p.name)}
-                            className="btn text-xs text-[#888] hover:text-[#f66] hover:border-[#f66] btn-action-red-subtle"
+                            className="btn btn-action-red text-xs p-1.5"
                             title="Remover projeto da lista do MemoryCard"
+                            aria-label={t('remove')}
                           >
-                            {t('remove')}
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </>
                       ) : (
@@ -264,10 +266,11 @@ export default function DashboardPage() {
                           </button>
                           <button
                             onClick={() => handleUnregisterProject(p.project_id, p.name)}
-                            className="btn btn-danger btn-action-red text-xs"
+                            className="btn btn-danger btn-action-red text-xs p-1.5"
                             title="Remover projeto indisponível da lista"
+                            aria-label={t('remove')}
                           >
-                            {t('remove')}
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </>
                       )}

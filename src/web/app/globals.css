@@ -148,119 +148,112 @@ code, pre, .font-mono {
 
 /* 1. Memory Card 3D: Contorno estilo sticker renderizado nativamente no WebGL a 60fps */
 
-/* 2. Botões: cantos arredondados, sem preenchimento branco e com a nova paleta */
+/* 2. Botões: cantos de 4px, borda de 2px, transparentes e com a cor do símbolo */
 [data-theme="play"] .btn,
 [data-theme="play"] button:not(.btn-unstyled) {
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 /* Botão padrão / secundário */
 [data-theme="play"] .btn {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.16);
-  color: #eeeeee;
+  background: transparent !important;
+  border: 2px solid rgba(255, 255, 255, 0.22) !important;
+  color: #eeeeee !important;
   transition: all 0.15s ease-in-out;
 }
 
 [data-theme="play"] .btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.32);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  color: #ffffff !important;
 }
 
-/* Triângulo / Verde (#46b48a): Ações de criação e adição */
+[data-theme="play"] .btn svg {
+  color: inherit;
+}
+
+/* Triângulo / Verde (#46b48a): Ações de criação e avanço */
 [data-theme="play"] .btn-action-green,
-[data-theme="play"] .btn-primary {
-  background: var(--play-green);
-  color: #ffffff;
-  border-color: var(--play-green);
+[data-theme="play"] .btn-primary:not(.btn-action-blue):not(.btn-action-pink):not(.btn-action-red) {
+  background: transparent !important;
+  color: var(--play-green) !important;
+  border: 2px solid var(--play-green) !important;
   font-weight: 600;
 }
 
 [data-theme="play"] .btn-action-green:hover,
-[data-theme="play"] .btn-primary:hover {
-  background: #3da07a;
-  border-color: #3da07a;
-  color: #ffffff;
+[data-theme="play"] .btn-primary:not(.btn-action-blue):not(.btn-action-pink):not(.btn-action-red):hover {
+  background: rgba(70, 180, 138, 0.12) !important;
+  border-color: #55cca0 !important;
+  color: #55cca0 !important;
 }
 
 /* X / Cruz / Azul (#2e6db4): Navegação primária, abertura, salvar */
 [data-theme="play"] .btn-action-blue {
-  background: var(--play-blue) !important;
-  color: #ffffff !important;
-  border-color: var(--play-blue) !important;
+  background: transparent !important;
+  color: var(--play-blue) !important;
+  border: 2px solid var(--play-blue) !important;
   font-weight: 600;
 }
 
 [data-theme="play"] .btn-action-blue:hover {
-  background: #255d9b !important;
-  border-color: #255d9b !important;
-  color: #ffffff !important;
+  background: rgba(46, 109, 180, 0.12) !important;
+  border-color: #4387d8 !important;
+  color: #4387d8 !important;
 }
 
 /* Círculo / Vermelho (#df0024): Exclusão, perigo, remoção */
 [data-theme="play"] .btn-action-red,
-[data-theme="play"] .btn-danger {
-  background: var(--play-red) !important;
-  color: #ffffff !important;
-  border-color: var(--play-red) !important;
+[data-theme="play"] .btn-danger,
+[data-theme="play"] .btn-action-red-subtle {
+  background: transparent !important;
+  color: var(--play-red) !important;
+  border: 2px solid var(--play-red) !important;
   font-weight: 600;
 }
 
 [data-theme="play"] .btn-action-red:hover,
-[data-theme="play"] .btn-danger:hover {
-  background: #ba001e !important;
-  border-color: #ba001e !important;
-  color: #ffffff !important;
-}
-
-/* Botão de remoção sutil na listagem de projetos */
-[data-theme="play"] .btn-action-red-subtle {
-  background: transparent !important;
-  color: var(--play-red) !important;
-  border-color: rgba(223, 0, 36, 0.45) !important;
-}
-
+[data-theme="play"] .btn-danger:hover,
 [data-theme="play"] .btn-action-red-subtle:hover {
-  background: var(--play-red) !important;
-  color: #ffffff !important;
-  border-color: var(--play-red) !important;
+  background: rgba(223, 0, 36, 0.12) !important;
+  border-color: #ff2b4f !important;
+  color: #ff2b4f !important;
 }
 
-/* Quadrado / Rosa (#f69dc8): Relink, atalhos numéricos, ajustes secundários */
+/* Quadrado / Rosa (#f69dc8): Abrir board, add task, relink, atalhos */
 [data-theme="play"] .btn-action-pink {
-  background: var(--play-pink) !important;
-  color: #111111 !important;
-  border-color: var(--play-pink) !important;
+  background: transparent !important;
+  color: var(--play-pink) !important;
+  border: 2px solid var(--play-pink) !important;
   font-weight: 600;
 }
 
 [data-theme="play"] .btn-action-pink:hover {
-  background: #e88fb9 !important;
-  border-color: #e88fb9 !important;
-  color: #000000 !important;
+  background: rgba(246, 157, 200, 0.12) !important;
+  border-color: #fbb3d8 !important;
+  color: #fbb3d8 !important;
 }
 
-/* Alternadores e seletores ativos (sem preenchimento branco) */
+/* Alternadores e seletores ativos (transparentes com texto da cor) */
 [data-theme="play"] .toggle-active {
-  background: var(--play-blue) !important;
-  color: #ffffff !important;
-  border-color: var(--play-blue) !important;
+  background: transparent !important;
+  color: var(--play-blue) !important;
+  border: 2px solid var(--play-blue) !important;
   font-weight: 600;
 }
 
 [data-theme="play"] .shortcut-num-active {
-  background: var(--play-pink) !important;
-  color: #111111 !important;
-  border-color: var(--play-pink) !important;
+  background: transparent !important;
+  color: var(--play-pink) !important;
+  border: 2px solid var(--play-pink) !important;
   font-weight: 700;
 }
 
-/* Inputs e selects com cantos mais arredondados */
+/* Inputs e selects com cantos de 4px */
 [data-theme="play"] .input,
 [data-theme="play"] .textarea,
 [data-theme="play"] .select {
-  border-radius: 8px;
+  border-radius: 4px;
   background: rgba(18, 18, 18, 0.9);
   border-color: rgba(255, 255, 255, 0.15);
 }
@@ -295,11 +288,11 @@ code, pre, .font-mono {
   background: transparent !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
   border-style: dashed !important;
-  border-radius: 12px;
+  border-radius: 4px;
 }
 
 [data-theme="play"] .home-project-card {
-  border-radius: 12px;
+  border-radius: 4px;
   background: rgba(18, 18, 18, 0.7);
   border-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
@@ -313,20 +306,20 @@ code, pre, .font-mono {
 
 /* 4. Colunas e Kanban (Bordas estruturais preservadas!) */
 [data-theme="play"] .kanban-column {
-  border-radius: 12px;
+  border-radius: 4px;
   border-color: rgba(255, 255, 255, 0.12);
   background: rgba(12, 12, 12, 0.85);
 }
 
 [data-theme="play"] .kanban-column-header {
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   background: transparent !important;
   border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="play"] .kanban-task-card {
-  border-radius: 8px;
+  border-radius: 4px;
   background: rgba(20, 20, 20, 0.85);
   border-color: rgba(255, 255, 255, 0.08);
   transition: all 0.15s ease-in-out;
@@ -337,29 +330,39 @@ code, pre, .font-mono {
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-/* 5. Modais com cantos suaves */
+/* 5. Modais com cantos de 4px */
 [data-theme="play"] .modal-surface {
-  border-radius: 16px;
+  border-radius: 4px;
   border-color: rgba(255, 255, 255, 0.18);
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85);
 }
 
 [data-theme="play"] .modal-header {
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   background: transparent !important;
   border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="play"] .modal-footer {
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
   background: transparent !important;
   border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="play"] .model-badge-default {
-  background: var(--play-blue) !important;
-  color: #ffffff !important;
+  background: transparent !important;
+  color: var(--play-blue) !important;
+  border: 1px solid var(--play-blue) !important;
   border-radius: 4px;
+}
+
+/* 6. Normalização de border-radius para 4px para tudo no tema play */
+[data-theme="play"] .rounded-sm,
+[data-theme="play"] .rounded-md,
+[data-theme="play"] .rounded-lg,
+[data-theme="play"] .rounded-xl,
+[data-theme="play"] .rounded-2xl {
+  border-radius: 4px !important;
 }
