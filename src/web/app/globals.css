@@ -87,7 +87,8 @@ code, pre, .font-mono {
   border-radius: 2px;
 }
 
-.btn:hover {
+.btn:hover,
+.btn[aria-expanded="true"] {
   background: var(--bg-hover);
   border-color: var(--text-secondary);
 }
@@ -374,7 +375,34 @@ code, pre, .font-mono {
   border-color: var(--play-blue) !important;
 }
 
-/* Menu dropdown de ordenação no board */
+/* Menu dropdown de ordenação no board (Tema Default base) */
+.sort-dropdown-menu {
+  background-color: #111111;
+  border: 1px solid #333333;
+  border-radius: 2px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+}
+
+.sort-dropdown-item {
+  color: #cccccc;
+  transition: all 0.15s ease-in-out;
+}
+
+.sort-dropdown-item:hover {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+.sort-dropdown-item.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.sort-dropdown-item .sort-check-icon {
+  color: #ffffff;
+}
+
+/* Menu dropdown de ordenação no board (Tema Play) */
 [data-theme="play"] .sort-dropdown-menu {
   background-color: #2C2C2C !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
@@ -395,6 +423,10 @@ code, pre, .font-mono {
 [data-theme="play"] .sort-dropdown-item.active {
   color: var(--play-blue) !important;
   font-weight: 600;
+}
+
+[data-theme="play"] .sort-dropdown-item .sort-check-icon {
+  color: var(--play-blue) !important;
 }
 
 /* 5. Modais com cantos de 4px - cores e superfícies preservadas */
