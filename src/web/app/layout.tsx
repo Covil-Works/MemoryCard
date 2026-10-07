@@ -1,9 +1,17 @@
 import './globals.css';
 import React from 'react';
+import { Poppins } from 'next/font/google';
 import { SettingsProvider } from '../components/settings-context';
 import { AppHeader } from '../components/app-header';
 import { VisibilityModal } from '../components/visibility-modal';
 import { NetworkModal } from '../components/network-modal';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-poppins',
+  display: 'swap',
+});
 
 export const metadata = {
   title: 'MemoryCard',
@@ -22,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
-      <body className="bg-black text-white min-h-screen flex flex-col font-sans overflow-x-hidden">
+    <html lang="pt-BR" className={poppins.variable}>
+      <body className={`${poppins.className} bg-black text-white min-h-screen flex flex-col font-sans overflow-x-hidden`}>
         <SettingsProvider>
           <AppHeader />
           <main className="flex-1 flex flex-col p-3 sm:p-6 w-full max-w-full min-w-0 overflow-x-hidden">

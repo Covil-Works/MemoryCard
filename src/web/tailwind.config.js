@@ -12,7 +12,11 @@ export default {
     path.join(__dirname, 'hooks/**/*.{js,ts,jsx,tsx,mdx}').replace(/\\/g, '/'),
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-poppins)', 'Poppins', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
