@@ -22,7 +22,7 @@ export function MemoryCard3D() {
     const initialHeight = container.clientHeight || 360;
 
     const camera = new THREE.PerspectiveCamera(45, initialWidth / initialHeight, 0.1, 1000);
-    camera.position.set(0, 18, 86);
+    camera.position.set(0, 18, 96);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -341,14 +341,14 @@ export function MemoryCard3D() {
       renderLogo();
     }
 
-    // 7. Agrupamento para rotação unificada (+20% no tamanho em relação à escala anterior: 0.84)
+    // 7. Agrupamento para rotação unificada (+40% no tamanho em relação à escala anterior: 1.18)
     const cardGroup = new THREE.Group();
     cardGroup.add(recessBackstop);
     cardGroup.add(bodyBrush);
     cardGroup.add(labelFloor);
     cardGroup.add(brandPlane);
 
-    cardGroup.scale.set(0.84, 0.84, 0.84);
+    cardGroup.scale.set(1.18, 1.18, 1.18);
 
     scene.add(cardGroup);
 
