@@ -28,7 +28,7 @@ export function createDefaultConfig(projectId: string, projectName: string): Pro
       { id: 'done', name: 'Done', order: 2 }
     ],
     board: {
-      sort: 'updated_at'
+      sort: 'custom'
     },
     task_model: 'default'
   };

@@ -5,6 +5,7 @@ import { SettingsProvider } from '../components/settings-context';
 import { AppHeader } from '../components/app-header';
 import { VisibilityModal } from '../components/visibility-modal';
 import { NetworkModal } from '../components/network-modal';
+import { PlayNoiseOverlay } from '../components/play-noise-overlay';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -39,6 +40,7 @@ export default function RootLayout({
           </main>
           <VisibilityModal />
           <NetworkModal />
+          <PlayNoiseOverlay />
         </SettingsProvider>
       </body>
     </html>

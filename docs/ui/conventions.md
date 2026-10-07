@@ -117,10 +117,10 @@ A aplicação suporta múltiplos temas visuais preservando integralmente a estru
 ### 3. Diretrizes do Tema `play`
 1. **Hierarquia de Fundo e Contêineres:**
    - **Fundo Principal:** Adota a tonalidade cinza escuro `#242424` (`background mais escuro`).
-   - **Cabeçalho e Contêineres:** O cabeçalho (`AppHeader`) e a caixa externa de projetos na Home utilizam a tonalidade cinza `#2C2C2C`.
+   - **Cabeçalho e Contêineres:** O cabeçalho (`AppHeader`) e o container de projetos na Home utilizam a tonalidade cinza `#2C2C2C`. No container principal de projetos (`.home-projects-box`), a sombra e a borda externa são completamente removidas (sem borda de `1px`), mantendo apenas o bloco na cor de fundo `#2C2C2C` e a linha divisória inferior abaixo do título "Projetos registrados" (`.home-projects-header`).
    - **Elementos e Cards Internos Mais Claros:** Os cards de projeto na Home (`#383838`) e os cards de tarefas no Kanban (`#383838`, hover `#424242`) possuem tonalidade mais clara para garantir contraste nítido em relação ao fundo e aos contêineres.
    - **Colunas do Board:** Não são mais escuras que o background; utilizam a tonalidade cinza `#2C2C2C`, mantendo a coerência visual entre containers.
-   - **Controle de Ordenação:** Utiliza o ícone padrão de ordenação do projeto (`ArrowUpDown`) e seu seletor (`select`) não é mais escuro que o background (`#2C2C2C`).
+   - **Controle de Ordenação:** Substitui o seletor visível e texto "Ordenar" por um botão contendo exclusivamente o ícone de ordenação (`ArrowUpDown`), estilizado no padrão visual de botões do tema com a cor associada ao `X / Cruz` (`#2e6db4` / `.btn-action-blue`). Ao clicar, abre o menu dropdown com as opções disponíveis (`Manual`, `Mais Recente`, `Alfabética`), indicando a ordenação atualmente selecionada com checkmark e destaque visual. A ordenação padrão é `Manual`.
 2. **Paleta de Cores Inspirada nos Símbolos dos Controles:**
    - **Triângulo / Verde (`#46b48a`):** Ações de criação e avanço (`+ Novo Projeto`, `+ Nova Coluna`, `+ Novo Modelo`, `Criar Task`, `+ Todo`).
    - **X / Cruz / Azul (`#2e6db4`):** Salvar configurações e estados ativos de alternância/toggles.
@@ -137,14 +137,18 @@ A aplicação suporta múltiplos temas visuais preservando integralmente a estru
 5. **Memory Card 3D:**
    - **Iluminação Calibrada:** Reutiliza a configuração e calibração visual do tema `default` (mesmo ângulo de iluminação, mapa de tons sRGB e realce dos relevos e detalhes da carcaça plástica).
    - **Sticker Outline:** Contorno branco contínuo de aproximadamente `4px` ao redor da silhueta 2D renderizado nativamente na GPU via pós-processamento.
-   - **Interação Física ao Pressionar:** Ao pressionar (`pointerdown`), o card diminui levemente de tamanho. Se mantido pressionado por mais de 220ms, acumula energia e inicia uma tremida (shake) sutil. Ao soltar (`pointerup`), a tremida para imediatamente, o card aumenta rapidamente além do tamanho normal (overshoot) e retorna suavemente ao tamanho original. Cliques sucessivos tratam a transição suavemente sem interrupção abrupta.
+   - **Velocidades de Rotação e Hover:** Ao passar o mouse (`hover`) sobre o objeto 3D, a rotação desacelera suavemente para um ritmo mais lento que a velocidade original em ambos os temas (`default` e `play`).
+   - **Interação Física ao Pressionar:** Ao pressionar (`pointerdown`) no tema `play`, o card diminui levemente de tamanho e acelera sua rotação gradativamente enquanto vibra/treme (shake cumulativo após 220ms). Ao soltar (`pointerup`), a tremida para imediatamente, a rotação desacelera suavemente de volta ao ritmo de hover, o card aumenta rapidamente além do tamanho normal (overshoot) e retorna suavemente ao tamanho original. Cliques sucessivos tratam a transição suavemente sem interrupção abrupta.
    - **Emissão de Letras como Partículas:** Ao soltar o card (tanto em clique rápido quanto segurado), letras soltas surgem de trás da silhueta do card em direções radiais aleatórias, desacelerando suavemente por atrito e desaparecendo em fade out gradual.
      - **Conjunto de Caracteres Restrito:** Apenas letras contidas nas palavras `Memory Card` e `Covil`.
      - **Tipografia:** Fonte retrô `MinimalHard` (`ref/`).
      - **Cores:** Reutiliza exclusivamente as variáveis do tema Play (`--play-green`, `--play-pink`, `--play-red`, `--play-blue`).
-     - **Intensidade Proporcional:** Quantidade de partículas varia de 14 (clique rápido) até 48 (clique segurado acumulado).
+     - **Intensidade e Alcance Proporcionais:** A quantidade (16 a 54) e o alcance das partículas aumentam progressivamente com o tempo em que o card é segurado. No clique rápido, as letras ficam contidas em raio menor próximo ao card; em seguradas mais longas, ganham maior velocidade e viajam até as extremidades da tela (para cima, baixo, esquerda e direita) em canvas de tela cheia antes de desaparecerem por fade out.
 6. **Efeito Visual de Ruído / Granulado Animado:**
-   - Textura sutil de pequenos pontos/grãos aplicada via overlay fixo (`opacity: 0.04`) com animação contínua em passos discretos (`steps(8)`), sem scanlines, faixas VHS ou distorções agressivas, garantindo legibilidade e desempenho ideais exclusivamente no tema `play`.
+   - Textura orgânica de pequenos pontos/grãos de foto/vídeo antigo renderizada dinamicamente via canvas dedicado ([`PlayNoiseOverlay`](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/src/web/components/play-noise-overlay.tsx)) em camada de sobreposição fixa (`fixed inset-0 pointer-events-none z-[99999]`), ativa exclusivamente no tema `play`.
+   - Os pontos mudam continuamente de posição a ~22 fps através da alternância de quadros procedurais e deslocamento espacial aleatório, gerando o movimento natural de emulsão fotográfica / película cinematográfica.
+   - Proibição estrita de listras, scanlines, faixas VHS ou distorções de TV analógica — apenas granulado fino em pontos de luz e sombra com transparência preservada.
+   - Pausa automática em abas inativas (`visibilitychange`) e respeita preferências de acessibilidade (`prefers-reduced-motion`).
 7. **Alternância e Persistência:**
    - O tema é configurável via `VisibilityModal` (seguindo a hierarquia de `UI-001`) e atalho rápido no menu superior direito do `AppHeader`.
    - O tema ativo é persistido no `localStorage` sob a chave `memorycard_theme` e refletido no DOM pelo atributo `data-theme="play"` / `data-theme="default"`.

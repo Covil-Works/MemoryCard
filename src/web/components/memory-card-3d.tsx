@@ -37,6 +37,7 @@ interface LetterParticle {
   y: number;
   vx: number;
   vy: number;
+  friction: number;
   rotation: number;
   vRot: number;
   size: number;
@@ -71,16 +72,18 @@ export function MemoryCard3D() {
     renderer.setSize(initialWidth, initialHeight);
     renderer.shadowMap.enabled = false;
     renderer.domElement.style.position = 'relative';
-    renderer.domElement.style.zIndex = '1';
+    renderer.domElement.style.zIndex = '30';
     container.appendChild(renderer.domElement);
 
-    if (particleCanvasRef.current) {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const pWidth = initialWidth + 128;
-      const pHeight = initialHeight + 128;
-      particleCanvasRef.current.width = pWidth * dpr;
-      particleCanvasRef.current.height = pHeight * dpr;
-    }
+    const syncParticleCanvasSize = () => {
+      if (particleCanvasRef.current) {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        particleCanvasRef.current.width = window.innerWidth * dpr;
+        particleCanvasRef.current.height = window.innerHeight * dpr;
+      }
+    };
+    syncParticleCanvasSize();
+    window.addEventListener('resize', syncParticleCanvasSize);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -450,23 +453,32 @@ export function MemoryCard3D() {
       if (!pCanvas) return;
 
       const colors = getPlayColors();
-      let count = 14; // clique rápido padrão
-      let speedMult = 1.0;
 
-      if (holdDuration >= SHAKE_START_DELAY) {
-        // Quanto mais tempo o usuário segurar, maior a quantidade e intensidade (até 48 letras)
-        const p = Math.min(1.0, (holdDuration - SHAKE_START_DELAY) / 1580);
-        count = Math.round(14 + p * 34);
-        speedMult = 1.0 + p * 0.45;
-      }
+      // Progressão do tempo de clique segurado: p de 0 (clique rápido) até 1 (~2000ms de segurada)
+      const p = Math.min(1.0, Math.max(0, (holdDuration - SHAKE_START_DELAY) / 1800));
 
-      const rect = pCanvas.getBoundingClientRect();
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
+      // Quantidade de letras: 16 (rápido) até 54 (máximo segurado)
+      const count = Math.round(16 + p * 38);
+
+      // Velocidade: quanto mais tempo segurar, maior a velocidade de lançamento
+      const minSpeed = 4.0 + p * 12.0;       // 4.0 a 16.0 px/frame
+      const speedSpread = 4.0 + p * 16.0;    // variação aleatória de 4 a 20 px/frame
+
+      // Coeficiente de atrito: clique rápido desacelera contido (0.938), segurada longa viaja até as bordas da tela (0.982)
+      const friction = 0.938 + p * 0.044;
+
+      // Tempo de vida das letras na tela
+      const minLife = 750 + p * 1350;        // 750ms a 2100ms
+      const lifeSpread = 250 + p * 650;      // 250ms a 900ms
+
+      // Posição exata do centro do Memory Card na janela/viewport
+      const cardRect = renderer.domElement.getBoundingClientRect();
+      const centerX = cardRect.left + cardRect.width / 2;
+      const centerY = cardRect.top + cardRect.height / 2;
 
       for (let i = 0; i < count; i++) {
         const baseAngle = (i / count) * Math.PI * 2;
-        const angle = baseAngle + (Math.random() - 0.5) * 0.42;
+        const angle = baseAngle + (Math.random() - 0.5) * 0.45;
 
         // Surgem de trás do Memory Card (contorno elíptico)
         const rx = 64 + Math.random() * 16;
@@ -474,7 +486,7 @@ export function MemoryCard3D() {
         const startX = centerX + Math.cos(angle) * rx;
         const startY = centerY + Math.sin(angle) * ry;
 
-        const speed = (2.6 + Math.random() * 3.4) * speedMult;
+        const speed = minSpeed + Math.random() * speedSpread;
         const vx = Math.cos(angle) * speed;
         const vy = Math.sin(angle) * speed;
 
@@ -485,11 +497,12 @@ export function MemoryCard3D() {
           y: startY,
           vx,
           vy,
+          friction,
           rotation: (Math.random() - 0.5) * 0.7,
           vRot: (Math.random() - 0.5) * 0.08,
           size: 18 + Math.floor(Math.random() * 8),
           age: 0,
-          maxAge: 650 + Math.random() * 320,
+          maxAge: minLife + Math.random() * lifeSpread,
         });
       }
     }
@@ -519,19 +532,30 @@ export function MemoryCard3D() {
         p.age += dt;
         if (p.age >= p.maxAge) continue;
 
-        // Desaceleração suave por atrito para percorrer pequena distância
-        p.vx *= 0.94;
-        p.vy *= 0.94;
+        // Se já saiu consideravelmente dos limites da tela (extremidades), expira a partícula
+        const margin = 100;
+        if (
+          p.x < -margin ||
+          p.x > window.innerWidth + margin ||
+          p.y < -margin ||
+          p.y > window.innerHeight + margin
+        ) {
+          continue;
+        }
+
+        // Desaceleração por atrito dinâmico
+        p.vx *= p.friction;
+        p.vy *= p.friction;
         p.x += p.vx * (dt / 16.6);
         p.y += p.vy * (dt / 16.6);
         p.rotation += p.vRot * (dt / 16.6);
-        p.vRot *= 0.96;
+        p.vRot *= 0.97;
 
-        // Desaparece gradualmente com fade out
+        // Fade out proporcional ao tempo de vida
         const progress = p.age / p.maxAge;
-        const alpha = progress < 0.2
+        const alpha = progress < 0.3
           ? 1.0
-          : Math.max(0, 1.0 - (progress - 0.2) / 0.8);
+          : Math.max(0, 1.0 - (progress - 0.3) / 0.7);
         const easeAlpha = alpha * alpha;
 
         pCtx.save();
@@ -706,17 +730,29 @@ export function MemoryCard3D() {
     const outputPass = new OutputPass();
     composer.addPass(outputPass);
 
-    // 10. Loop de animação com aceleração apenas quando o mouse toca o objeto
-    let currentSpeed = 0.007;
+    // 10. Loop de animação: desaceleração ao passar o mouse e aceleração gradativa ao clicar (tema Play)
+    const IDLE_SPEED = 0.007;
+    const HOVER_SPEED = 0.0018; // Mais lento que a velocidade original em ambos os temas
+    const MAX_PRESS_SPEED = 0.052; // Aceleração gradual ao clicar e segurar no tema Play
+    let currentSpeed = IDLE_SPEED;
     let animId = 0;
 
     function animate() {
       animId = requestAnimationFrame(animate);
-      const targetSpeed = isHoveredRef.current ? 0.038 : 0.007;
-      currentSpeed += (targetSpeed - currentSpeed) * 0.08;
-      cardGroup.rotation.y += currentSpeed;
 
       const now = performance.now();
+      let targetSpeed = isHoveredRef.current ? HOVER_SPEED : IDLE_SPEED;
+
+      if (themeRef.current === 'play' && isCardPressed && cardState === 'PRESSING') {
+        const elapsed = now - pressStartTime;
+        // Acelera gradativamente com o tempo de clique segurado (acompanha o acúmulo da vibração)
+        const pressProgress = Math.min(1.0, elapsed / 1800);
+        const easeAccel = Math.pow(pressProgress, 1.25);
+        targetSpeed = HOVER_SPEED + (MAX_PRESS_SPEED - HOVER_SPEED) * easeAccel;
+      }
+
+      currentSpeed += (targetSpeed - currentSpeed) * 0.08;
+      cardGroup.rotation.y += currentSpeed;
 
       if (themeRef.current === 'play') {
         if (cardState === 'PRESSING') {
@@ -797,13 +833,6 @@ export function MemoryCard3D() {
         composer.setSize(width, height);
         stickerPass.uniforms.resolution.value.set(width, height);
 
-        if (particleCanvasRef.current) {
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          const pWidth = width + 128;
-          const pHeight = height + 128;
-          particleCanvasRef.current.width = pWidth * dpr;
-          particleCanvasRef.current.height = pHeight * dpr;
-        }
       }
     });
     resizeObserver.observe(container);
@@ -811,6 +840,7 @@ export function MemoryCard3D() {
     return () => {
       cancelAnimationFrame(animId);
       resizeObserver.disconnect();
+      window.removeEventListener('resize', syncParticleCanvasSize);
       renderer.domElement.removeEventListener('pointermove', onPointerMove);
       renderer.domElement.removeEventListener('pointerleave', onPointerLeave);
       renderer.domElement.removeEventListener('pointerdown', onPointerDown);
@@ -835,7 +865,8 @@ export function MemoryCard3D() {
     >
       <canvas
         ref={particleCanvasRef}
-        className="absolute -inset-16 w-[calc(100%+128px)] h-[calc(100%+128px)] pointer-events-none z-0 overflow-visible"
+        className="fixed inset-0 pointer-events-none z-20 overflow-hidden"
+        style={{ width: '100vw', height: '100vh' }}
       />
     </div>
   );

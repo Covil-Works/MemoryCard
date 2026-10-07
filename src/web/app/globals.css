@@ -160,43 +160,6 @@ code, pre, .font-mono {
   background-color: #242424 !important;
 }
 
-/* Efeito de Ruído / Granulado Sutil Animado Exclusivo do Tema Play */
-[data-theme="play"] body::after {
-  content: "";
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  pointer-events: none;
-  z-index: 9999;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTgwIDE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOTUiIG51bU9jdGF2ZXM9IjQiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIvPjwvc3ZnPg==');
-  background-repeat: repeat;
-  background-size: 180px 180px;
-  opacity: 0.04;
-  animation: play-grain-motion 0.45s steps(8) infinite;
-}
-
-@keyframes play-grain-motion {
-  0% { transform: translate(0, 0); }
-  12.5% { transform: translate(-3%, -4%); }
-  25% { transform: translate(4%, 3%); }
-  37.5% { transform: translate(-2%, 5%); }
-  50% { transform: translate(3%, -3%); }
-  62.5% { transform: translate(-5%, 2%); }
-  75% { transform: translate(4%, 4%); }
-  87.5% { transform: translate(-3%, -2%); }
-  100% { transform: translate(0, 0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-theme="play"] body::after {
-    animation: none;
-    opacity: 0.03;
-  }
-}
-
-
 [data-theme="play"] header {
   background-color: #2C2C2C !important;
   border-bottom-color: rgba(255, 255, 255, 0.1) !important;
@@ -253,7 +216,8 @@ code, pre, .font-mono {
   font-weight: 600;
 }
 
-[data-theme="play"] .btn-action-blue:hover {
+[data-theme="play"] .btn-action-blue:hover,
+[data-theme="play"] .btn-action-blue[aria-expanded="true"] {
   background: var(--play-blue) !important;
   border-color: var(--play-blue) !important;
   color: #ffffff !important;
@@ -322,6 +286,7 @@ code, pre, .font-mono {
 [data-theme="play"] .btn-action-green:hover *,
 [data-theme="play"] .btn-primary:not(.btn-action-blue):not(.btn-action-pink):not(.btn-action-red):hover *,
 [data-theme="play"] .btn-action-blue:hover *,
+[data-theme="play"] .btn-action-blue[aria-expanded="true"] *,
 [data-theme="play"] .btn-action-red:hover *,
 [data-theme="play"] .btn-danger:hover *,
 [data-theme="play"] .btn-action-red-subtle:hover *,
@@ -335,9 +300,9 @@ code, pre, .font-mono {
 /* 3. Containers e cards de projetos na Home */
 [data-theme="play"] .home-projects-box {
   background: #2C2C2C !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: none !important;
   border-radius: 4px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: none !important;
 }
 
 [data-theme="play"] .home-projects-header {
@@ -407,6 +372,29 @@ code, pre, .font-mono {
 
 [data-theme="play"] select.select:not(.modal-surface select):focus {
   border-color: var(--play-blue) !important;
+}
+
+/* Menu dropdown de ordenação no board */
+[data-theme="play"] .sort-dropdown-menu {
+  background-color: #2C2C2C !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="play"] .sort-dropdown-item {
+  color: #d1d5db;
+  transition: all 0.15s ease-in-out;
+}
+
+[data-theme="play"] .sort-dropdown-item:hover {
+  background-color: #383838 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="play"] .sort-dropdown-item.active {
+  color: var(--play-blue) !important;
+  font-weight: 600;
 }
 
 /* 5. Modais com cantos de 4px - cores e superfícies preservadas */
