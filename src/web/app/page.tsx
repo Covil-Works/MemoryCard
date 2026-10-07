@@ -157,10 +157,10 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 flex items-center justify-center w-full max-w-7xl mx-auto py-2 sm:py-6 min-h-[calc(100vh-140px)]">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center w-full">
-        {/* Lado Esquerdo: Objeto 3D alinhado ao centro com textos embaixo */}
-        <div className="lg:col-span-6 flex flex-col items-center justify-center w-full lg:-translate-y-2">
-          <div className="w-[240px] sm:w-[270px] h-[220px] sm:h-[250px] flex items-center justify-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center lg:items-start w-full">
+        {/* Lado Esquerdo: Objeto 3D alinhado ao topo com textos embaixo */}
+        <div className="lg:col-span-6 flex flex-col items-center justify-center w-full lg:pt-2">
+          <div className="w-[250px] sm:w-[280px] h-[230px] sm:h-[260px] flex items-center justify-center">
             <MemoryCard3D />
           </div>
           <div className="flex flex-col items-center justify-center text-center -mt-1 sm:-mt-2 select-none">
