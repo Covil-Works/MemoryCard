@@ -9,6 +9,8 @@ export function AppHeader() {
   const {
     language,
     setLanguage,
+    theme,
+    setTheme,
     projectActions,
     setIsVisibilityModalOpen,
     setIsNetworkModalOpen,
@@ -170,6 +172,35 @@ export function AppHeader() {
                 <div className="border-t border-[#222] my-1" />
               </div>
 
+              {/* Tema Visual */}
+              <div className="px-2 pt-1 pb-0.5 text-[10px] text-[#666] uppercase tracking-wider font-bold">
+                {t('theme')}
+              </div>
+              <div className="grid grid-cols-2 gap-1 px-1 py-1">
+                <button
+                  onClick={() => setTheme('default')}
+                  className={`py-1 px-2 text-center text-xs border transition-colors ${
+                    theme === 'default'
+                      ? 'bg-white text-black border-white font-bold'
+                      : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
+                  }`}
+                >
+                  {t('themeDefault')}
+                </button>
+                <button
+                  onClick={() => setTheme('play')}
+                  className={`py-1 px-2 text-center text-xs border transition-colors ${
+                    theme === 'play'
+                      ? 'toggle-active bg-[#2e6db4] text-white border-[#2e6db4] font-bold'
+                      : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
+                  }`}
+                >
+                  {t('themePlay')}
+                </button>
+              </div>
+
+              <div className="border-t border-[#222] my-1" />
+
               {/* Idioma */}
               <div className="px-2 pt-1 pb-0.5 text-[10px] text-[#666] uppercase tracking-wider font-bold">
                 {t('language')}
@@ -179,17 +210,21 @@ export function AppHeader() {
                   onClick={() => setLanguage('pt-br')}
                   className={`py-1 px-2 text-center text-xs border transition-colors ${
                     language === 'pt-br'
-                      ? 'bg-white text-black border-white font-bold'
+                      ? theme === 'play'
+                        ? 'toggle-active bg-[#2e6db4] text-white border-[#2e6db4] font-bold'
+                        : 'bg-white text-black border-white font-bold'
                       : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
                   }`}
                 >
-                  PT-BR (Padrão)
+                  PT-BR
                 </button>
                 <button
                   onClick={() => setLanguage('en')}
                   className={`py-1 px-2 text-center text-xs border transition-colors ${
                     language === 'en'
-                      ? 'bg-white text-black border-white font-bold'
+                      ? theme === 'play'
+                        ? 'toggle-active bg-[#2e6db4] text-white border-[#2e6db4] font-bold'
+                        : 'bg-white text-black border-white font-bold'
                       : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
                   }`}
                 >

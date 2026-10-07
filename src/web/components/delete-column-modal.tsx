@@ -52,11 +52,11 @@ export function DeleteColumnModal({
   return (
     <div className="fixed inset-0 bg-black/85 flex items-center justify-center p-3 sm:p-4 z-50">
       <div
-        className={`bg-[#111] border ${
+        className={`modal-surface bg-[#111] border ${
           hasTasks ? 'border-[#333]' : 'border-[#f44]'
         } max-w-md w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl`}
       >
-        <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+        <div className="modal-header p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <h2 className="text-sm font-bold font-mono text-white">
             {hasTasks ? t('cannotDeleteColumnTitle') : t('deleteColumnTitle')}
           </h2>
@@ -99,12 +99,12 @@ export function DeleteColumnModal({
           )}
         </div>
 
-        <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
+        <div className="modal-footer p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
           {hasTasks ? (
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-primary text-xs"
+              className="btn btn-primary btn-action-blue text-xs"
             >
               {t('understandClose')}
             </button>
@@ -122,7 +122,7 @@ export function DeleteColumnModal({
                 type="button"
                 onClick={handleDelete}
                 disabled={isSubmitting}
-                className="btn btn-danger text-xs font-bold"
+                className="btn btn-danger btn-action-red text-xs font-bold"
               >
                 {isSubmitting ? t('deleting') : t('confirmDelete')}
               </button>

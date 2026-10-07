@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { useSSE } from '../hooks/use-sse';
 import { useSettings } from '../components/settings-context';
 import { FolderBrowser } from '../components/folder-browser';
+import { Trash2 } from 'lucide-react';
 
 import dynamic from 'next/dynamic';
 
 const MemoryCard3D = dynamic(() => import('../components/memory-card-3d'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full min-h-[340px] flex items-center justify-center text-[#555] font-mono text-xs">
+    <div className="w-full h-full min-h-[280px] sm:min-h-[320px] flex items-center justify-center text-[#555] font-mono text-xs">
       Carregando 3D...
     </div>
   ),
@@ -39,9 +40,23 @@ export default function DashboardPage() {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [newProjectPath, setNewProjectPath] = useState('');
   const [newProjectName, setNewProjectName] = useState('');
+  const [modalNotice, setModalNotice] = useState<{ path: string; isAlreadyInList: boolean; name?: string } | null>(null);
+  const [modalError, setModalError] = useState<string | null>(null);
   const [relinkingProject, setRelinkingProject] = useState<ProjectEntry | null>(null);
   const [relinkPath, setRelinkPath] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isNormalizedSamePath = (p1?: string, p2?: string) => {
+    if (!p1 || !p2) return false;
+    const n1 = p1.trim().replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+    const n2 = p2.trim().replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+    return n1 === n2;
+  };
+
+  const isSelectedPathAlreadyInList = Boolean(
+    newProjectPath.trim() &&
+    projects.some((p) => isNormalizedSamePath(p.path, newProjectPath))
+  );
 
   const fetchProjects = async () => {
     try {
@@ -72,6 +87,8 @@ export default function DashboardPage() {
 
   const handleOpenNewProjectModal = () => {
     setError(null);
+    setModalError(null);
+    setModalNotice(null);
     setNewProjectPath('');
     setNewProjectName('');
     setIsNewProjectModalOpen(true);
@@ -81,8 +98,13 @@ export default function DashboardPage() {
     e.preventDefault();
     if (!newProjectPath.trim()) return;
 
+    if (isSelectedPathAlreadyInList || modalNotice?.isAlreadyInList) {
+      setModalError(t('projectAlreadyInListWarning'));
+      return;
+    }
+
     setIsSubmitting(true);
-    setError(null);
+    setModalError(null);
     try {
       const res = await fetch('/api/projects/init', {
         method: 'POST',
@@ -92,16 +114,18 @@ export default function DashboardPage() {
           name: newProjectName.trim() || undefined
         })
       });
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || 'Erro ao inicializar projeto');
       }
       setIsNewProjectModalOpen(false);
       setNewProjectPath('');
       setNewProjectName('');
+      setModalNotice(null);
+      setModalError(null);
       await fetchProjects();
     } catch (err: any) {
-      setError(err.message);
+      setModalError(err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -157,13 +181,13 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 flex items-center justify-center w-full max-w-7xl mx-auto py-2 sm:py-6 min-h-[calc(100vh-140px)]">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center lg:items-start w-full">
-        {/* Lado Esquerdo: Objeto 3D alinhado ao topo com textos embaixo */}
-        <div className="lg:col-span-6 flex flex-col items-center justify-center w-full lg:pt-2">
-          <div className="w-[250px] sm:w-[280px] h-[230px] sm:h-[260px] flex items-center justify-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center w-full">
+        {/* Lado Esquerdo: Objeto 3D e textos centralizados */}
+        <div className="lg:col-span-6 flex flex-col items-center justify-center w-full pb-8 lg:pb-[55px]">
+          <div className="w-[280px] sm:w-[320px] h-[280px] sm:h-[320px] flex items-center justify-center">
             <MemoryCard3D />
           </div>
-          <div className="flex flex-col items-center justify-center text-center -mt-1 sm:-mt-2 select-none">
+          <div className="flex flex-col items-center justify-center text-center -mt-3 select-none">
             <span className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-sans leading-tight">
               MemoryCard
             </span>
@@ -183,8 +207,8 @@ export default function DashboardPage() {
 
         {/* Lado Direito: Lista de Projetos alinhada ao meio e rolável */}
         <div className="lg:col-span-6 flex items-center justify-center w-full">
-          <div className="w-full max-w-xl flex flex-col border border-[#222] bg-[#0c0c0c] max-h-[72vh] shadow-2xl overflow-hidden">
-            <div className="p-4 sm:p-5 border-b border-[#222] flex items-center justify-between gap-3 shrink-0 bg-[#0d0d0d]">
+          <div className="w-full max-w-xl flex flex-col border border-[#222] bg-[#0c0c0c] max-h-[72vh] shadow-2xl overflow-hidden home-projects-box">
+            <div className="p-4 sm:p-5 border-b border-[#222] flex items-center justify-between gap-3 shrink-0 bg-[#0d0d0d] home-projects-header">
               <div>
                 <h1 className="text-base sm:text-lg font-bold tracking-tight text-white">{t('registeredProjects')}</h1>
                 <p className="text-xs text-[#777] mt-0.5">
@@ -193,7 +217,7 @@ export default function DashboardPage() {
               </div>
               <button
                 onClick={handleOpenNewProjectModal}
-                className="btn btn-primary text-xs shrink-0"
+                className="btn btn-primary text-xs shrink-0 btn-action-green"
               >
                 {t('newProject')}
               </button>
@@ -205,11 +229,11 @@ export default function DashboardPage() {
               </div>
             )}
 
-            <div className="overflow-y-auto custom-scrollbar p-3 sm:p-4 flex flex-col gap-3 flex-1 min-h-[140px]">
+            <div className="overflow-y-auto custom-scrollbar p-3 sm:p-4 flex flex-col gap-3 flex-1 min-h-[140px] home-projects-list">
               {loading ? (
                 <div className="text-center py-12 text-[#666] font-mono text-xs">{t('loading')}</div>
               ) : projects.length === 0 ? (
-                <div className="text-center py-12 border border-[#1a1a1a] bg-[#080808]">
+                <div className="text-center py-12 border border-[#1a1a1a] bg-[#080808] home-empty-box">
                   <p className="text-sm text-[#888]">{t('noProjects')}</p>
                   <p className="text-xs text-[#555] mt-1">
                     {t('noProjectsHint')}
@@ -219,7 +243,7 @@ export default function DashboardPage() {
                 projects.map((p) => (
                   <div
                     key={p.project_id}
-                    className="border border-[#222] bg-[#111] hover:border-[#444] p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors shrink-0"
+                    className="border border-[#222] bg-[#111] hover:border-[#444] p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors shrink-0 home-project-card"
                   >
                     <div className="flex flex-col gap-1 min-w-0 w-full sm:w-auto">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -240,15 +264,16 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2 shrink-0 self-end sm:self-center border-t border-[#1a1a1a] sm:border-0 pt-2 sm:pt-0 w-full sm:w-auto justify-end">
                       {p.available ? (
                         <>
-                          <Link href={`/${p.slug}`} className="btn btn-primary text-xs">
+                          <Link href={`/${p.slug}`} className="btn btn-primary btn-action-pink text-xs">
                             {t('openBoard')}
                           </Link>
                           <button
                             onClick={() => handleUnregisterProject(p.project_id, p.name)}
-                            className="btn text-xs text-[#888] hover:text-[#f66] hover:border-[#f66]"
+                            className="btn btn-action-red text-xs p-1.5"
                             title="Remover projeto da lista do MemoryCard"
+                            aria-label={t('remove')}
                           >
-                            {t('remove')}
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </>
                       ) : (
@@ -258,16 +283,17 @@ export default function DashboardPage() {
                               setRelinkingProject(p);
                               setRelinkPath('');
                             }}
-                            className="btn text-xs"
+                            className="btn text-xs btn-action-pink"
                           >
                             {t('relink')}
                           </button>
                           <button
                             onClick={() => handleUnregisterProject(p.project_id, p.name)}
-                            className="btn btn-danger text-xs"
+                            className="btn btn-danger btn-action-red text-xs p-1.5"
                             title="Remover projeto indisponível da lista"
+                            aria-label={t('remove')}
                           >
-                            {t('remove')}
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </>
                       )}
@@ -283,8 +309,8 @@ export default function DashboardPage() {
       {/* Modal Novo Projeto */}
       {isNewProjectModalOpen && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
-          <div className="bg-[#111] border border-[#333] max-w-xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
-            <div className="p-3.5 sm:p-4 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+          <div className="modal-surface bg-[#111] border border-[#333] max-w-xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+            <div className="modal-header p-3.5 sm:p-4 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
               <h2 className="text-sm font-bold font-mono text-white">{t('createNewProject')}</h2>
               <button
                 onClick={() => setIsNewProjectModalOpen(false)}
@@ -294,6 +320,25 @@ export default function DashboardPage() {
               </button>
             </div>
             <div className="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex-1 flex flex-col gap-4">
+              {modalError && (
+                <div className="p-2.5 bg-[#200] border border-[#500] text-[#f88] text-xs font-mono rounded-sm">
+                  {modalError}
+                </div>
+              )}
+
+              {(isSelectedPathAlreadyInList || modalNotice?.isAlreadyInList) && (
+                <div className="p-3 bg-amber-950/40 border border-amber-600/60 text-amber-300 text-xs font-mono rounded-sm flex items-center gap-2">
+                  <span className="font-bold">[Aviso]</span>
+                  <span>{t('projectAlreadyInListWarning')}</span>
+                </div>
+              )}
+
+              {modalNotice && !modalNotice.isAlreadyInList && !isSelectedPathAlreadyInList && (
+                <div className="p-2.5 bg-emerald-950/30 border border-emerald-600/40 text-emerald-300 text-xs font-mono rounded-sm flex items-center gap-2">
+                  <span>{t('existingMemoryCardHint')}</span>
+                </div>
+              )}
+
               <form id="new-project-form" onSubmit={handleCreateProject} className="flex flex-col gap-3">
                 <div>
                   <label className="text-xs text-[#888] font-mono block mb-1">{t('projectNameLabel')}</label>
@@ -302,7 +347,10 @@ export default function DashboardPage() {
                     className="input text-xs"
                     placeholder="Nome do projeto (opcional)"
                     value={newProjectName}
-                    onChange={(e) => setNewProjectName(e.target.value)}
+                    onChange={(e) => {
+                      setNewProjectName(e.target.value);
+                      setModalError(null);
+                    }}
                   />
                 </div>
                 <div>
@@ -312,7 +360,11 @@ export default function DashboardPage() {
                     className="input font-mono text-xs"
                     placeholder="/caminho/para/o/projeto"
                     value={newProjectPath}
-                    onChange={(e) => setNewProjectPath(e.target.value)}
+                    onChange={(e) => {
+                      setNewProjectPath(e.target.value);
+                      setModalError(null);
+                      setModalNotice(null);
+                    }}
                     required
                   />
                 </div>
@@ -322,11 +374,19 @@ export default function DashboardPage() {
                 <label className="text-xs text-[#888] font-mono block mb-1.5">{t('browseFolders')}</label>
                 <FolderBrowser
                   selectedPath={newProjectPath}
-                  onSelectPath={(selected) => setNewProjectPath(selected)}
+                  onSelectPath={(selected) => {
+                    setNewProjectPath(selected);
+                    setModalError(null);
+                  }}
+                  existingProjects={projects}
+                  onSelectExistingProject={(info) => {
+                    setModalNotice(info);
+                    setModalError(null);
+                  }}
                 />
               </div>
             </div>
-            <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
+            <div className="modal-footer p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
               <button
                 type="button"
                 onClick={() => setIsNewProjectModalOpen(false)}
@@ -337,10 +397,19 @@ export default function DashboardPage() {
               <button
                 type="submit"
                 form="new-project-form"
-                disabled={isSubmitting || !newProjectPath.trim()}
-                className="btn btn-primary text-xs"
+                disabled={isSubmitting || !newProjectPath.trim() || isSelectedPathAlreadyInList || Boolean(modalNotice?.isAlreadyInList)}
+                className="btn btn-primary btn-action-green text-xs disabled:opacity-40 disabled:cursor-not-allowed"
+                title={
+                  isSelectedPathAlreadyInList || modalNotice?.isAlreadyInList
+                    ? t('projectAlreadyInListWarning')
+                    : undefined
+                }
               >
-                {isSubmitting ? t('initializingProject') : t('initProjectBtn')}
+                {isSubmitting
+                  ? t('initializingProject')
+                  : modalNotice && !modalNotice.isAlreadyInList && !isSelectedPathAlreadyInList
+                  ? t('addExistingProjectBtn')
+                  : t('initProjectBtn')}
               </button>
             </div>
           </div>
@@ -350,8 +419,8 @@ export default function DashboardPage() {
       {/* Modal Relink Projeto */}
       {relinkingProject && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
-          <div className="bg-[#111] border border-[#333] max-w-xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
-            <div className="p-3.5 sm:p-4 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+          <div className="modal-surface bg-[#111] border border-[#333] max-w-xl w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+            <div className="modal-header p-3.5 sm:p-4 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
               <h2 className="text-sm font-bold font-mono text-white">{t('relink')}</h2>
               <button
                 onClick={() => setRelinkingProject(null)}
@@ -386,7 +455,7 @@ export default function DashboardPage() {
                 />
               </div>
             </div>
-            <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
+            <div className="modal-footer p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
               <button
                 type="button"
                 onClick={() => setRelinkingProject(null)}
@@ -398,7 +467,7 @@ export default function DashboardPage() {
                 type="submit"
                 form="relink-form"
                 disabled={isSubmitting || !relinkPath.trim()}
-                className="btn btn-primary text-xs"
+                className="btn btn-primary btn-action-pink text-xs"
               >
                 {isSubmitting ? 'Relincando...' : t('relinkConfirm')}
               </button>

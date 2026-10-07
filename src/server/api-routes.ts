@@ -58,7 +58,13 @@ function sendError(res: ServerResponse, err: any): void {
     status = 409;
   } else if (err.name?.includes('NotFound')) {
     status = 404;
-  } else if (err.name?.includes('Invalid') || err.name?.includes('AlreadyExists') || err.name?.includes('InUse')) {
+  } else if (
+    err.name?.includes('Invalid') ||
+    err.name?.includes('AlreadyExists') ||
+    err.name?.includes('InUse') ||
+    err.name?.includes('AlreadyInList') ||
+    err.name?.includes('AlreadyInitialized')
+  ) {
     status = 400;
   }
   sendJson(res, status, { error: err.message, name: err.name });
@@ -202,7 +208,8 @@ export async function handleApiRoute(req: IncomingMessage, res: ServerResponse):
       }
       const project = await ProjectService.initProject(targetPath, body.name);
       await ensureWatcherForProject(project.rootDir, project.config.project.id);
-      sendJson(res, 201, project);
+      sseManager.broadcast({ type: 'project-availability-changed', projectId: project.config.project.id });
+      sendJson(res, project.reattached ? 200 : 201, project);
     } catch (err: any) {
       sendError(res, err);
     }

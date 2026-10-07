@@ -31,16 +31,38 @@ export interface DirectoryBrowseResult {
   error?: string;
 }
 
+export interface FolderBrowserExistingProject {
+  path: string;
+  name?: string;
+}
+
+export interface FolderBrowserExistingNotice {
+  path: string;
+  isAlreadyInList: boolean;
+  name?: string;
+}
+
 interface FolderBrowserProps {
   initialPath?: string;
   selectedPath: string;
   onSelectPath: (path: string) => void;
+  existingProjects?: FolderBrowserExistingProject[];
+  onSelectExistingProject?: (info: FolderBrowserExistingNotice | null) => void;
+}
+
+function isSamePath(p1?: string, p2?: string): boolean {
+  if (!p1 || !p2) return false;
+  const n1 = p1.trim().replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+  const n2 = p2.trim().replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+  return n1 === n2;
 }
 
 export function FolderBrowser({
   initialPath,
   selectedPath,
-  onSelectPath
+  onSelectPath,
+  existingProjects,
+  onSelectExistingProject
 }: FolderBrowserProps) {
   const { t } = useSettings();
 
@@ -273,7 +295,7 @@ export function FolderBrowser({
             <button
               type="submit"
               disabled={createLoading || !newFolderName.trim()}
-              className="btn btn-primary text-xs py-1 px-3"
+              className="btn btn-primary btn-action-green text-xs py-1 px-3"
             >
               {createLoading ? '...' : t('create')}
             </button>
@@ -315,18 +337,43 @@ export function FolderBrowser({
         ) : (
           filteredDirectories.map((dir) => {
             const isSelected = selectedPath === dir.path;
+            const isMemoryCard = dir.isMemoryCard;
+            const isAlreadyInList = isMemoryCard && Boolean(
+              existingProjects?.some((ep) => isSamePath(ep.path, dir.path))
+            );
+
             return (
-              <button
+              <div
                 key={dir.path}
-                type="button"
-                onClick={() => handleNavigate(dir.path)}
-                className={`flex items-center justify-between gap-2 px-2.5 py-1.5 text-left border-b border-[#141414] hover:bg-[#151515] transition-colors ${
-                  isSelected ? 'bg-[#1a1a1a] text-white font-semibold' : 'text-[#bbb]'
+                className={`flex items-center justify-between gap-2 px-2.5 py-1.5 border-b border-[#141414] hover:bg-[#151515] transition-colors ${
+                  isSelected ? 'bg-[#1a1a1a]' : ''
                 }`}
               >
-                <div className="flex items-center gap-2 truncate">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onSelectPath(dir.path);
+                    if (isMemoryCard) {
+                      onSelectExistingProject?.({
+                        path: dir.path,
+                        isAlreadyInList,
+                        name: dir.name
+                      });
+                    } else {
+                      onSelectExistingProject?.(null);
+                      handleNavigate(dir.path);
+                    }
+                  }}
+                  className="flex items-center gap-2 truncate flex-1 text-left"
+                >
                   <svg
-                    className={`w-3.5 h-3.5 shrink-0 ${dir.isMemoryCard ? 'text-amber-500' : 'text-gray-400'}`}
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      isMemoryCard
+                        ? isAlreadyInList
+                          ? 'text-blue-400'
+                          : 'text-emerald-400'
+                        : 'text-gray-400'
+                    }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -339,15 +386,37 @@ export function FolderBrowser({
                       d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
                     />
                   </svg>
-                  <span className="truncate text-xs">{dir.name}</span>
-                </div>
-
-                {dir.isMemoryCard && (
-                  <span className="shrink-0 px-1.5 py-0.2 text-[9px] border border-amber-600/60 bg-amber-950/40 text-amber-300 font-mono">
-                    {t('alreadyMemoryCardBadge')}
+                  <span className={`truncate text-xs ${isSelected ? 'text-white font-semibold' : 'text-[#bbb]'}`}>
+                    {dir.name}
                   </span>
+                </button>
+
+                {isMemoryCard && (
+                  <div className="flex items-center gap-1 shrink-0">
+                    <span
+                      className={`px-1.5 py-0.2 text-[9px] border font-mono ${
+                        isAlreadyInList
+                          ? 'border-blue-600/60 bg-blue-950/40 text-blue-300'
+                          : 'border-emerald-600/60 bg-emerald-950/40 text-emerald-300'
+                      }`}
+                      title={isAlreadyInList ? t('projectAlreadyInListWarning') : t('existingMemoryCardHint')}
+                    >
+                      {isAlreadyInList ? t('projectAlreadyInListBadge') : t('alreadyMemoryCardBadge')}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onSelectExistingProject?.(null);
+                        handleNavigate(dir.path);
+                      }}
+                      className="text-[10px] text-gray-500 hover:text-white px-1 py-0.5 border border-transparent hover:border-[#444] transition-colors"
+                      title="Navegar para dentro desta pasta"
+                    >
+                      →
+                    </button>
+                  </div>
                 )}
-              </button>
+              </div>
             );
           })
         )}

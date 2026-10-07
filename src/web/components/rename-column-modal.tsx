@@ -68,8 +68,8 @@ export function RenameColumnModal({
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
-      <div className="bg-[#111] border border-[#333] max-w-md w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
-        <div className="p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+      <div className="modal-surface bg-[#111] border border-[#333] max-w-md w-full max-h-[90vh] sm:max-h-[85vh] my-auto flex flex-col text-sm overflow-hidden shadow-2xl">
+        <div className="modal-header p-3.5 sm:p-5 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
           <h2 className="text-sm font-bold font-mono text-white">{t('renameColumnTitle')}</h2>
           <button
             type="button"
@@ -105,7 +105,7 @@ export function RenameColumnModal({
           </form>
         </div>
 
-        <div className="p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
+        <div className="modal-footer p-3.5 sm:p-4 border-t border-[#222] flex items-center justify-end gap-2 shrink-0 bg-[#0d0d0d]">
           <button type="button" onClick={onClose} className="btn text-xs">
             {t('cancel')}
           </button>
@@ -113,7 +113,7 @@ export function RenameColumnModal({
             type="submit"
             form="rename-column-form"
             disabled={isSubmitting || !name.trim()}
-            className="btn btn-primary text-xs"
+            className="btn btn-primary btn-action-blue text-xs"
           >
             {isSubmitting ? t('saving') : t('save')}
           </button>
