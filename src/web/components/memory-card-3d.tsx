@@ -341,25 +341,60 @@ export function MemoryCard3D() {
       renderLogo();
     }
 
-    // 7. Agrupamento para rotação unificada e redução de 30% no tamanho
+    // 7. Agrupamento para rotação unificada (+20% no tamanho em relação à escala anterior: 0.84)
     const cardGroup = new THREE.Group();
     cardGroup.add(recessBackstop);
     cardGroup.add(bodyBrush);
     cardGroup.add(labelFloor);
     cardGroup.add(brandPlane);
 
-    // Reduz o tamanho do objeto em 30% (escala 0.7)
-    cardGroup.scale.set(0.7, 0.7, 0.7);
+    cardGroup.scale.set(0.84, 0.84, 0.84);
 
     scene.add(cardGroup);
 
-    // 8. Loop de animação com aceleração no hover
+    // 8. Raycaster para detecção precisa do mouse sobre o objeto
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+
+    const onPointerMove = (e: PointerEvent) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(pointer, camera);
+      const intersects = raycaster.intersectObjects(cardGroup.children, true);
+      const isHit = intersects.length > 0;
+      isHoveredRef.current = isHit;
+      renderer.domElement.style.cursor = isHit ? 'grab' : 'default';
+    };
+
+    const onPointerLeave = () => {
+      isHoveredRef.current = false;
+      renderer.domElement.style.cursor = 'default';
+    };
+
+    const onPointerDown = () => {
+      if (isHoveredRef.current) {
+        renderer.domElement.style.cursor = 'grabbing';
+      }
+    };
+
+    const onPointerUp = () => {
+      renderer.domElement.style.cursor = isHoveredRef.current ? 'grab' : 'default';
+    };
+
+    renderer.domElement.addEventListener('pointermove', onPointerMove);
+    renderer.domElement.addEventListener('pointerleave', onPointerLeave);
+    renderer.domElement.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointerup', onPointerUp);
+
+    // 9. Loop de animação com aceleração apenas quando o mouse toca o objeto
     let currentSpeed = 0.007;
     let animId = 0;
 
     function animate() {
       animId = requestAnimationFrame(animate);
-      // Quando hover ativo, acelera suavemente (~5x mais rápido)
       const targetSpeed = isHoveredRef.current ? 0.038 : 0.007;
       currentSpeed += (targetSpeed - currentSpeed) * 0.08;
       cardGroup.rotation.y += currentSpeed;
@@ -369,7 +404,7 @@ export function MemoryCard3D() {
     }
     animate();
 
-    // 9. Redimensionamento responsivo
+    // 10. Redimensionamento responsivo
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
@@ -384,6 +419,10 @@ export function MemoryCard3D() {
     return () => {
       cancelAnimationFrame(animId);
       resizeObserver.disconnect();
+      renderer.domElement.removeEventListener('pointermove', onPointerMove);
+      renderer.domElement.removeEventListener('pointerleave', onPointerLeave);
+      renderer.domElement.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointerup', onPointerUp);
       controls.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode === container) {
@@ -395,14 +434,8 @@ export function MemoryCard3D() {
   return (
     <div
       ref={mountRef}
-      onPointerEnter={() => {
-        isHoveredRef.current = true;
-      }}
-      onPointerLeave={() => {
-        isHoveredRef.current = false;
-      }}
-      className="w-full h-full flex items-center justify-center relative cursor-grab active:cursor-grabbing select-none"
-      title="Passe o mouse para acelerar a rotação ou arraste para inspecionar em 3D"
+      className="w-full h-full flex items-center justify-center relative select-none"
+      title="Passe o mouse sobre o objeto para acelerar a rotação ou arraste para inspecionar em 3D"
     />
   );
 }
