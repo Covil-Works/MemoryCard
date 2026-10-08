@@ -24,18 +24,20 @@ memorycard --version
 O agente **não deve executar comandos globais silenciosamente**. Pare e pergunte ao usuário:
 > *"O comando `memorycard` não foi detectado no PATH do seu terminal. Você já possui o repositório clonado localmente ou gostaria que eu auxilie na instalação?"*
 
-### 1.2 Cenários e Opções de Instalação
+### 1.2 Cenários e Formas de Instalação
 
-1. **Repositório já existente ou clonado (Ativação via `npm link`):**
+1. **Repositório já existente localmente (Ativação via `npm link`):**
    > [!IMPORTANT]
-   > Pode ser que o projeto já esteja clonado na máquina do usuário, mas o binário ainda não esteja linkado no PATH global do terminal.
+   > É muito comum o repositório já estar clonado na máquina do usuário, mas o binário ainda não ter sido linkado no PATH global do terminal.
    - Para disponibilizar o comando `memorycard` globalmente a partir da pasta do projeto:
      ```bash
      cd <caminho-do-repositorio>
      npm install
      npm link
      ```
-   - Para instalar clonando diretamente o repositório oficial:
+
+2. **Clonar e linkar a partir do repositório oficial:**
+   - Caso o repositório ainda não esteja na máquina:
      - Repositório: [https://github.com/covil-works/memorycard](https://github.com/covil-works/memorycard)
      ```bash
      git clone https://github.com/covil-works/memorycard.git
@@ -44,17 +46,10 @@ O agente **não deve executar comandos globais silenciosamente**. Pare e pergunt
      npm link
      ```
 
-2. **Instalação Global via npm:**
-   - Se o usuário preferir instalar o pacote publicado e autorizar:
+3. **Instalação Global direta do GitHub via npm:**
+   - É possível instalar globalmente apontando diretamente para o repositório no GitHub sem precisar clonar manualmente:
      ```bash
-     npm install -g memorycard
-     ```
-     *(ou via gerenciadores alternativos: `pnpm add -g memorycard` / `yarn global add memorycard`)*
-
-3. **Execução sob demanda (sem instalação global):**
-   - Caso o usuário prefira executar comandos diretamente sem linkar ou instalar globalmente:
-     ```bash
-     npx memorycard <comando>
+     npm install -g git+https://github.com/covil-works/memorycard.git
      ```
 
 ### 1.3 Validação e Fluxo
