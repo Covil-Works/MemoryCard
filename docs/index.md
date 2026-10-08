@@ -11,7 +11,7 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
 - [AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/AGENTS.md): Roteador de contexto principal para agentes de IA na raiz do repositório.
 - [docs/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/AGENTS.md): Como produzir, estruturar e manter a documentação na pasta `docs/`.
 - [tests/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/tests/AGENTS.md): Regras de criação sob demanda, integridade dos testes, isolamento e variáveis globais.
-- [.agents/skills/memorycard/SKILL.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/.agents/skills/memorycard/SKILL.md): Skill para gerenciamento de tasks e comandos CLI do MemoryCard.
+- [skills/memorycard/SKILL.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/skills/memorycard/SKILL.md): Skill para gerenciamento de tasks e comandos CLI do MemoryCard.
 
 ---
 
