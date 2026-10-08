@@ -15,6 +15,7 @@ O **MemoryCard** preserva o estado das tasks fora da janela de contexto dos mode
 5. **IDs Humanos e Monotônicos:** IDs numéricos sequenciais por projeto (`1, 2, 3...`) que nunca são reutilizados e recuperam colisões automaticamente.
 6. **Atualização Reativa:** File watcher seletivo com debounce e Server-Sent Events (SSE) atualizam o board local em tempo real.
 7. **Versionamento Git:** A pasta `.memorycard/` é versionada normalmente no repositório.
+8. **Pronto para Agentes de IA:** Inclui skill pronta e distribuível em `skills/memorycard/SKILL.md` para integração imediata com coding agents.
 
 ---
 
@@ -65,6 +66,26 @@ memorycard
 
 # Ou abre diretamente o board do projeto atual
 memorycard open
+```
+
+### 4. Usar a Skill com Agentes de IA (em qualquer projeto)
+
+O MemoryCard acompanha uma **Skill pronta** em [`skills/memorycard/SKILL.md`](skills/memorycard/SKILL.md) para permitir que coding agents (como Google Antigravity, Cursor, Claude Code, etc.) operem o MemoryCard autonomamente.
+
+A skill ensina o modelo a:
+- **Validar instalação:** Detectar se `memorycard` está disponível no PATH e alertar caso o repositório esteja presente mas falte executar `npm link` (ou orientar instalação global).
+- **Alinhar antes de codar:** Perguntar se deve criar ou atualizar uma task antes de iniciar uma nova feature ou correção.
+- **Interpretar pedidos cotidianos:** Responder a comandos como *"onde a gente parou?"*, *"detalha os passos da task"*, *"marca o passo 2 como concluído"* e *"move para done"*.
+
+#### Como instalar a skill em outro projeto
+Para que um agente de IA gerencie tarefas usando o MemoryCard em **qualquer outro repositório** sem precisar reexplicar o fluxo:
+
+```bash
+# Opção 1: Via degit (baixa diretamente a pasta da skill)
+npx degit covil-works/memorycard/skills/memorycard skills/memorycard
+
+# Opção 2: Cópia manual
+# Copie a pasta skills/memorycard/ para a raiz do seu novo projeto
 ```
 
 ---
