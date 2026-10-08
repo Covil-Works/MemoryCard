@@ -24,3 +24,6 @@ As decisões sobre como o sistema deve ser construído estão catalogadas por co
 ### 4. Suíte de Testes Automatizados
 - Para diretrizes obrigatórias de testes: [tests/AGENTS.md](memorycard/tests/AGENTS.md).
 
+### 5. Skills e Operação do MemoryCard
+- Para instruções de gerenciamento de tasks e CLI pelo agente: [skills/memorycard/SKILL.md](skills/memorycard/SKILL.md).
+
