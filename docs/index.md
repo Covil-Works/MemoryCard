@@ -8,15 +8,15 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
 ---
 
 ## 1. Diretrizes para Agentes de IA
-- [AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/AGENTS.md): Roteador de contexto principal para agentes de IA na raiz do repositório.
-- [docs/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/AGENTS.md): Como produzir, estruturar e manter a documentação na pasta `docs/`.
-- [tests/AGENTS.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/tests/AGENTS.md): Regras de criação sob demanda, integridade dos testes, isolamento e variáveis globais.
-- [skills/memorycard/SKILL.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/skills/memorycard/SKILL.md): Skill para gerenciamento de tasks e comandos CLI do MemoryCard.
+- [AGENTS.md](../AGENTS.md): Roteador de contexto principal para agentes de IA na raiz do repositório.
+- [docs/AGENTS.md](AGENTS.md): Como produzir, estruturar e manter a documentação na pasta `docs/`.
+- [tests/AGENTS.md](../tests/AGENTS.md): Regras de criação sob demanda, integridade dos testes, isolamento e variáveis globais.
+- [skills/memorycard/SKILL.md](../skills/memorycard/SKILL.md): Skill para gerenciamento de tasks e comandos CLI do MemoryCard.
 
 ---
 
 ## 2. Interface do Usuário (UI & UX)
-- [docs/ui/conventions.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/ui/conventions.md): Convenções visuais e estruturais de interface:
+- [docs/ui/conventions.md](ui/conventions.md): Convenções visuais e estruturais de interface:
   - **`UI-001`**: *Padrão Estrutural de Configurações por Temas e Opções Contextuais*.
   - **`UI-002`**: *Criação de Novos Componentes e Utilitários*.
   - **`UI-003`**: *Responsividade Mobile e Quadro Kanban com Rolagem Horizontal Isolada*.
@@ -26,11 +26,11 @@ Este arquivo é o mapa central de documentações transversais do **MemoryCard**
 ---
 
 ## 3. Decisões de Arquitetura (ADRs)
-- [docs/architecture/ADR-STORAGE.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/architecture/ADR-STORAGE.md): Decisões arquiteturais de Armazenamento, Concorrência e Ambiente:
+- [docs/architecture/ADR-STORAGE.md](architecture/ADR-STORAGE.md): Decisões arquiteturais de Armazenamento, Concorrência e Ambiente:
   - **`ADR-STORAGE-001`**: *Integridade de Armazenamento e Concorrência Atômica*.
   - **`ADR-STORAGE-002`**: *Separação de Escopos Local vs Global*.
   - **`ADR-STORAGE-003`**: *Preservação de Ambiente e Recursos Temporários*.
-- [docs/architecture/ADR-UI.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/architecture/ADR-UI.md): Decisões arquiteturais de UI e Frontend Web:
+- [docs/architecture/ADR-UI.md](architecture/ADR-UI.md): Decisões arquiteturais de UI e Frontend Web:
   - **`ADR-UI-001`**: *Independência de Diretório de Execução (`process.cwd()`)*.
   - **`ADR-UI-002`**: *Resiliência de Eventos SSE (Server-Sent Events)*.
   - **`ADR-UI-003`**: *Servidor Acessível em Rede Local (`0.0.0.0`) e Conexão de Dispositivos Móveis*.

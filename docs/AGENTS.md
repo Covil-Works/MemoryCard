@@ -13,7 +13,7 @@ A pasta `docs/` armazena a documentação transversal do projeto, abrangendo:
 ---
 
 ## 2. Mapa Geral e Descoberta (`docs/index.md`)
-- Todo novo documento adicionado à pasta `docs/` deve ser imediatamente registrado no índice mestre [docs/index.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/index.md).
+- Todo novo documento adicionado à pasta `docs/` deve ser imediatamente registrado no índice mestre [docs/index.md](index.md).
 - Agentes de IA que ingressam na pasta `docs/` devem utilizar o `docs/index.md` como mapa inicial de navegação e busca de contexto.
 
 ---
@@ -21,7 +21,7 @@ A pasta `docs/` armazena a documentação transversal do projeto, abrangendo:
 ## 3. Identificação Sequencial de Convenções de UI
 Para garantir rastreabilidade em commits, PRs, tarefas e revisões de código, **todas as convenções criadas e catalogadas para interface do usuário (UI) devem receber um identificador sequencial único**:
 - Formato: `UI-XXX` (iniciando em `UI-001`, `UI-002`, `UI-003`, etc.).
-- O arquivo principal de catálogo de convenções de UI é [docs/ui/conventions.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/ui/conventions.md).
+- O arquivo principal de catálogo de convenções de UI é [docs/ui/conventions.md](ui/conventions.md).
 - Cada convenção deve conter:
   1. **ID e Título:** `UI-XXX: [Nome da Convenção]`
   2. **Contexto e Motivação:** Problema de UX/UI resolvido pelo padrão.
@@ -32,7 +32,7 @@ Para garantir rastreabilidade em commits, PRs, tarefas e revisões de código, *
 
 ## 4. Identificação e Estrutura de Decisões de Arquitetura (ADRs)
 Para assegurar rastreabilidade técnica e governança das escolhas estruturais do projeto, **todas as decisões de arquitetura devem ser catalogadas na pasta `docs/architecture/`, separadas por contexto e identificadas de forma única**:
-- **Organização por Contexto:** Arquivos nomeados no padrão `ADR-<CONTEXTO>.md` (ex.: [docs/architecture/ADR-UI.md](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/docs/architecture/ADR-UI.md)).
+- **Organização por Contexto:** Arquivos nomeados no padrão `ADR-<CONTEXTO>.md` (ex.: [docs/architecture/ADR-UI.md](architecture/ADR-UI.md)).
 - **Identificador Único por Decisão:** Cada decisão arquitetural dentro de um arquivo de contexto deve receber um identificador sequencial próprio: `ADR-<CONTEXTO>-XXX` (ex.: `ADR-UI-001`, `ADR-UI-002`, etc.).
 - **Estrutura Obrigatória de cada Decisão:**
   1. **ID e Título:** `ADR-<CONTEXTO>-XXX: [Nome da Decisão]`

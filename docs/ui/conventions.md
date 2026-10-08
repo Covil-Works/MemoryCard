@@ -55,7 +55,7 @@ Toda interface de configuração deve seguir a seguinte hierarquia:
    - Novos temas devem utilizar o mesmo estilo de cabeçalho em destaque.
 
 ### 4. Exemplo de Referência no Projeto
-- **Componente:** [visibility-modal.tsx](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/src/web/components/visibility-modal.tsx)
+- **Componente:** [visibility-modal.tsx](../../src/web/components/visibility-modal.tsx)
 - **Tema Maior:** Visibilidade
 - **Tema:** Altura das colunas
 - **Configuração:** Modo de exibição (`Padrão` | `Personalizado`)
@@ -145,7 +145,7 @@ A aplicação suporta múltiplos temas visuais preservando integralmente a estru
      - **Cores:** Reutiliza exclusivamente as variáveis do tema Play (`--play-green`, `--play-pink`, `--play-red`, `--play-blue`).
      - **Intensidade e Alcance Proporcionais:** A quantidade (16 a 54) e o alcance das partículas aumentam progressivamente com o tempo em que o card é segurado. No clique rápido, as letras ficam contidas em raio menor próximo ao card; em seguradas mais longas, ganham maior velocidade e viajam até as extremidades da tela (para cima, baixo, esquerda e direita) em canvas de tela cheia antes de desaparecerem por fade out.
 6. **Efeito Visual de Ruído / Granulado Animado:**
-   - Textura orgânica de pequenos pontos/grãos de foto/vídeo antigo renderizada dinamicamente via canvas dedicado ([`PlayNoiseOverlay`](file:///C:/Users/artue/OneDrive/Documentos/GitHub/memorycard/src/web/components/play-noise-overlay.tsx)) em camada de sobreposição fixa (`fixed inset-0 pointer-events-none z-[99999] opacity-[0.45]`), ativa exclusivamente no tema `play`.
+   - Textura orgânica de pequenos pontos/grãos de foto/vídeo antigo renderizada dinamicamente via canvas dedicado ([`PlayNoiseOverlay`](../../src/web/components/play-noise-overlay.tsx)) em camada de sobreposição fixa (`fixed inset-0 pointer-events-none z-[99999] opacity-[0.45]`), ativa exclusivamente no tema `play`.
    - Os pontos operam em escala microscópica (sub-pixel) e mudam suavemente de posição a 12 fps através da alternância de quadros procedurais e deslocamento espacial aleatório, gerando a cadência natural e repousante de película analógica (Super 8/16mm).
    - Proibição estrita de listras, scanlines, faixas VHS ou distorções de TV analógica — apenas granulado fino em pontos de luz e sombra com 70% de área transparente preservada.
    - Pausa automática em abas inativas (`visibilitychange`) e respeita preferências de acessibilidade (`prefers-reduced-motion`).
