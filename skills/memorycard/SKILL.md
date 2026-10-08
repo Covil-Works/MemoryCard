@@ -21,44 +21,47 @@ memorycard --version
 ```
 
 ### 1.1 Se o comando NÃO for reconhecido no terminal
-O agente **não deve executar comandos globais silenciosamente**. Pare e pergunte ao usuário:
-> *"O comando `memorycard` não foi detectado no PATH do seu terminal. Você já possui o repositório clonado localmente ou gostaria que eu auxilie na instalação?"*
+O agente **não deve executar comandos de clonagem ou instalação silenciosamente**. Pare e faça esta pergunta direta ao usuário:
 
-### 1.2 Cenários e Formas de Instalação
+> *"O comando `memorycard` não foi detectado no PATH do seu terminal. Você já possui o repositório do MemoryCard clonado na sua máquina?"*
 
-1. **Repositório já existente localmente (Ativação via `npm link`):**
-   > [!IMPORTANT]
-   > É muito comum o repositório já estar clonado na máquina do usuário, mas o binário ainda não ter sido linkado no PATH global do terminal.
-   - Para disponibilizar o comando `memorycard` globalmente a partir da pasta do projeto:
-     ```bash
-     cd <caminho-do-repositorio>
-     npm install
-     npm link
-     ```
+---
 
-2. **Clonar e linkar a partir do repositório oficial:**
-   - Caso o repositório ainda não esteja na máquina:
-     - Repositório: [https://github.com/covil-works/memorycard](https://github.com/covil-works/memorycard)
-     ```bash
-     git clone https://github.com/covil-works/memorycard.git
-     cd memorycard
-     npm install
-     npm link
-     ```
+### 1.2 Fluxo baseado na resposta do usuário
 
-3. **Instalação Global direta do GitHub via npm:**
-   - É possível instalar globalmente apontando diretamente para o repositório no GitHub sem precisar clonar manualmente:
-     ```bash
-     npm install -g git+https://github.com/covil-works/memorycard.git
-     ```
+#### Caso o usuário responda SIM (já possui o repositório clonado)
+Oriente o usuário a acessar a pasta do repositório e rodar o `npm link`:
 
-### 1.3 Validação e Fluxo
-Após a instalação ou o `npm link`, valide com:
-```bash
-memorycard --version
-```
-- Se o comando for reconhecido, continue com a demanda normalmente.
-- Se o usuário optar por **não** instalar ou não utilizar o MemoryCard, prossiga com o desenvolvimento diretamente sem insistir.
+> *"Perfeito! Basta acessar a pasta do repositório no seu terminal e rodar `npm link` (certificando-se de que rodou `npm install` antes, se necessário):*
+> ```bash
+> cd <caminho-onde-voce-clonou>/memorycard
+> npm install
+> npm link
+> ```
+> *Isso tornará o comando `memorycard` acessível em qualquer lugar do seu terminal. Me avise assim que rodar para continuarmos!"*
+
+#### Caso o usuário responda NÃO (ainda não clonou o repositório)
+Forneça o link do repositório oficial no GitHub e as instruções passo a passo para clonar e linkar:
+
+> *"Sem problemas! Você pode clonar o repositório oficial em [https://github.com/covil-works/memorycard](https://github.com/covil-works/memorycard) e disponibilizar o comando executando:*
+> ```bash
+> git clone https://github.com/covil-works/memorycard.git
+> cd memorycard
+> npm install
+> npm link
+> ```
+> *Assim que concluir esses passos, o comando `memorycard` estará pronto para uso global. Me avise quando terminar para darmos sequência!"*
+
+---
+
+### 1.3 Validação e Continuidade
+Assim que o usuário confirmar que executou os passos:
+1. Valide no terminal rodando:
+   ```bash
+   memorycard --version
+   ```
+2. Se o comando responder com a versão, prossiga com o fluxo de trabalho normalmente.
+3. Se o usuário preferir **não** instalar ou não utilizar o MemoryCard, siga diretamente com o desenvolvimento sem insistir.
 
 ---
 
