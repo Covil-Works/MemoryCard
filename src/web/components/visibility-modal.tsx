@@ -51,6 +51,7 @@ export function VisibilityModal() {
 
   // Determina se a interface deve exibir estados ativos coloridos (tema play ativo ou preview local)
   const isPlayActive = theme === 'play' || selectedTheme === 'play';
+  const isPs1Active = theme === 'ps1' || selectedTheme === 'ps1';
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
@@ -87,7 +88,7 @@ export function VisibilityModal() {
               </p>
             </div>
 
-            {/* Configuração de Tema: Padrão vs Play */}
+            {/* Configuração de Tema: Padrão vs Play vs PS1 */}
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <span className="text-xs font-mono text-[#aaa]">
@@ -103,7 +104,11 @@ export function VisibilityModal() {
                       selectedTheme === 'default'
                         ? isPlayActive
                           ? 'toggle-active bg-[#2e6db4] text-white font-bold shadow-sm'
+                          : isPs1Active
+                          ? 'toggle-active bg-[#23252a] text-white font-bold shadow-sm'
                           : 'bg-white text-black font-bold shadow-sm'
+                        : isPs1Active
+                        ? 'text-[#52525b] hover:text-[#18181b]'
                         : 'text-[#888] hover:text-white'
                     }`}
                   >
@@ -116,11 +121,32 @@ export function VisibilityModal() {
                       selectedTheme === 'play'
                         ? isPlayActive
                           ? 'toggle-active bg-[#2e6db4] text-white font-bold shadow-sm'
+                          : isPs1Active
+                          ? 'toggle-active bg-[#23252a] text-white font-bold shadow-sm'
                           : 'bg-white text-black font-bold shadow-sm'
+                        : isPs1Active
+                        ? 'text-[#52525b] hover:text-[#18181b]'
                         : 'text-[#888] hover:text-white'
                     }`}
                   >
                     {t('themePlay')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTheme('ps1')}
+                    className={`flex-1 sm:flex-initial px-3 py-1 text-xs font-mono transition-colors rounded-sm ${
+                      selectedTheme === 'ps1'
+                        ? isPlayActive
+                          ? 'toggle-active bg-[#2e6db4] text-white font-bold shadow-sm'
+                          : isPs1Active
+                          ? 'toggle-active bg-[#23252a] text-white font-bold shadow-sm'
+                          : 'bg-white text-black font-bold shadow-sm'
+                        : isPs1Active
+                        ? 'text-[#52525b] hover:text-[#18181b]'
+                        : 'text-[#888] hover:text-white'
+                    }`}
+                  >
+                    {t('themePs1')}
                   </button>
                 </div>
               </div>
@@ -129,8 +155,10 @@ export function VisibilityModal() {
               <div className="p-3 bg-[#111] border border-[#222] text-xs text-[#999] leading-relaxed">
                 {selectedTheme === 'default' ? (
                   <p>{t('themeDefaultDesc')}</p>
-                ) : (
+                ) : selectedTheme === 'play' ? (
                   <p>{t('themePlayDesc')}</p>
+                ) : (
+                  <p>{t('themePs1Desc')}</p>
                 )}
               </div>
             </div>
@@ -163,7 +191,11 @@ export function VisibilityModal() {
                       mode === 'auto'
                         ? isPlayActive
                           ? 'toggle-active bg-[#2e6db4] text-white font-bold shadow-sm'
+                          : isPs1Active
+                          ? 'toggle-active bg-[#23252a] text-white font-bold shadow-sm'
                           : 'bg-white text-black font-bold shadow-sm'
+                        : isPs1Active
+                        ? 'text-[#52525b] hover:text-[#18181b]'
                         : 'text-[#888] hover:text-white'
                     }`}
                   >
@@ -176,7 +208,11 @@ export function VisibilityModal() {
                       mode === 'tasks'
                         ? isPlayActive
                           ? 'toggle-active bg-[#2e6db4] text-white font-bold shadow-sm'
+                          : isPs1Active
+                          ? 'toggle-active bg-[#23252a] text-white font-bold shadow-sm'
                           : 'bg-white text-black font-bold shadow-sm'
+                        : isPs1Active
+                        ? 'text-[#52525b] hover:text-[#18181b]'
                         : 'text-[#888] hover:text-white'
                     }`}
                   >
@@ -215,7 +251,11 @@ export function VisibilityModal() {
                                 tasksLimit === num
                                   ? isPlayActive
                                     ? 'shortcut-num-active bg-[#f69dc8] text-black border-[#f69dc8] font-bold'
+                                    : isPs1Active
+                                    ? 'shortcut-num-active bg-[#23252a] text-white border-[#23252a] font-bold'
                                     : 'bg-white text-black border-white'
+                                  : isPs1Active
+                                  ? 'text-[#52525b]'
                                   : 'text-[#777]'
                               }`}
                             >
