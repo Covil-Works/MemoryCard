@@ -115,7 +115,7 @@ export function AppHeader() {
           {isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute right-0 top-full mt-2 w-60 sm:w-64 max-w-[calc(100vw-1.5rem)] bg-[#111] border border-[#333] shadow-2xl p-2 text-xs flex flex-col gap-1 font-mono z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+              className="app-header-dropdown absolute right-0 top-full mt-2 w-60 sm:w-64 max-w-[calc(100vw-1.5rem)] bg-[#111] border border-[#333] shadow-2xl p-2 text-xs flex flex-col gap-1 font-mono z-50 animate-in fade-in slide-in-from-top-1 duration-150"
             >
               {/* Opções específicas de Projeto */}
               {projectActions?.openModelsModal && (
@@ -176,12 +176,14 @@ export function AppHeader() {
               <div className="px-2 pt-1 pb-0.5 text-[10px] text-[#666] uppercase tracking-wider font-bold">
                 {t('theme')}
               </div>
-              <div className="grid grid-cols-2 gap-1 px-1 py-1">
+              <div className="grid grid-cols-3 gap-1 px-1 py-1">
                 <button
                   onClick={() => setTheme('default')}
-                  className={`py-1 px-2 text-center text-xs border transition-colors ${
+                  className={`py-1 px-1 text-center text-xs border transition-colors ${
                     theme === 'default'
                       ? 'bg-white text-black border-white font-bold'
+                      : theme === 'ps1'
+                      ? 'bg-[#e2e2e7] text-[#52525b] border-[#c0c1c8] hover:text-[#18181b] hover:border-[#8e9099]'
                       : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
                   }`}
                 >
@@ -189,13 +191,25 @@ export function AppHeader() {
                 </button>
                 <button
                   onClick={() => setTheme('play')}
-                  className={`py-1 px-2 text-center text-xs border transition-colors ${
+                  className={`py-1 px-1 text-center text-xs border transition-colors ${
                     theme === 'play'
                       ? 'toggle-active bg-[#2e6db4] text-white border-[#2e6db4] font-bold'
+                      : theme === 'ps1'
+                      ? 'bg-[#e2e2e7] text-[#52525b] border-[#c0c1c8] hover:text-[#18181b] hover:border-[#8e9099]'
                       : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
                   }`}
                 >
                   {t('themePlay')}
+                </button>
+                <button
+                  onClick={() => setTheme('ps1')}
+                  className={`py-1 px-1 text-center text-xs border transition-colors ${
+                    theme === 'ps1'
+                      ? 'toggle-active bg-[#23252a] text-white border-[#23252a] font-bold'
+                      : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
+                  }`}
+                >
+                  {t('themePs1')}
                 </button>
               </div>
 
@@ -212,7 +226,11 @@ export function AppHeader() {
                     language === 'pt-br'
                       ? theme === 'play'
                         ? 'toggle-active bg-[#2e6db4] text-white border-[#2e6db4] font-bold'
+                        : theme === 'ps1'
+                        ? 'toggle-active bg-[#23252a] text-white border-[#23252a] font-bold'
                         : 'bg-white text-black border-white font-bold'
+                      : theme === 'ps1'
+                      ? 'bg-[#e2e2e7] text-[#52525b] border-[#c0c1c8] hover:text-[#18181b] hover:border-[#8e9099]'
                       : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
                   }`}
                 >
@@ -224,7 +242,11 @@ export function AppHeader() {
                     language === 'en'
                       ? theme === 'play'
                         ? 'toggle-active bg-[#2e6db4] text-white border-[#2e6db4] font-bold'
+                        : theme === 'ps1'
+                        ? 'toggle-active bg-[#23252a] text-white border-[#23252a] font-bold'
                         : 'bg-white text-black border-white font-bold'
+                      : theme === 'ps1'
+                      ? 'bg-[#e2e2e7] text-[#52525b] border-[#c0c1c8] hover:text-[#18181b] hover:border-[#8e9099]'
                       : 'bg-[#181818] text-[#888] border-[#2b2b2b] hover:text-white hover:border-[#444]'
                   }`}
                 >

@@ -481,3 +481,631 @@ code, pre, .font-mono {
 [data-theme="play"] .rounded-2xl {
   border-radius: 4px !important;
 }
+
+/* ========================================================
+   TEMA PS1 - TEMA CLARO INSPIRADO NO PLAYSTATION 1 E MEMORY CARDS
+   ======================================================== */
+
+[data-theme="ps1"] {
+  --bg-primary: #dcdce0;
+  --bg-secondary: #e8e8ed;
+  --bg-card: #ffffff;
+  --bg-hover: #e2e2e7;
+  --border: #b8b9c0;
+  --border-focus: #23252a;
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --ps1-chassis: #dcdce0;
+  --ps1-header: #cfd0d5;
+  --ps1-surface: #ebebef;
+  --ps1-surface-alt: #dedfe4;
+  --ps1-card: #ffffff;
+  --ps1-card-hover: #f4f4f7;
+  --ps1-border: #b8b9c0;
+  --ps1-dark: #23252a;
+  --ps1-dark-hover: #383a42;
+  --ps1-blue: #2563eb;
+  --ps1-green: #059669;
+  --ps1-red: #dc2626;
+  --ps1-pink: #db2777;
+}
+
+[data-theme="ps1"],
+[data-theme="ps1"] body {
+  background-color: var(--ps1-chassis) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Scrollbars no tema PS1 */
+[data-theme="ps1"]::-webkit-scrollbar-track,
+[data-theme="ps1"] *::-webkit-scrollbar-track {
+  background: #d4d4d9;
+}
+
+[data-theme="ps1"]::-webkit-scrollbar-thumb,
+[data-theme="ps1"] *::-webkit-scrollbar-thumb {
+  background: #b0b1b9;
+}
+
+[data-theme="ps1"]::-webkit-scrollbar-thumb:hover,
+[data-theme="ps1"] *::-webkit-scrollbar-thumb:hover {
+  background: #9697a0;
+}
+
+/* Header */
+[data-theme="ps1"] header {
+  background-color: var(--ps1-header) !important;
+  border-bottom-color: #b5b6bc !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="ps1"] header a,
+[data-theme="ps1"] header span.text-white {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] header span.text-\[\#555\] {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] header a.text-gray-400 {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] header a.text-gray-400:hover {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] header button {
+  background-color: #e2e2e7 !important;
+  border-color: #b8b9c0 !important;
+  color: #27272a !important;
+}
+
+[data-theme="ps1"] header button:hover {
+  background-color: #d6d6dc !important;
+  border-color: #9da0aa !important;
+  color: #09090b !important;
+}
+
+[data-theme="ps1"] header button svg {
+  color: #27272a !important;
+}
+
+/* Menu Hamburguer / Dropdown no Header */
+[data-theme="ps1"] .app-header-dropdown {
+  background-color: #f5f5f8 !important;
+  border-color: #b8b9c0 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] .app-header-dropdown button {
+  color: #27272a !important;
+  border-color: transparent !important;
+}
+
+[data-theme="ps1"] .app-header-dropdown button:hover {
+  background-color: #e4e5eb !important;
+  color: #09090b !important;
+}
+
+[data-theme="ps1"] .app-header-dropdown .border-t {
+  border-color: #d0d1d7 !important;
+}
+
+[data-theme="ps1"] .app-header-dropdown .text-\[\#666\] {
+  color: #71717a !important;
+}
+
+[data-theme="ps1"] .app-header-dropdown .text-gray-200 {
+  color: #27272a !important;
+}
+
+[data-theme="ps1"] .app-header-dropdown .text-gray-300 {
+  color: #18181b !important;
+}
+
+/* Botões base no tema PS1 */
+[data-theme="ps1"] .btn,
+[data-theme="ps1"] button:not(.btn-unstyled) {
+  border-radius: 4px;
+}
+
+[data-theme="ps1"] .btn {
+  background: #f0f0f4 !important;
+  border: 1px solid #b8b9c0 !important;
+  color: #18181b !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease-in-out;
+}
+
+[data-theme="ps1"] .btn:hover {
+  background: #e2e2e7 !important;
+  border-color: #9da0aa !important;
+  color: #09090b !important;
+}
+
+[data-theme="ps1"] .btn svg {
+  color: inherit;
+  stroke: currentColor;
+}
+
+/* Botão Primário: Estilo escuro clássico do PS1 */
+[data-theme="ps1"] .btn-primary {
+  background: var(--ps1-dark) !important;
+  border-color: var(--ps1-dark) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+[data-theme="ps1"] .btn-primary:hover {
+  background: var(--ps1-dark-hover) !important;
+  border-color: var(--ps1-dark-hover) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="ps1"] .btn-primary:hover *,
+[data-theme="ps1"] .btn-primary * {
+  color: #ffffff !important;
+}
+
+/* Ações com detalhes discretos inspirados na identidade PlayStation */
+[data-theme="ps1"] .btn-action-green {
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #10b981 !important;
+  font-weight: 600;
+}
+
+[data-theme="ps1"] .btn-action-green:hover {
+  background: #059669 !important;
+  border-color: #059669 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="ps1"] .btn-action-blue {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #3b82f6 !important;
+  font-weight: 600;
+}
+
+[data-theme="ps1"] .btn-action-blue:hover,
+[data-theme="ps1"] .btn-action-blue[aria-expanded="true"] {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+[data-theme="ps1"] .btn-action-pink {
+  background: #fdf2f8 !important;
+  color: #be185d !important;
+  border: 1px solid #ec4899 !important;
+  font-weight: 600;
+}
+
+[data-theme="ps1"] .btn-action-pink:hover {
+  background: #db2777 !important;
+  border-color: #db2777 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="ps1"] .btn-action-red,
+[data-theme="ps1"] .btn-danger,
+[data-theme="ps1"] .btn-action-red-subtle {
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #ef4444 !important;
+  font-weight: 600;
+}
+
+[data-theme="ps1"] .btn-action-red:hover,
+[data-theme="ps1"] .btn-danger:hover,
+[data-theme="ps1"] .btn-action-red-subtle:hover {
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+/* Propagação de cor branca nos hovers dos botões de ação */
+[data-theme="ps1"] .btn-action-green:hover *,
+[data-theme="ps1"] .btn-action-blue:hover *,
+[data-theme="ps1"] .btn-action-blue[aria-expanded="true"] *,
+[data-theme="ps1"] .btn-action-pink:hover *,
+[data-theme="ps1"] .btn-action-red:hover *,
+[data-theme="ps1"] .btn-danger:hover *,
+[data-theme="ps1"] .btn-action-red-subtle:hover *,
+[data-theme="ps1"] .toggle-active:hover *,
+[data-theme="ps1"] .shortcut-num-active:hover * {
+  color: #ffffff !important;
+  stroke: currentColor;
+}
+
+/* Alternadores e atalhos ativos */
+[data-theme="ps1"] .toggle-active {
+  background: var(--ps1-dark) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--ps1-dark) !important;
+  font-weight: 700;
+}
+
+[data-theme="ps1"] .toggle-active:hover {
+  background: var(--ps1-dark-hover) !important;
+  border-color: var(--ps1-dark-hover) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="ps1"] .shortcut-num-active {
+  background: var(--ps1-dark) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--ps1-dark) !important;
+  font-weight: 700;
+}
+
+[data-theme="ps1"] .shortcut-num-active:hover {
+  background: var(--ps1-dark-hover) !important;
+  border-color: var(--ps1-dark-hover) !important;
+  color: #ffffff !important;
+}
+
+/* Home: Identidade e Logo */
+[data-theme="ps1"] main .text-white {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] main .text-\[\#777\] {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] main .text-\[\#999\] {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] main .text-\[\#999\]:hover {
+  color: #18181b !important;
+}
+
+/* Home: Containers e cards de projetos */
+[data-theme="ps1"] .home-projects-box {
+  background: var(--ps1-surface) !important;
+  border: 1px solid var(--ps1-border) !important;
+  border-radius: 4px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="ps1"] .home-projects-header {
+  background: var(--ps1-surface-alt) !important;
+  border-bottom: 1px solid var(--ps1-border) !important;
+}
+
+[data-theme="ps1"] .home-projects-header h1 {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] .home-projects-header p {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] .home-empty-box {
+  background: #e2e2e7 !important;
+  border: 1px dashed #b4b5bc !important;
+  border-radius: 4px;
+}
+
+[data-theme="ps1"] .home-empty-box p {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] .home-empty-box p.text-\[\#555\] {
+  color: #71717a !important;
+}
+
+[data-theme="ps1"] .home-project-card {
+  border-radius: 4px;
+  background: var(--ps1-card) !important;
+  border: 1px solid #c4c5cc !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease-in-out;
+}
+
+[data-theme="ps1"] .home-project-card:hover {
+  background: var(--ps1-card-hover) !important;
+  border-color: #9da0aa !important;
+}
+
+[data-theme="ps1"] .home-project-card span.text-white {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] .home-project-card .text-\[\#666\] {
+  color: #52525b !important;
+}
+
+/* Badges de disponibilidade */
+[data-theme="ps1"] .border-\[\#444\].text-gray-300 {
+  background: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+  color: #065f46 !important;
+}
+
+[data-theme="ps1"] .border-\[\#f44\].text-\[\#f66\] {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+  color: #991b1b !important;
+}
+
+/* Kanban: Colunas e cards */
+[data-theme="ps1"] .kanban-column {
+  border-radius: 4px;
+  border: 1px solid var(--ps1-border) !important;
+  background: var(--ps1-surface) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="ps1"] .kanban-column-header {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background: var(--ps1-surface-alt) !important;
+  border-bottom: 1px solid var(--ps1-border) !important;
+}
+
+[data-theme="ps1"] .kanban-column-header span.text-white {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] .kanban-column-header span.bg-\[\#1a1a1a\] {
+  background: #d0d1d7 !important;
+  color: #27272a !important;
+}
+
+[data-theme="ps1"] .kanban-column-header button {
+  color: #27272a !important;
+}
+
+[data-theme="ps1"] .kanban-column-header button:hover {
+  color: #09090b !important;
+}
+
+[data-theme="ps1"] .kanban-task-card {
+  border-radius: 4px;
+  background: var(--ps1-card) !important;
+  border: 1px solid #c4c5cc !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease-in-out;
+}
+
+[data-theme="ps1"] .kanban-task-card:hover {
+  background: var(--ps1-card-hover) !important;
+  border-color: #9da0aa !important;
+}
+
+[data-theme="ps1"] .kanban-task-card .text-gray-200 {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] .kanban-task-card .text-\[\#888\] {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] .kanban-task-card .text-\[\#555\] {
+  color: #71717a !important;
+}
+
+[data-theme="ps1"] .kanban-task-card .text-\[\#777\] {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] .kanban-task-card .text-white {
+  color: #18181b !important;
+}
+
+/* Menus dropdown no board */
+[data-theme="ps1"] .sort-dropdown-menu {
+  background-color: #ffffff !important;
+  border: 1px solid var(--ps1-border) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="ps1"] .sort-dropdown-item {
+  color: #374151 !important;
+}
+
+[data-theme="ps1"] .sort-dropdown-item:hover {
+  background-color: #f0f0f4 !important;
+  color: #111827 !important;
+}
+
+[data-theme="ps1"] .sort-dropdown-item.active {
+  color: var(--ps1-blue) !important;
+  font-weight: 600;
+}
+
+[data-theme="ps1"] .sort-dropdown-item .sort-check-icon {
+  color: var(--ps1-blue) !important;
+}
+
+[data-theme="ps1"] .kanban-column .bg-\[\#111\].border-\[\#333\] {
+  background-color: #ffffff !important;
+  border-color: var(--ps1-border) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="ps1"] .kanban-column .bg-\[\#111\].border-\[\#333\] button {
+  color: #27272a !important;
+}
+
+[data-theme="ps1"] .kanban-column .bg-\[\#111\].border-\[\#333\] button:hover {
+  background-color: #f0f0f4 !important;
+  color: #09090b !important;
+}
+
+[data-theme="ps1"] .kanban-column .bg-\[\#111\].border-\[\#333\] .bg-\[\#222\] {
+  background-color: #e4e4e9 !important;
+}
+
+/* Modais */
+[data-theme="ps1"] .modal-surface {
+  background: #f5f5f8 !important;
+  border-radius: 4px;
+  border-color: var(--ps1-border) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="ps1"] .modal-header {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background: #e6e7ec !important;
+  border-bottom-color: #c8c9d0 !important;
+}
+
+[data-theme="ps1"] .modal-header h2,
+[data-theme="ps1"] .modal-header span.text-white {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] .modal-header p,
+[data-theme="ps1"] .modal-header span.text-\[\#888\],
+[data-theme="ps1"] .modal-header span.text-\[\#aaa\] {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] .modal-header button {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] .modal-header button:hover {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] .modal-footer {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background: #e6e7ec !important;
+  border-top-color: #c8c9d0 !important;
+}
+
+[data-theme="ps1"] .modal-surface .input,
+[data-theme="ps1"] .modal-surface .textarea,
+[data-theme="ps1"] .modal-surface .select,
+[data-theme="ps1"] .input,
+[data-theme="ps1"] .textarea,
+[data-theme="ps1"] .select {
+  border-radius: 4px;
+  background: #ffffff !important;
+  color: #18181b !important;
+  border: 1px solid var(--ps1-border) !important;
+}
+
+[data-theme="ps1"] .modal-surface .input:focus,
+[data-theme="ps1"] .modal-surface .textarea:focus,
+[data-theme="ps1"] .modal-surface .select:focus,
+[data-theme="ps1"] .input:focus,
+[data-theme="ps1"] .textarea:focus,
+[data-theme="ps1"] .select:focus {
+  border-color: var(--ps1-dark) !important;
+  box-shadow: 0 0 0 1px var(--ps1-dark) !important;
+}
+
+[data-theme="ps1"] .modal-surface .text-white,
+[data-theme="ps1"] .modal-surface h3 {
+  color: #18181b !important;
+}
+
+[data-theme="ps1"] .modal-surface .text-gray-200,
+[data-theme="ps1"] .modal-surface .text-gray-300 {
+  color: #27272a !important;
+}
+
+[data-theme="ps1"] .modal-surface .text-\[\#888\],
+[data-theme="ps1"] .modal-surface .text-\[\#777\],
+[data-theme="ps1"] .modal-surface .text-\[\#aaa\],
+[data-theme="ps1"] .modal-surface .text-\[\#666\] {
+  color: #52525b !important;
+}
+
+[data-theme="ps1"] .modal-surface .border-\[\#222\],
+[data-theme="ps1"] .modal-surface .border-\[\#333\],
+[data-theme="ps1"] .modal-surface .border-\[\#1f1f1f\] {
+  border-color: #c8c9d0 !important;
+}
+
+[data-theme="ps1"] .modal-surface .bg-\[\#0c0c0c\],
+[data-theme="ps1"] .modal-surface .bg-\[\#111\],
+[data-theme="ps1"] .modal-surface .bg-\[\#141414\],
+[data-theme="ps1"] .modal-surface .bg-\[\#080808\],
+[data-theme="ps1"] .modal-surface .bg-\[\#181818\] {
+  background-color: #eaebee !important;
+  border-color: #c8c9d0 !important;
+}
+
+[data-theme="ps1"] .modal-surface .bg-\[\#1a1a1a\] {
+  background-color: #dcdde2 !important;
+}
+
+/* Banner de aviso e erro nos modais */
+[data-theme="ps1"] .modal-surface .bg-\[\#200\] {
+  background-color: #fef2f2 !important;
+  border-color: #fca5a5 !important;
+  color: #991b1b !important;
+}
+
+[data-theme="ps1"] .modal-surface .bg-\[\#2b2200\] {
+  background-color: #fffbeb !important;
+  border-color: #fcd34d !important;
+  color: #92400e !important;
+}
+
+/* Normalização de border-radius para 4px no tema ps1 */
+[data-theme="ps1"] .rounded-sm,
+[data-theme="ps1"] .rounded-md,
+[data-theme="ps1"] .rounded-lg,
+[data-theme="ps1"] .rounded-xl,
+[data-theme="ps1"] .rounded-2xl {
+  border-radius: 4px !important;
+}
+
+/* Estados de Drag & Drop e Reordenação das Colunas do Kanban */
+.kanban-column.column-dragging {
+  opacity: 0.45;
+  cursor: grabbing;
+}
+
+.kanban-column.column-drag-target {
+  border-style: dashed !important;
+  border-color: #777777 !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.column-drag-handle {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.column-drag-handle:active {
+  cursor: grabbing;
+}
+
+[data-theme="play"] .kanban-column.column-drag-target {
+  border-style: dashed !important;
+  border-color: var(--play-blue) !important;
+  box-shadow: 0 0 0 2px rgba(46, 109, 180, 0.35) !important;
+}
+
+[data-theme="ps1"] .kanban-column.column-drag-target {
+  border-style: dashed !important;
+  border-color: var(--ps1-blue) !important;
+  background-color: #d6d7dc !important;
+  box-shadow: 0 0 0 2px rgba(0, 67, 156, 0.25) !important;
+}
+
+[data-theme="ps1"] .column-drag-handle {
+  color: #6b7280;
+}
+
+[data-theme="ps1"] .column-drag-handle:hover {
+  color: #18181b;
+}

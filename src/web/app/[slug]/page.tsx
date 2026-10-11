@@ -9,7 +9,15 @@ import { RenameColumnModal } from '../../components/rename-column-modal';
 import { DeleteColumnModal } from '../../components/delete-column-modal';
 import { ModelsModal } from '../../components/models-modal';
 import { useSettings } from '../../components/settings-context';
-import { ArrowUpDown, Check } from 'lucide-react';
+import { ArrowUpDown, Check, GripVertical, ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react';
+import {
+  getStoredColumnOrder,
+  saveStoredColumnOrder,
+  clearStoredColumnOrder,
+  applyColumnOrder,
+  reorderColumnArray,
+  moveColumnDirection,
+} from '../../utils/column-order';
 
 interface Column {
   id: string;
@@ -68,6 +76,9 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
   // Drag and drop state
   const [draggedTaskId, setDraggedTaskId] = useState<number | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+  const [draggedColumnId, setDraggedColumnId] = useState<string | null>(null);
+  const [dragOverColumnTarget, setDragOverColumnTarget] = useState<string | null>(null);
+  const [customColumnOrder, setCustomColumnOrder] = useState<string[] | null>(null);
 
   const fetchProjectData = async () => {
     try {
@@ -98,6 +109,7 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
 
   useEffect(() => {
     fetchProjectData();
+    setCustomColumnOrder(getStoredColumnOrder(slug));
   }, [slug]);
 
   // Registra as ações de projeto para o menu dos três tracinhos no canto superior direito
@@ -152,28 +164,106 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
     }
   };
 
-  // Drag and Drop nativo HTML5
-  const handleDragStart = (e: React.DragEvent, taskId: number) => {
+  // Reordenação de colunas
+  const handleReorderColumns = (sourceId: string, targetId: string) => {
+    if (sourceId === targetId) return;
+    const baseCols = projectInfo?.config.columns || [];
+    const currentOrdered = applyColumnOrder(baseCols, customColumnOrder);
+    const reordered = reorderColumnArray(currentOrdered, sourceId, targetId);
+    const newOrder = reordered.map((c) => c.id);
+    setCustomColumnOrder(newOrder);
+    saveStoredColumnOrder(slug, newOrder);
+  };
+
+  const handleMoveColumn = (columnId: string, direction: 'left' | 'right') => {
+    const baseCols = projectInfo?.config.columns || [];
+    const currentOrdered = applyColumnOrder(baseCols, customColumnOrder);
+    const reordered = moveColumnDirection(currentOrdered, columnId, direction);
+    const newOrder = reordered.map((c) => c.id);
+    setCustomColumnOrder(newOrder);
+    saveStoredColumnOrder(slug, newOrder);
+  };
+
+  const handleResetColumnOrder = () => {
+    clearStoredColumnOrder(slug);
+    setCustomColumnOrder(null);
+  };
+
+  // Drag and Drop nativo HTML5 - Tasks
+  const handleTaskDragStart = (e: React.DragEvent, taskId: number) => {
+    e.dataTransfer.setData('application/x-memorycard-task', String(taskId));
     e.dataTransfer.setData('text/plain', String(taskId));
+    e.dataTransfer.effectAllowed = 'move';
     setDraggedTaskId(taskId);
   };
 
-  const handleDragOver = (e: React.DragEvent, columnId: string) => {
-    e.preventDefault();
-    setDragOverColumn(columnId);
+  const handleTaskDragEnd = () => {
+    setDraggedTaskId(null);
+    setDragOverColumn(null);
   };
 
-  const handleDrop = async (e: React.DragEvent, targetStatus: string) => {
+  // Drag and Drop nativo HTML5 - Colunas
+  const handleColumnDragStart = (e: React.DragEvent, columnId: string) => {
+    e.dataTransfer.setData('application/x-memorycard-column', columnId);
+    e.dataTransfer.effectAllowed = 'move';
+    setDraggedColumnId(columnId);
+  };
+
+  const handleColumnDragEnd = () => {
+    setDraggedColumnId(null);
+    setDragOverColumnTarget(null);
+  };
+
+  const handleColumnDragOver = (e: React.DragEvent, columnId: string) => {
     e.preventDefault();
+    if (draggedColumnId || e.dataTransfer.types.includes('application/x-memorycard-column')) {
+      e.dataTransfer.dropEffect = 'move';
+      if (dragOverColumnTarget !== columnId) {
+        setDragOverColumnTarget(columnId);
+      }
+    } else {
+      e.dataTransfer.dropEffect = 'move';
+      if (dragOverColumn !== columnId) {
+        setDragOverColumn(columnId);
+      }
+    }
+  };
+
+  const handleColumnDragLeave = (e: React.DragEvent) => {
+    const currentTarget = e.currentTarget;
+    if (!currentTarget.contains(e.relatedTarget as Node)) {
+      if (draggedColumnId) {
+        setDragOverColumnTarget(null);
+      } else {
+        setDragOverColumn(null);
+      }
+    }
+  };
+
+  const handleColumnDrop = async (e: React.DragEvent, targetColumnId: string) => {
+    e.preventDefault();
+    const isColumnDrop = draggedColumnId !== null || e.dataTransfer.types.includes('application/x-memorycard-column');
+
+    if (isColumnDrop) {
+      const sourceColId = draggedColumnId || e.dataTransfer.getData('application/x-memorycard-column');
+      setDraggedColumnId(null);
+      setDragOverColumnTarget(null);
+      if (sourceColId && sourceColId !== targetColumnId) {
+        handleReorderColumns(sourceColId, targetColumnId);
+      }
+      return;
+    }
+
+    // Drop de Task
     setDragOverColumn(null);
-    const taskIdStr = e.dataTransfer.getData('text/plain');
+    const taskIdStr = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('application/x-memorycard-task');
     const taskId = Number(taskIdStr);
 
     if (isNaN(taskId)) return;
 
     try {
-      const task = tasks.find(t => t.id === taskId);
-      if (!task || task.status === targetStatus) return;
+      const task = tasks.find((t) => t.id === taskId);
+      if (!task || task.status === targetColumnId) return;
 
       // Ao mover manualmente, altera ordenação para custom (§16.3)
       if (projectInfo?.config.board.sort !== 'custom') {
@@ -184,9 +274,9 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'If-Match': task.hash || ''
+          'If-Match': task.hash || '',
         },
-        body: JSON.stringify({ status: targetStatus })
+        body: JSON.stringify({ status: targetColumnId }),
       });
 
       await fetchProjectData();
@@ -209,7 +299,14 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
     );
   }
 
-  const columns = projectInfo.config.columns || [];
+  const rawColumns = projectInfo.config.columns || [];
+  const columns = applyColumnOrder(rawColumns, customColumnOrder);
+  const isCustomOrderActive = Boolean(
+    customColumnOrder &&
+    customColumnOrder.length > 0 &&
+    (customColumnOrder.length !== rawColumns.length ||
+      customColumnOrder.some((id, idx) => id !== rawColumns[idx]?.id))
+  );
 
   return (
     <div className="flex-1 flex flex-col gap-3 sm:gap-4 w-full max-w-full min-w-0">
@@ -286,6 +383,18 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
             )}
           </div>
 
+          {isCustomOrderActive && (
+            <button
+              type="button"
+              onClick={handleResetColumnOrder}
+              className="btn btn-action-blue text-xs p-1.5 sm:p-2 shrink-0 flex items-center justify-center"
+              title={t('resetColumnOrder')}
+              aria-label={t('resetColumnOrder')}
+            >
+              <RotateCcw className="w-4 h-4 shrink-0" />
+            </button>
+          )}
+
           {/* Botão Nova Coluna (substitui o botão de nova task no canto superior direito) */}
           <button
             onClick={() => setIsNewColumnModalOpen(true)}
@@ -299,23 +408,38 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
       {/* Grid de Colunas Kanban com Scroll Horizontal Isolado */}
       <div className="w-full max-w-full overflow-x-auto pb-4 pt-1 custom-scrollbar snap-x snap-proximity overscroll-x-contain touch-pan-x">
         <div className="flex flex-row items-start gap-3 sm:gap-4 min-w-max pb-2 pr-4 sm:pr-0">
-          {columns.map((column) => {
+          {columns.map((column, colIndex) => {
             const columnTasks = tasks.filter((t) => t.status === column.id);
-            const isDragOver = dragOverColumn === column.id;
+            const isTaskDragOver = dragOverColumn === column.id;
+            const isColumnDragTarget = dragOverColumnTarget === column.id && draggedColumnId !== column.id;
+            const isColumnDragging = draggedColumnId === column.id;
 
             return (
               <div
                 key={column.id}
-                onDragOver={(e) => handleDragOver(e, column.id)}
-                onDragLeave={() => setDragOverColumn(null)}
-                onDrop={(e) => handleDrop(e, column.id)}
+                onDragOver={(e) => handleColumnDragOver(e, column.id)}
+                onDragLeave={handleColumnDragLeave}
+                onDrop={(e) => handleColumnDrop(e, column.id)}
                 className={`kanban-column flex flex-col bg-[#0c0c0c] border w-[82vw] max-w-[320px] sm:w-[290px] shrink-0 snap-start transition-colors ${
-                  isDragOver ? 'border-white bg-[#151515]' : 'border-[#222]'
+                  isColumnDragging ? 'column-dragging' : ''
+                } ${
+                  isColumnDragTarget ? 'column-drag-target' : ''
+                } ${
+                  isTaskDragOver ? 'border-white bg-[#151515]' : 'border-[#222]'
                 }`}
               >
-                {/* Cabeçalho da Coluna com botão + Task e Menu de 3 Pontinhos */}
-                <div className="kanban-column-header p-2.5 sm:p-3 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+                {/* Cabeçalho da Coluna com drag handle, botão + Task e Menu de 3 Pontinhos */}
+                <div
+                  draggable
+                  onDragStart={(e) => handleColumnDragStart(e, column.id)}
+                  onDragEnd={handleColumnDragEnd}
+                  className="kanban-column-header p-2.5 sm:p-3 border-b border-[#222] flex items-center justify-between shrink-0 bg-[#0d0d0d] cursor-grab active:cursor-grabbing select-none"
+                  title={t('dragColumnHint')}
+                >
                   <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <span className="column-drag-handle text-gray-500 hover:text-gray-300 shrink-0">
+                      <GripVertical className="w-3.5 h-3.5" />
+                    </span>
                     <span className="font-mono font-bold text-xs text-white uppercase tracking-wider truncate">
                       {column.name}
                     </span>
@@ -324,9 +448,14 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1 shrink-0 ml-1 sm:ml-2">
+                  <div
+                    className="flex items-center gap-1 shrink-0 ml-1 sm:ml-2"
+                    draggable={false}
+                    onMouseDown={(e) => e.stopPropagation()}
+                  >
                     <button
                       type="button"
+                      draggable={false}
                       onClick={() => {
                         setNewTaskTargetColumn(column.id);
                         setIsNewTaskModalOpen(true);
@@ -338,9 +467,10 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                     </button>
 
                     {/* Botão de 3 pontinhos verticais (Kebab Menu) */}
-                    <div className="relative">
+                    <div className="relative" draggable={false}>
                       <button
                         type="button"
+                        draggable={false}
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpenMenuColumnId(openMenuColumnId === column.id ? null : column.id);
@@ -377,6 +507,55 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                             className="absolute right-0 top-full mt-1.5 w-44 bg-[#111] border border-[#333] shadow-2xl py-1 z-30 font-mono text-xs"
                             onClick={(e) => e.stopPropagation()}
                           >
+                            {/* Mover para a esquerda */}
+                            {colIndex > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenMenuColumnId(null);
+                                  handleMoveColumn(column.id, 'left');
+                                }}
+                                className="w-full text-left px-3 py-2 text-gray-200 hover:text-white hover:bg-[#1f1f1f] flex items-center gap-2 transition-colors"
+                              >
+                                <ArrowLeft className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                                <span>{t('moveLeft')}</span>
+                              </button>
+                            )}
+
+                            {/* Mover para a direita */}
+                            {colIndex < columns.length - 1 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenMenuColumnId(null);
+                                  handleMoveColumn(column.id, 'right');
+                                }}
+                                className="w-full text-left px-3 py-2 text-gray-200 hover:text-white hover:bg-[#1f1f1f] flex items-center gap-2 transition-colors"
+                              >
+                                <ArrowRight className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                                <span>{t('moveRight')}</span>
+                              </button>
+                            )}
+
+                            {/* Restaurar ordem original */}
+                            {isCustomOrderActive && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenMenuColumnId(null);
+                                  handleResetColumnOrder();
+                                }}
+                                className="w-full text-left px-3 py-2 text-gray-200 hover:text-white hover:bg-[#1f1f1f] flex items-center gap-2 transition-colors"
+                              >
+                                <RotateCcw className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                                <span>{t('resetColumnOrder')}</span>
+                              </button>
+                            )}
+
+                            {(colIndex > 0 || colIndex < columns.length - 1 || isCustomOrderActive) && (
+                              <div className="h-[1px] bg-[#222] my-1" />
+                            )}
+
                             {/* Renomear Coluna */}
                             <button
                               type="button"
@@ -457,7 +636,11 @@ export default function ProjectBoardPage({ params }: { params: { slug: string } 
                         <div
                           key={task.id}
                           draggable
-                          onDragStart={(e) => handleDragStart(e, task.id)}
+                          onDragStart={(e) => {
+                            e.stopPropagation();
+                            handleTaskDragStart(e, task.id);
+                          }}
+                          onDragEnd={handleTaskDragEnd}
                           onClick={() => {
                             setActiveTaskId(task.id);
                             setExternalConflictForActiveTask(false);

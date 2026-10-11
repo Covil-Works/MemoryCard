@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'pt-br' | 'en';
 export type ColumnHeightMode = 'auto' | 'tasks' | 'compact' | 'medium' | 'large' | 'custom';
-export type Theme = 'default' | 'play';
+export type Theme = 'default' | 'play' | 'ps1';
 
 export interface VisibilitySettings {
   mode: ColumnHeightMode;
@@ -33,6 +33,7 @@ const translations = {
     theme: 'Tema',
     themeDefault: 'Padrão',
     themePlay: 'Play',
+    themePs1: 'PS1',
     version: 'Versão',
     appearance: 'Aparência & Visibilidade',
     projectSettings: 'Configurações do Projeto',
@@ -55,6 +56,7 @@ const translations = {
     configThemeLabel: 'Tema ativo:',
     themeDefaultDesc: 'Visual técnico minimalista monocromático original do MemoryCard, com estrutura sólida e alto contraste.',
     themePlayDesc: 'Identidade inspirada nos símbolos dos controles (verde, vermelho, azul e rosa), com cantos arredondados, containers abertos e sticker outline no Memory Card.',
+    themePs1Desc: 'Tema claro retrô inspirado no console PlayStation original e nos cartões de memória, com tons de cinza-claro, branco, detalhes discretos e alto contraste.',
     columnHeightTitle: 'Altura das colunas',
     columnHeightDesc: 'Defina como a altura das colunas do quadro Kanban é dimensionada.',
     configModeLabel: 'Configuração de exibição:',
@@ -122,6 +124,10 @@ const translations = {
     confirmDelete: 'Sim, Excluir Coluna',
     deleting: 'Excluindo...',
     understandClose: 'Entendido',
+    moveLeft: 'Mover para a esquerda',
+    moveRight: 'Mover para a direita',
+    dragColumnHint: 'Arraste para reordenar a coluna',
+    resetColumnOrder: 'Restaurar ordem padrão das colunas',
   },
   'en': {
     appName: 'MemoryCard',
@@ -137,6 +143,7 @@ const translations = {
     theme: 'Theme',
     themeDefault: 'Default',
     themePlay: 'Play',
+    themePs1: 'PS1',
     version: 'Version',
     appearance: 'Appearance & Visibility',
     projectSettings: 'Project Settings',
@@ -159,6 +166,7 @@ const translations = {
     configThemeLabel: 'Active theme:',
     themeDefaultDesc: 'Original monochromatic technical minimalist look of MemoryCard, with sober structure and high contrast.',
     themePlayDesc: 'Identity inspired by classic controller symbols (green, red, blue and pink), featuring rounded corners, open containers and sticker outline on the Memory Card.',
+    themePs1Desc: 'Light retro theme inspired by the original PlayStation console and classic memory cards, featuring light gray chassis tones, white surfaces, subtle accents, and high contrast.',
     columnHeightTitle: 'Column height',
     columnHeightDesc: 'Configure how the Kanban board column heights are dimensioned.',
     configModeLabel: 'Display configuration:',
@@ -226,6 +234,10 @@ const translations = {
     confirmDelete: 'Yes, Delete Column',
     deleting: 'Deleting...',
     understandClose: 'Understood',
+    moveLeft: 'Move left',
+    moveRight: 'Move right',
+    dragColumnHint: 'Drag to reorder column',
+    resetColumnOrder: 'Reset default column order',
   }
 } as const;
 
@@ -273,7 +285,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       }
       const savedTheme = localStorage.getItem('memorycard_theme') as Theme | null;
       let activeTheme: Theme = 'default';
-      if (savedTheme === 'default' || savedTheme === 'play') {
+      if (savedTheme === 'default' || savedTheme === 'play' || savedTheme === 'ps1') {
         activeTheme = savedTheme;
         setThemeState(savedTheme);
       }
@@ -282,7 +294,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       const savedVis = localStorage.getItem('memorycard_visibility');
       if (savedVis) {
         const parsed = JSON.parse(savedVis);
-        if (parsed.theme === 'default' || parsed.theme === 'play') {
+        if (parsed.theme === 'default' || parsed.theme === 'play' || parsed.theme === 'ps1') {
           activeTheme = parsed.theme;
           setThemeState(parsed.theme);
           document.documentElement.setAttribute('data-theme', parsed.theme);
@@ -316,7 +328,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   const setVisibilitySettings = (settings: VisibilitySettings) => {
     setVisibilitySettingsState(settings);
-    if (settings.theme && (settings.theme === 'default' || settings.theme === 'play')) {
+    if (settings.theme && (settings.theme === 'default' || settings.theme === 'play' || settings.theme === 'ps1')) {
       setThemeState(settings.theme);
       try {
         localStorage.setItem('memorycard_theme', settings.theme);
